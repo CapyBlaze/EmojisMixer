@@ -1,0 +1,75 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+body {
+    background-color: #2f3338;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+.container {
+    background: #404449;
+    border: 3px #686d76 solid;
+    border-radius: 13px;
+    height: 90vh;
+    width: 300px;
+    padding: 15px;
+    color: #ebe9e5;
+    text-transform: uppercase;
+    font-weight: bold;
+    box-shadow: #00000075 7px 7px 0px;
+    position: absolute;
+}
+
+.input-search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+
+    background: #2c2f33;
+    padding: 10px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+
+    input {
+        width: stretch;
+        background: #2c2f33;
+        border: none;
+        font-size: 16px;
+        color: #ffffff;
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.not-selected {
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2c2f33;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #acacb0;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #acacb0;
+}
