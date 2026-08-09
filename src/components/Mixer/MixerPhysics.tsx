@@ -7,27 +7,52 @@ const CONTAINER_WIDTH = 500;
 const CONTAINER_HEIGHT = 620;
 const EMOJI_RADIUS = 12;
 
-const RIM_Y = 73;
-const RIM_LEFT = 132.5;
-const RIM_RIGHT = 367.5;
+const WALL1_Y = 103;
+const WALL1_LEFT = 147;
+const WALL1_RIGHT = 353;
 
-const FLOOR_Y = 327;
-const FLOOR_LEFT = 179.5;
-const FLOOR_RIGHT = 320.5;
+const WALL2_Y = 73;
+const WALL2_LEFT = 132.5;
+const WALL2_RIGHT = 367.5;
 
-const DEBUG_MODE = true;
+const WALL3_Y = 310;
+const WALL3_LEFT = 219;
+const WALL3_RIGHT = 281;
 
-function makeWall(x1: number, y1: number, x2: number, y2: number) {
+const FLOOR1_Y = 327;
+const FLOOR1_LEFT = 179.5;
+const FLOOR1_RIGHT = 320.5;
+
+const FLOOR2_Y = 308;
+const FLOOR2_LEFT = 219;
+const FLOOR2_RIGHT = 281;
+
+const DEBUG_MODE = false;
+
+function makeWall(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    thickness: number = 4,
+) {
     const dx = x2 - x1;
     const dy = y2 - y1;
     const length = Math.hypot(dx, dy);
     const angle = Math.atan2(dy, dx);
-    return Matter.Bodies.rectangle((x1 + x2) / 2, (y1 + y2) / 2, length, 4, {
-        isStatic: true,
-        angle,
-        friction: 0.8,
-        restitution: 0.15,
-    });
+
+    return Matter.Bodies.rectangle(
+        (x1 + x2) / 2,
+        (y1 + y2) / 2,
+        length,
+        thickness,
+        {
+            isStatic: true,
+            angle: angle,
+            friction: 0.8,
+            restitution: 0.15,
+        },
+    );
 }
 
 export default function MixerPhysics() {
@@ -65,16 +90,56 @@ export default function MixerPhysics() {
             Matter.Render.run(debugRender);
         }
 
-        const leftWall = makeWall(RIM_LEFT, RIM_Y, FLOOR_LEFT, FLOOR_Y);
-        const rightWall = makeWall(RIM_RIGHT, RIM_Y, FLOOR_RIGHT, FLOOR_Y);
-        const floor = Matter.Bodies.rectangle(
-            (FLOOR_LEFT + FLOOR_RIGHT) / 2,
-            FLOOR_Y + 5,
-            FLOOR_RIGHT - FLOOR_LEFT,
+        const leftWall1 = makeWall(WALL1_LEFT, WALL1_Y, FLOOR1_LEFT, FLOOR1_Y);
+        const rightWall1 = makeWall(
+            WALL1_RIGHT,
+            WALL1_Y,
+            FLOOR1_RIGHT,
+            FLOOR1_Y,
+        );
+
+        const leftWall2 = makeWall(WALL2_LEFT, WALL2_Y, WALL1_LEFT, WALL1_Y);
+        const rightWall2 = makeWall(WALL2_RIGHT, WALL2_Y, WALL1_RIGHT, WALL1_Y);
+
+        const leftWall3 = makeWall(
+            WALL3_LEFT,
+            WALL3_Y,
+            FLOOR1_LEFT,
+            FLOOR1_Y + 3,
+        );
+        const rightWall3 = makeWall(
+            WALL3_RIGHT,
+            WALL3_Y,
+            FLOOR1_RIGHT,
+            FLOOR1_Y + 3,
+        );
+
+        const floor1 = Matter.Bodies.rectangle(
+            (FLOOR1_LEFT + FLOOR1_RIGHT) / 2,
+            FLOOR1_Y + 5,
+            FLOOR1_RIGHT - FLOOR1_LEFT,
             10,
             { isStatic: true, friction: 0.9, restitution: 0.1 },
         );
-        Matter.World.add(engine.world, [leftWall, rightWall, floor]);
+
+        const floor2 = Matter.Bodies.rectangle(
+            (FLOOR2_LEFT + FLOOR2_RIGHT) / 2,
+            FLOOR2_Y + 5,
+            FLOOR2_RIGHT - FLOOR2_LEFT,
+            10,
+            { isStatic: true, friction: 0.9, restitution: 0.1 },
+        );
+
+        Matter.World.add(engine.world, [
+            leftWall1,
+            rightWall1,
+            leftWall2,
+            rightWall2,
+            leftWall3,
+            rightWall3,
+            floor1,
+            floor2,
+        ]);
 
         const runner = Matter.Runner.create();
         Matter.Runner.run(runner, engine);
@@ -99,13 +164,13 @@ export default function MixerPhysics() {
 
             const t = Math.max(
                 0,
-                Math.min(1, (localY - RIM_Y) / (FLOOR_Y - RIM_Y)),
+                Math.min(1, (localY - WALL1_Y) / (FLOOR1_Y - WALL1_Y)),
             );
-            const leftBound = RIM_LEFT + (FLOOR_LEFT - RIM_LEFT) * t;
-            const rightBound = RIM_RIGHT + (FLOOR_RIGHT - RIM_RIGHT) * t;
+            const leftBound = WALL1_LEFT + (FLOOR1_LEFT - WALL1_LEFT) * t;
+            const rightBound = WALL1_RIGHT + (FLOOR1_RIGHT - WALL1_RIGHT) * t;
 
             if (
-                localY < RIM_Y - 30 ||
+                localY < WALL1_Y - 30 ||
                 localX < leftBound ||
                 localX > rightBound
             )
@@ -113,7 +178,7 @@ export default function MixerPhysics() {
 
             const body = Matter.Bodies.circle(
                 localX,
-                Math.max(localY, RIM_Y),
+                Math.max(localY, WALL1_Y),
                 EMOJI_RADIUS,
                 {
                     restitution: 0.35,
@@ -158,7 +223,7 @@ export default function MixerPhysics() {
                 inset: 0,
                 width: CONTAINER_WIDTH,
                 height: CONTAINER_HEIGHT,
-                zIndex: 3,
+                zIndex: 0,
                 pointerEvents: "none",
                 overflow: "hidden",
             }}
