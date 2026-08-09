@@ -12,15 +12,17 @@ export default function Base() {
         "#8ee297",
     ];
 
+    const progress = 0.0;
+
     return (
         <span>
             <span
                 style={{
                     background: "#595251",
                     position: "absolute",
-                    width: "100px",
-                    height: "100px",
-                    bottom: "100px",
+                    width: "90px",
+                    height: "90px",
+                    bottom: "105px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     borderRadius: "50%",
@@ -38,6 +40,94 @@ export default function Base() {
                         transform: "translate(-50%, -50%)",
                         borderRadius: "50%",
                         zIndex: 1,
+                        cursor: "pointer",
+                    }}
+                ></span>
+            </span>
+
+            <span
+                style={{
+                    background: "#595251",
+                    position: "absolute",
+                    width: "40px",
+                    height: "40px",
+                    bottom: "105px",
+                    left: "66.5%",
+                    transform: "translateX(-50%)",
+                    zIndex: 1,
+                    borderRadius: "5px",
+                }}
+            >
+                <span
+                    style={{
+                        background: "#786b67",
+                        position: "absolute",
+                        width: "32px",
+                        height: "32px",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        borderRadius: "2px",
+                        zIndex: 1,
+                        cursor: "pointer",
+                    }}
+                ></span>
+            </span>
+
+            <span
+                style={{
+                    background: "#595251",
+                    position: "absolute",
+                    width: "40px",
+                    height: "40px",
+                    bottom: "150px",
+                    left: "32%",
+                    transform: "translateX(-50%)",
+                    zIndex: 1,
+                    borderRadius: "5px",
+                }}
+            >
+                <span
+                    style={{
+                        background: "#786b67",
+                        position: "absolute",
+                        width: "32px",
+                        height: "32px",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        borderRadius: "2px",
+                        zIndex: 1,
+                        cursor: "pointer",
+                    }}
+                ></span>
+            </span>
+
+            <span
+                style={{
+                    background: "#595251",
+                    position: "absolute",
+                    width: "40px",
+                    height: "40px",
+                    bottom: "105px",
+                    left: "32%",
+                    transform: "translateX(-50%)",
+                    zIndex: 1,
+                    borderRadius: "5px",
+                }}
+            >
+                <span
+                    style={{
+                        background: "#786b67",
+                        position: "absolute",
+                        width: "32px",
+                        height: "32px",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        borderRadius: "2px",
+                        zIndex: 1,
+                        cursor: "pointer",
                     }}
                 ></span>
             </span>
@@ -46,39 +136,15 @@ export default function Base() {
                 style={{
                     background: "#2c2626",
                     position: "absolute",
-                    width: "154px",
-                    height: "18px",
-                    bottom: "312px",
+                    width: "72px",
+                    height: "20px",
+                    bottom: "310px",
                     left: "50%",
-                    transform: "translateX(-50%)",
-                    clipPath: "polygon(47% 0%, 53% 0%, 53% 100%, 47% 100%)",
+                    translate: "-50% 0",
+                    clipPath:
+                        "polygon(12% 0%, 45% 100%, 55% 100%, 88% 0%, 100% 0%, 78% 100%, 22% 100%, 0% 0%)",
                     zIndex: 0,
-                }}
-            ></span>
-            <span
-                style={{
-                    background: "#2c2626",
-                    position: "absolute",
-                    width: "154px",
-                    height: "18px",
-                    bottom: "312px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    clipPath: "polygon(68% 0%, 73% 0%, 64% 100%, 51% 100%)",
-                    zIndex: 0,
-                }}
-            ></span>
-            <span
-                style={{
-                    background: "#2c2626",
-                    position: "absolute",
-                    width: "154px",
-                    height: "18px",
-                    bottom: "312px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    clipPath: "polygon(32% 0%, 27% 0%, 36% 100%, 49% 100%)",
-                    zIndex: 0,
+                    animation: "rotation 200ms linear infinite",
                 }}
             ></span>
 
@@ -92,34 +158,46 @@ export default function Base() {
                     left: "50%",
                     transform: "translateX(-50%)",
                     clipPath: "polygon(73% 0%, 27% 0%, 0% 100%, 100% 100%)",
-                    zIndex: 0,
+                    zIndex: 1,
                 }}
             ></span>
 
             <div
-                className="not-selected"
                 style={{
                     display: "flex",
                     alignItems: "center",
                     flexDirection: "column",
                     justifyContent: "center",
-                    background: "rgb(130 121 103 / 44%)",
+                    background: "#1a1818",
                     position: "absolute",
-                    width: "200px",
-                    height: "30px",
-                    bottom: "210px",
+                    width: "220px",
+                    height: "25px",
+                    bottom: "205px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     zIndex: 1,
-                    textAlign: "center",
-                    textTransform: "uppercase",
-                    borderRadius: "9px",
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                    color: "#4f493e9c",
+                    borderRadius: "4px",
+                    border: "solid 4px #575251",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "clip",
                 }}
             >
-                Emojis Mixer
+                <span
+                    className="not-selected"
+                    style={{
+                        fontSize: "24px",
+                        color: "#fdfdfd",
+                        fontFamily:
+                            "VT323, Segoe UI, Tahoma, Geneva, Verdana, sans-serif, sans-serif",
+                        textTransform: "uppercase",
+                        textAlign: "center",
+                        textShadow:
+                            "rgb(255 255 255 / 54%) 0px 0px 4px, rgb(255 255 255 / 0%) 0px 0px 20px, rgb(255 255 255 / 20%) 0px 0px 20px",
+                    }}
+                >
+                    Emojis Mixer
+                </span>
             </div>
 
             <span
@@ -217,7 +295,10 @@ export default function Base() {
                         <span
                             key={index}
                             style={{
-                                background: color,
+                                background:
+                                    index + 1 <= progress * colors.length
+                                        ? color
+                                        : "#5d5d5d",
                                 width: "stretch",
                                 height: "16px",
                                 borderRadius: "2px",
