@@ -7,7 +7,7 @@ export default function Bowl() {
                     position: "absolute",
                     width: "110px",
                     height: "198px",
-                    bottom: "320px",
+                    bottom: "311px",
                     zIndex: 0,
                     right: "86px",
                     clipPath:
@@ -21,7 +21,7 @@ export default function Bowl() {
                     position: "absolute",
                     width: "235px",
                     height: "254px",
-                    bottom: "293px",
+                    bottom: "284px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     clipPath:

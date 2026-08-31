@@ -138,7 +138,7 @@ export default function Base() {
                     position: "absolute",
                     width: "72px",
                     height: "20px",
-                    bottom: "310px",
+                    bottom: "301px",
                     left: "50%",
                     translate: "-50% 0",
                     clipPath:
@@ -154,7 +154,7 @@ export default function Base() {
                     position: "absolute",
                     width: "140px",
                     height: "19px",
-                    bottom: "293px",
+                    bottom: "284px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     clipPath: "polygon(73% 0%, 27% 0%, 0% 100%, 100% 100%)",
@@ -206,7 +206,7 @@ export default function Base() {
                     position: "absolute",
                     width: "50px",
                     height: "36px",
-                    bottom: "257px",
+                    bottom: "249px",
                     right: "160px",
                     clipPath: "polygon(0% 0%, 85% 0%, 100% 100%, 0% 100%)",
                     zIndex: 1,
@@ -218,7 +218,7 @@ export default function Base() {
                     position: "absolute",
                     width: "50px",
                     height: "36px",
-                    bottom: "257px",
+                    bottom: "249px",
                     left: "160px",
                     clipPath: "polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)",
                     zIndex: 1,
@@ -230,14 +230,14 @@ export default function Base() {
                     position: "absolute",
                     width: "80px",
                     height: "36px",
-                    bottom: "257px",
+                    bottom: "249px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     zIndex: 1,
                 }}
             ></span>
 
-            <span
+            {/* <span
                 style={{
                     background: "#E3D8C1",
                     position: "absolute",
@@ -248,7 +248,7 @@ export default function Base() {
                     transform: "translateX(-50%)",
                     clipPath: "polygon(15% 0%, 85% 0%, 100% 100%, 0% 100%)",
                 }}
-            ></span>
+            ></span> */}
             <span
                 style={{
                     background: "#dac197",
@@ -296,9 +296,7 @@ export default function Base() {
                             key={index}
                             style={{
                                 background:
-                                    index + 1 <= progress * colors.length
-                                        ? color
-                                        : "#5d5d5d",
+                                    index + 1 <= progress * colors.length ? color : "#5d5d5d",
                                 width: "stretch",
                                 height: "16px",
                                 borderRadius: "2px",

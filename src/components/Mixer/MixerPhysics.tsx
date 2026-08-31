@@ -9,7 +9,7 @@ const EMOJI_RADIUS = 12;
 
 const WALL1_Y = 103;
 const WALL1_LEFT = 147;
-const WALL1_RIGHT = 353;
+const WALL1_RIGHT = 344;
 
 const WALL2_Y = 73;
 const WALL2_LEFT = 132.5;
@@ -21,7 +21,7 @@ const WALL3_RIGHT = 281;
 
 const FLOOR1_Y = 327;
 const FLOOR1_LEFT = 179.5;
-const FLOOR1_RIGHT = 320.5;
+const FLOOR1_RIGHT = 311.5;
 
 const FLOOR2_Y = 308;
 const FLOOR2_LEFT = 219;
