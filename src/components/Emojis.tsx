@@ -25,17 +25,12 @@ export default function Emojis() {
         };
     }, [dragging]);
 
-    const handlePointerDown = (
-        e: React.PointerEvent<HTMLSpanElement>,
-        emoji: string,
-    ) => {
+    const handlePointerDown = (e: React.PointerEvent<HTMLSpanElement>, emoji: string) => {
         e.preventDefault();
         lastX.current = e.clientX;
         setDragging({ emoji, x: e.clientX, y: e.clientY });
 
-        window.dispatchEvent(
-            new CustomEvent("emoji-drag-start", { detail: { emoji } }),
-        );
+        window.dispatchEvent(new CustomEvent("emoji-drag-start", { detail: { emoji } }));
 
         const handlePointerMove = (moveEvent: PointerEvent) => {
             const deltaX = moveEvent.clientX - lastX.current;
@@ -85,15 +80,12 @@ export default function Emojis() {
                     transform: "translateY(-50%)",
                     position: "absolute",
                     overflow: "hidden",
+                    zIndex: 0,
                 }}
             >
                 <div className="input-search">
-                    <img
-                        src="./search.svg"
-                        alt="Search"
-                        style={{ width: "20px", opacity: 0.5 }}
-                    />
-                    <input type="text" placeholder="Search..." />
+                    <img src="./search.svg" alt="Search" style={{ width: "20px", opacity: 0.5 }} />
+                    <input id="search-bar" type="text" placeholder="Search..." />
                 </div>
                 <div
                     style={{
@@ -124,10 +116,7 @@ export default function Emojis() {
                             style={{
                                 flex: "1 1 24px",
                                 boxSizing: "border-box",
-                                cursor:
-                                    dragging?.emoji === emoji
-                                        ? "grabbing"
-                                        : "grab",
+                                cursor: dragging?.emoji === emoji ? "grabbing" : "grab",
                                 userSelect: "none",
                                 touchAction: "none",
                                 opacity: dragging?.emoji === emoji ? 0.25 : 1,

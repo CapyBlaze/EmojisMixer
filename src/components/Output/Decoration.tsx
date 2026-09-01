@@ -40,8 +40,8 @@ export default function Decoration({
                                 y2="63"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#ACEE55" />
-                                <stop offset="1" stop-color="#7BD71F" />
+                                <stop stopColor="#ACEE55" />
+                                <stop offset="1" stopColor="#7BD71F" />
                             </linearGradient>
                             <linearGradient
                                 id="paint1_linear_2500_2700"
@@ -51,8 +51,8 @@ export default function Decoration({
                                 y2="63"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#A7DF83" />
-                                <stop offset="1" stop-color="#AEE27B" />
+                                <stop stopColor="#A7DF83" />
+                                <stop offset="1" stopColor="#AEE27B" />
                             </linearGradient>
                         </defs>
                     </svg>
@@ -92,8 +92,8 @@ export default function Decoration({
                                 y2="31.5"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#90D75A" />
-                                <stop offset="1" stop-color="#98D84A" />
+                                <stop stopColor="#90D75A" />
+                                <stop offset="1" stopColor="#98D84A" />
                             </linearGradient>
                             <linearGradient
                                 id="paint1_linear_2500_2701"
@@ -103,8 +103,8 @@ export default function Decoration({
                                 y2="31.5"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#A5DE87" />
-                                <stop offset="1" stop-color="#AFE27B" />
+                                <stop stopColor="#A5DE87" />
+                                <stop offset="1" stopColor="#AFE27B" />
                             </linearGradient>
                         </defs>
                     </svg>
@@ -144,8 +144,8 @@ export default function Decoration({
                                 y2="63"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#EE9855" />
-                                <stop offset="1" stop-color="#D7841F" />
+                                <stop stopColor="#EE9855" />
+                                <stop offset="1" stopColor="#D7841F" />
                             </linearGradient>
                             <linearGradient
                                 id="paint1_linear_2500_2695"
@@ -155,8 +155,8 @@ export default function Decoration({
                                 y2="63"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#F7F742" />
-                                <stop offset="1" stop-color="#F0BD4D" />
+                                <stop stopColor="#F7F742" />
+                                <stop offset="1" stopColor="#F0BD4D" />
                             </linearGradient>
                         </defs>
                     </svg>
@@ -196,8 +196,8 @@ export default function Decoration({
                                 y2="31.5"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#EE9D55" />
-                                <stop offset="1" stop-color="#CA6F1A" />
+                                <stop stopColor="#EE9D55" />
+                                <stop offset="1" stopColor="#CA6F1A" />
                             </linearGradient>
                             <linearGradient
                                 id="paint1_linear_2500_2699"
@@ -207,8 +207,8 @@ export default function Decoration({
                                 y2="31.5"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#EECB55" />
-                                <stop offset="1" stop-color="#E6C636" />
+                                <stop stopColor="#EECB55" />
+                                <stop offset="1" stopColor="#E6C636" />
                             </linearGradient>
                         </defs>
                     </svg>
@@ -256,8 +256,8 @@ export default function Decoration({
                                 y2="50.7027"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#51C736" />
-                                <stop offset="1" stop-color="#ACE59F" />
+                                <stop stopColor="#51C736" />
+                                <stop offset="1" stopColor="#ACE59F" />
                             </linearGradient>
                             <linearGradient
                                 id="paint1_linear_2500_2686"
@@ -267,8 +267,8 @@ export default function Decoration({
                                 y2="50.7027"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#32BD13" />
-                                <stop offset="1" stop-color="#ACE59F" />
+                                <stop stopColor="#32BD13" />
+                                <stop offset="1" stopColor="#ACE59F" />
                             </linearGradient>
                             <linearGradient
                                 id="paint2_linear_2500_2686"
@@ -278,8 +278,8 @@ export default function Decoration({
                                 y2="50.7027"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#59DE3C" />
-                                <stop offset="1" stop-color="#B7E6AD" />
+                                <stop stopColor="#59DE3C" />
+                                <stop offset="1" stopColor="#B7E6AD" />
                             </linearGradient>
                             <linearGradient
                                 id="paint3_linear_2500_2686"
@@ -289,8 +289,8 @@ export default function Decoration({
                                 y2="50.7027"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#43DF20" />
-                                <stop offset="1" stop-color="#B2E2A7" />
+                                <stop stopColor="#43DF20" />
+                                <stop offset="1" stopColor="#B2E2A7" />
                             </linearGradient>
                         </defs>
                     </svg>
@@ -350,8 +350,8 @@ export default function Decoration({
                                 y2="19"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#36F6E3" />
-                                <stop offset="1" stop-color="#36AEE6" />
+                                <stop stopColor="#36F6E3" />
+                                <stop offset="1" stopColor="#36AEE6" />
                             </linearGradient>
                             <linearGradient
                                 id="paint1_linear_2500_2702"
@@ -361,8 +361,8 @@ export default function Decoration({
                                 y2="19"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#36F6E3" />
-                                <stop offset="1" stop-color="#36AEE6" />
+                                <stop stopColor="#36F6E3" />
+                                <stop offset="1" stopColor="#36AEE6" />
                             </linearGradient>
                             <linearGradient
                                 id="paint2_linear_2500_2702"
@@ -372,8 +372,8 @@ export default function Decoration({
                                 y2="57.5"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#73E666" />
-                                <stop offset="1" stop-color="#B7F72D" />
+                                <stop stopColor="#73E666" />
+                                <stop offset="1" stopColor="#B7F72D" />
                             </linearGradient>
                             <linearGradient
                                 id="paint3_linear_2500_2702"
@@ -383,8 +383,8 @@ export default function Decoration({
                                 y2="19"
                                 gradientUnits="userSpaceOnUse"
                             >
-                                <stop stop-color="#7E6736" />
-                                <stop offset="1" stop-color="#D6AE6E" />
+                                <stop stopColor="#7E6736" />
+                                <stop offset="1" stopColor="#D6AE6E" />
                             </linearGradient>
                         </defs>
                     </svg>

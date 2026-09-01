@@ -1,4 +1,10 @@
+import { useRef, useState } from "react";
+
 export default function Base() {
+    const [isAnimating, setIsAnimating] = useState(false);
+    const [progress, setProgress] = useState(0.0);
+
+    const DURATION = 10000;
     const colors = [
         "#e28e8e",
         "#e29e8e",
@@ -12,7 +18,63 @@ export default function Base() {
         "#8ee297",
     ];
 
-    const progress = 0.0;
+    const animationRef = useRef<number | null>(null);
+    const startTimeRef = useRef<number | null>(null);
+    const savedProgressRef = useRef<number>(0);
+
+    const start = () => {
+        setIsAnimating(true);
+        startTimeRef.current = performance.now();
+
+        const animate = (currentTime: number) => {
+            if (!startTimeRef.current) return;
+
+            const elapsed = currentTime - startTimeRef.current;
+            const currentProgress =
+                Math.floor(Math.min(savedProgressRef.current + elapsed / DURATION, 1.0) * 100.0) /
+                100.0;
+
+            setProgress(currentProgress);
+
+            console.log("Progress:", currentProgress);
+
+            animationRef.current = requestAnimationFrame(animate);
+        };
+        animationRef.current = requestAnimationFrame(animate);
+    };
+
+    const stop = () => {
+        setIsAnimating(false);
+
+        if (animationRef.current) {
+            cancelAnimationFrame(animationRef.current);
+            animationRef.current = null;
+        }
+
+        savedProgressRef.current = progress;
+        startTimeRef.current = null;
+    };
+
+    const handleTouchStart = (e: React.TouchEvent<HTMLSpanElement>) => {
+        e.preventDefault();
+        if (progress < 1) start();
+    };
+
+    const handleTouchEnd = () => {
+        stop();
+    };
+
+    const emptyClicked = () => {
+        console.log("Empty clicked");
+    };
+
+    const diceClicked = () => {
+        console.log("Dice clicked");
+    };
+
+    const trashClicked = () => {
+        console.log("Trash clicked");
+    };
 
     return (
         <span>
@@ -30,6 +92,11 @@ export default function Base() {
                 }}
             >
                 <span
+                    onMouseDown={start}
+                    onMouseUp={stop}
+                    onMouseLeave={stop}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
                     style={{
                         background: "#786B67",
                         position: "absolute",
@@ -42,7 +109,22 @@ export default function Base() {
                         zIndex: 1,
                         cursor: "pointer",
                     }}
-                ></span>
+                >
+                    <img
+                        src="./flash.svg"
+                        alt="Flash"
+                        draggable="false"
+                        className="not-selected"
+                        style={{
+                            width: "50px",
+                            height: "50px",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                        }}
+                    />
+                </span>
             </span>
 
             <span
@@ -59,6 +141,7 @@ export default function Base() {
                 }}
             >
                 <span
+                    onClick={emptyClicked}
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -71,7 +154,23 @@ export default function Base() {
                         zIndex: 1,
                         cursor: "pointer",
                     }}
-                ></span>
+                >
+                    <img
+                        src="./empty.svg"
+                        alt="Empty"
+                        draggable="false"
+                        className="not-selected"
+                        style={{
+                            width: "25px",
+                            height: "25px",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            opacity: progress >= 1.0 ? 1.0 : 0.3,
+                        }}
+                    />
+                </span>
             </span>
 
             <span
@@ -88,6 +187,7 @@ export default function Base() {
                 }}
             >
                 <span
+                    onClick={diceClicked}
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -100,7 +200,22 @@ export default function Base() {
                         zIndex: 1,
                         cursor: "pointer",
                     }}
-                ></span>
+                >
+                    <img
+                        src="./dice.svg"
+                        alt="Dice"
+                        draggable="false"
+                        className="not-selected"
+                        style={{
+                            width: "25px",
+                            height: "25px",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                        }}
+                    />
+                </span>
             </span>
 
             <span
@@ -117,6 +232,7 @@ export default function Base() {
                 }}
             >
                 <span
+                    onClick={trashClicked}
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -129,7 +245,22 @@ export default function Base() {
                         zIndex: 1,
                         cursor: "pointer",
                     }}
-                ></span>
+                >
+                    <img
+                        src="./trash.svg"
+                        alt="Trash"
+                        draggable="false"
+                        className="not-selected"
+                        style={{
+                            width: "25px",
+                            height: "25px",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                        }}
+                    />
+                </span>
             </span>
 
             <span
@@ -144,7 +275,7 @@ export default function Base() {
                     clipPath:
                         "polygon(12% 0%, 45% 100%, 55% 100%, 88% 0%, 100% 0%, 78% 100%, 22% 100%, 0% 0%)",
                     zIndex: 0,
-                    animation: "rotation 200ms linear infinite",
+                    animation: isAnimating ? "rotation 200ms linear infinite" : "none",
                 }}
             ></span>
 

@@ -9,6 +9,7 @@ export default function Output() {
                 right: "15px",
                 transform: "translateY(-50%)",
                 position: "absolute",
+                zIndex: -3,
             }}
         >
             <h2
