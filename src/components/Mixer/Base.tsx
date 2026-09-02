@@ -1,22 +1,9 @@
 import { useRef, useState } from "react";
+import CONFIG from "../../config/config.json";
 
 export default function Base() {
     const [isAnimating, setIsAnimating] = useState(false);
     const [progress, setProgress] = useState(0.0);
-
-    const DURATION = 10000;
-    const colors = [
-        "#e28e8e",
-        "#e29e8e",
-        "#e2ad8e",
-        "#e2bd8e",
-        "#e2cc8e",
-        "#d9d68f",
-        "#c6d991",
-        "#b3dc93",
-        "#a1df95",
-        "#8ee297",
-    ];
 
     const animationRef = useRef<number | null>(null);
     const startTimeRef = useRef<number | null>(null);
@@ -31,12 +18,11 @@ export default function Base() {
 
             const elapsed = currentTime - startTimeRef.current;
             const currentProgress =
-                Math.floor(Math.min(savedProgressRef.current + elapsed / DURATION, 1.0) * 100.0) /
-                100.0;
+                Math.floor(
+                    Math.min(savedProgressRef.current + elapsed / CONFIG.duration, 1.0) * 100.0,
+                ) / 100.0;
 
             setProgress(currentProgress);
-
-            console.log("Progress:", currentProgress);
 
             animationRef.current = requestAnimationFrame(animate);
         };
@@ -422,12 +408,14 @@ export default function Base() {
                         paddingRight: "4px",
                     }}
                 >
-                    {colors.map((color, index) => (
+                    {CONFIG.colors.map((color, index) => (
                         <span
                             key={index}
                             style={{
                                 background:
-                                    index + 1 <= progress * colors.length ? color : "#5d5d5d",
+                                    index + 1 <= progress * CONFIG.colors.length
+                                        ? color
+                                        : "#5d5d5d",
                                 width: "stretch",
                                 height: "16px",
                                 borderRadius: "2px",

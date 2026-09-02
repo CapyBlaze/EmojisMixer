@@ -1,0 +1,27 @@
+{
+    "categorys": [
+        "Smileys & Emotion",
+        "People & Body",
+        "Animals & Nature",
+        "Food & Drink",
+        "Travel & Places",
+        "Activities",
+        "Objects",
+        "Symbols",
+        "Flags"
+    ],
+    "emojiRadius": 17,
+    "duration": 10000,
+    "colors": [
+        "#e28e8e",
+        "#e29e8e",
+        "#e2ad8e",
+        "#e2bd8e",
+        "#e2cc8e",
+        "#d9d68f",
+        "#c6d991",
+        "#b3dc93",
+        "#a1df95",
+        "#8ee297"
+    ]
+}

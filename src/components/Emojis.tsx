@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import emojis from "../config/emojis.json";
 import defaultFile from "../utils/defaultFile";
+import EMOJIS from "../config/emojis.json";
+import CONFIG from "../config/config.json";
 
 export default function Emojis() {
     const [dragging, setDragging] = useState<{
@@ -21,28 +22,14 @@ export default function Emojis() {
     const lastX = useRef(0);
     const categorysContainerRef = useRef<HTMLDivElement>(null);
 
-    const categorys = [
-        "Smileys & Emotion",
-        "People & Body",
-        "Animals & Nature",
-        "Food & Drink",
-        "Travel & Places",
-        "Activities",
-        "Objects",
-        "Symbols",
-        "Flags",
-    ];
-
     const filteredEmojis = useMemo(() => {
-        return emojis
-            .filter((emoji) => {
-                const matchesCategory = category ? emoji.category === category : true;
-                const matchesSearch = search
-                    ? emoji.name.toLowerCase().includes(search.toLowerCase())
-                    : true;
-                return matchesCategory && matchesSearch;
-            })
-            .sort((a, b) => a.order - b.order);
+        return EMOJIS.filter((emoji) => {
+            const matchesCategory = category ? emoji.category === category : true;
+            const matchesSearch = search
+                ? emoji.name.toLowerCase().includes(search.toLowerCase())
+                : true;
+            return matchesCategory && matchesSearch;
+        }).sort((a, b) => a.order - b.order);
     }, [category, search]);
 
     useEffect(() => {
@@ -203,7 +190,7 @@ export default function Emojis() {
                             gap: "10px",
                         }}
                     >
-                        {categorys.map((categoryName) => (
+                        {CONFIG.categorys.map((categoryName) => (
                             <button
                                 key={categoryName}
                                 onClick={() => setCategory(categoryName)}

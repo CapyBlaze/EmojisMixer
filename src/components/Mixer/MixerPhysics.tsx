@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
 import defaultFile from "../../utils/defaultFile";
+import CONFIG from "../../config/config.json";
 
 type FallingEmoji = { id: number; body: Matter.Body; el: HTMLSpanElement };
 
 const CONTAINER_WIDTH = 500;
 const CONTAINER_HEIGHT = 620;
-const EMOJI_RADIUS = 17;
 
 const WALL1_Y = 103;
 const WALL1_LEFT = 147;
@@ -122,7 +122,7 @@ export default function MixerPhysics() {
         const render = () => {
             for (const item of itemsRef.current) {
                 const { x, y } = item.body.position;
-                item.el.style.transform = `translate(${x - EMOJI_RADIUS}px, ${y - EMOJI_RADIUS}px) rotate(${item.body.angle}rad)`;
+                item.el.style.transform = `translate(${x - CONFIG.emojiRadius}px, ${y - CONFIG.emojiRadius}px) rotate(${item.body.angle}rad)`;
             }
             raf = requestAnimationFrame(render);
         };
@@ -142,12 +142,17 @@ export default function MixerPhysics() {
 
             if (localY < WALL1_Y - 30 || localX < leftBound || localX > rightBound) return;
 
-            const body = Matter.Bodies.circle(localX, Math.max(localY, WALL1_Y), EMOJI_RADIUS - 2, {
-                restitution: 0.35,
-                friction: 0.5,
-                frictionAir: 0.008,
-                density: 0.002,
-            });
+            const body = Matter.Bodies.circle(
+                localX,
+                Math.max(localY, WALL1_Y),
+                CONFIG.emojiRadius - 2,
+                {
+                    restitution: 0.35,
+                    friction: 0.5,
+                    frictionAir: 0.008,
+                    density: 0.002,
+                },
+            );
             Matter.World.add(engine.world, body);
 
             const el = document.createElement("img");
@@ -156,8 +161,8 @@ export default function MixerPhysics() {
                 position: "absolute",
                 left: "0",
                 top: "0",
-                width: `${EMOJI_RADIUS * 2}px`,
-                height: `${EMOJI_RADIUS * 2}px`,
+                width: `${CONFIG.emojiRadius * 2}px`,
+                height: `${CONFIG.emojiRadius * 2}px`,
                 willChange: "transform",
             });
             containerRef.current?.appendChild(el);
