@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import Matter from "matter-js";
+import defaultFile from "../../utils/defaultFile";
 
 type FallingEmoji = { id: number; body: Matter.Body; el: HTMLSpanElement };
 
 const CONTAINER_WIDTH = 500;
 const CONTAINER_HEIGHT = 620;
-const EMOJI_RADIUS = 12;
+const EMOJI_RADIUS = 17;
 
 const WALL1_Y = 103;
 const WALL1_LEFT = 147;
@@ -15,44 +16,32 @@ const WALL2_Y = 73;
 const WALL2_LEFT = 132.5;
 const WALL2_RIGHT = 367.5;
 
-const WALL3_Y = 310;
+const WALL3_Y = 319;
 const WALL3_LEFT = 219;
 const WALL3_RIGHT = 281;
 
-const FLOOR1_Y = 327;
+const FLOOR1_Y = 335;
 const FLOOR1_LEFT = 179.5;
 const FLOOR1_RIGHT = 311.5;
 
-const FLOOR2_Y = 308;
+const FLOOR2_Y = 317;
 const FLOOR2_LEFT = 219;
 const FLOOR2_RIGHT = 281;
 
 const DEBUG_MODE = false;
 
-function makeWall(
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    thickness: number = 4,
-) {
+function makeWall(x1: number, y1: number, x2: number, y2: number, thickness: number = 4) {
     const dx = x2 - x1;
     const dy = y2 - y1;
     const length = Math.hypot(dx, dy);
     const angle = Math.atan2(dy, dx);
 
-    return Matter.Bodies.rectangle(
-        (x1 + x2) / 2,
-        (y1 + y2) / 2,
-        length,
-        thickness,
-        {
-            isStatic: true,
-            angle: angle,
-            friction: 0.8,
-            restitution: 0.15,
-        },
-    );
+    return Matter.Bodies.rectangle((x1 + x2) / 2, (y1 + y2) / 2, length, thickness, {
+        isStatic: true,
+        angle: angle,
+        friction: 0.8,
+        restitution: 0.15,
+    });
 }
 
 export default function MixerPhysics() {
@@ -91,28 +80,13 @@ export default function MixerPhysics() {
         }
 
         const leftWall1 = makeWall(WALL1_LEFT, WALL1_Y, FLOOR1_LEFT, FLOOR1_Y);
-        const rightWall1 = makeWall(
-            WALL1_RIGHT,
-            WALL1_Y,
-            FLOOR1_RIGHT,
-            FLOOR1_Y,
-        );
+        const rightWall1 = makeWall(WALL1_RIGHT, WALL1_Y, FLOOR1_RIGHT, FLOOR1_Y);
 
         const leftWall2 = makeWall(WALL2_LEFT, WALL2_Y, WALL1_LEFT, WALL1_Y);
         const rightWall2 = makeWall(WALL2_RIGHT, WALL2_Y, WALL1_RIGHT, WALL1_Y);
 
-        const leftWall3 = makeWall(
-            WALL3_LEFT,
-            WALL3_Y,
-            FLOOR1_LEFT,
-            FLOOR1_Y + 3,
-        );
-        const rightWall3 = makeWall(
-            WALL3_RIGHT,
-            WALL3_Y,
-            FLOOR1_RIGHT,
-            FLOOR1_Y + 3,
-        );
+        const leftWall3 = makeWall(WALL3_LEFT, WALL3_Y, FLOOR1_LEFT, FLOOR1_Y + 3);
+        const rightWall3 = makeWall(WALL3_RIGHT, WALL3_Y, FLOOR1_RIGHT, FLOOR1_Y + 3);
 
         const floor1 = Matter.Bodies.rectangle(
             (FLOOR1_LEFT + FLOOR1_RIGHT) / 2,
@@ -162,41 +136,28 @@ export default function MixerPhysics() {
             const localX = x - rect.left;
             const localY = y - rect.top;
 
-            const t = Math.max(
-                0,
-                Math.min(1, (localY - WALL1_Y) / (FLOOR1_Y - WALL1_Y)),
-            );
+            const t = Math.max(0, Math.min(1, (localY - WALL1_Y) / (FLOOR1_Y - WALL1_Y)));
             const leftBound = WALL1_LEFT + (FLOOR1_LEFT - WALL1_LEFT) * t;
             const rightBound = WALL1_RIGHT + (FLOOR1_RIGHT - WALL1_RIGHT) * t;
 
-            if (
-                localY < WALL1_Y - 30 ||
-                localX < leftBound ||
-                localX > rightBound
-            )
-                return;
+            if (localY < WALL1_Y - 30 || localX < leftBound || localX > rightBound) return;
 
-            const body = Matter.Bodies.circle(
-                localX,
-                Math.max(localY, WALL1_Y),
-                EMOJI_RADIUS,
-                {
-                    restitution: 0.35,
-                    friction: 0.5,
-                    frictionAir: 0.008,
-                    density: 0.002,
-                },
-            );
+            const body = Matter.Bodies.circle(localX, Math.max(localY, WALL1_Y), EMOJI_RADIUS - 2, {
+                restitution: 0.35,
+                friction: 0.5,
+                frictionAir: 0.008,
+                density: 0.002,
+            });
             Matter.World.add(engine.world, body);
 
-            const el = document.createElement("span");
-            el.textContent = emoji;
+            const el = document.createElement("img");
+            el.src = `./emojis/${defaultFile(emoji.files)}`;
             Object.assign(el.style, {
                 position: "absolute",
                 left: "0",
                 top: "0",
-                fontSize: `${EMOJI_RADIUS * 2}px`,
-                lineHeight: "1",
+                width: `${EMOJI_RADIUS * 2}px`,
+                height: `${EMOJI_RADIUS * 2}px`,
                 willChange: "transform",
             });
             containerRef.current?.appendChild(el);
