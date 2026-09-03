@@ -1,7 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import Matter from "matter-js";
 import defaultFile from "../../utils/defaultFile";
 import CONFIG from "../../config/config.json";
+import EMOJIS from "../../config/emojis.json";
+import type { EmojiData } from "../../interface/emoji";
 
 type FallingEmoji = { id: number; body: Matter.Body; el: HTMLImageElement };
 
@@ -46,7 +48,11 @@ function createThickWallsFromSVG(pathString: string) {
     return bodies;
 }
 
-export default function MixerPhysics() {
+interface MixerPhysicsProps {
+    bowlRef: RefObject<HTMLDivElement>;
+}
+
+export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const itemsRef = useRef<FallingEmoji[]>([]);
     const idCounter = useRef(0);
@@ -90,29 +96,7 @@ export default function MixerPhysics() {
         const runner = Matter.Runner.create();
         Matter.Runner.run(runner, engine);
 
-        let raf: number;
-        const render = () => {
-            for (let i = itemsRef.current.length - 1; i >= 0; i--) {
-                const item = itemsRef.current[i];
-                const { x, y } = item.body.position;
-
-                if (y > CONTAINER_HEIGHT + 50) {
-                    Matter.World.remove(engine.world, item.body);
-                    item.el.remove();
-                    itemsRef.current.splice(i, 1);
-                    continue;
-                }
-
-                item.el.style.transform = `translate(${x - CONFIG.emojiRadius}px, ${
-                    y - CONFIG.emojiRadius
-                }px) rotate(${item.body.angle}rad)`;
-            }
-            raf = requestAnimationFrame(render);
-        };
-        raf = requestAnimationFrame(render);
-
-        const handleDrop = (e: Event) => {
-            const { emoji, x, y } = (e as CustomEvent).detail;
+        function spawnEmojis(emoji: EmojiData, x: number, y: number) {
             const rect = containerRef.current?.getBoundingClientRect();
             if (!rect) return;
 
@@ -139,6 +123,32 @@ export default function MixerPhysics() {
             });
             containerRef.current?.appendChild(el);
             itemsRef.current.push({ id: idCounter.current++, body, el });
+        }
+
+        let raf: number;
+        const render = () => {
+            for (let i = itemsRef.current.length - 1; i >= 0; i--) {
+                const item = itemsRef.current[i];
+                const { x, y } = item.body.position;
+
+                if (y > CONTAINER_HEIGHT + 50) {
+                    Matter.World.remove(engine.world, item.body);
+                    item.el.remove();
+                    itemsRef.current.splice(i, 1);
+                    continue;
+                }
+
+                item.el.style.transform = `translate(${x - CONFIG.emojiRadius}px, ${
+                    y - CONFIG.emojiRadius
+                }px) rotate(${item.body.angle}rad)`;
+            }
+            raf = requestAnimationFrame(render);
+        };
+        raf = requestAnimationFrame(render);
+
+        const handleDrop = (e: Event) => {
+            const { emoji, x, y } = (e as CustomEvent).detail;
+            spawnEmojis(emoji, x, y);
         };
 
         const handleCheckPosition = (e: Event) => {
@@ -160,12 +170,44 @@ export default function MixerPhysics() {
             callback(collisions.length === 0);
         };
 
+        const handleDropSpawn = () => {
+            const NB_EMOJIS = 5;
+
+            const bowlElement = bowlRef.current;
+            const rect = bowlElement.getBoundingClientRect();
+
+            const MARGIN = 10;
+            const x1 = rect.left + CONFIG.emojiRadius + MARGIN;
+            const x2 = rect.right - CONFIG.emojiRadius - MARGIN;
+
+            for (let i = 0; i < NB_EMOJIS; i++) {
+                spawnEmojis(
+                    EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+                    Math.floor(Math.random() * (x2 - x1 + 1)) + x1,
+                    100,
+                );
+            }
+        };
+
+        const handleTrash = () => {
+            itemsRef.current.forEach((item) => {
+                Matter.World.remove(engine.world, item.body);
+                item.el.remove();
+            });
+            itemsRef.current = [];
+        };
+
         window.addEventListener("emoji-drag-end", handleDrop);
         window.addEventListener("emoji-drag-check", handleCheckPosition);
+        window.addEventListener("emoji-random-spawn", handleDropSpawn);
+        window.addEventListener("emoji-trash", handleTrash);
 
         return () => {
             window.removeEventListener("emoji-drag-end", handleDrop);
             window.removeEventListener("emoji-drag-check", handleCheckPosition);
+            window.removeEventListener("emoji-random-spawn", handleDropSpawn);
+            window.removeEventListener("emoji-trash", handleTrash);
+
             cancelAnimationFrame(raf);
             Matter.Runner.stop(runner);
             Matter.World.clear(engine.world, false);
@@ -173,7 +215,7 @@ export default function MixerPhysics() {
             itemsRef.current.forEach((i) => i.el.remove());
             itemsRef.current = [];
         };
-    }, []);
+    }, [bowlRef]);
 
     return (
         <div

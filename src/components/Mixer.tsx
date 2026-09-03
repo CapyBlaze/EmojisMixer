@@ -1,11 +1,15 @@
+import { useRef } from "react";
 import Base from "./Mixer/Base";
 import Bowl from "./Mixer/Bowl";
 import BowlFront from "./Mixer/BowlFront";
+import { Handle } from "./Mixer/Handle";
 import Lid from "./Mixer/Lid";
 import MixerPhysics from "./Mixer/MixerPhysics";
 import Tube from "./Mixer/Tube";
 
 export default function Mixer() {
+    const bowlRef = useRef<HTMLDivElement>(null);
+
     return (
         <>
             <div
@@ -19,9 +23,10 @@ export default function Mixer() {
                 }}
             >
                 <Lid />
-                <Bowl />
+                <Handle />
+                <Bowl ref={bowlRef} />
                 <Base />
-                <MixerPhysics />
+                <MixerPhysics bowlRef={bowlRef} />
 
                 <Tube />
             </div>

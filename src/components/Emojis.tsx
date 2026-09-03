@@ -2,16 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import defaultFile from "../utils/defaultFile";
 import EMOJIS from "../config/emojis.json";
 import CONFIG from "../config/config.json";
+import type { EmojiData } from "../interface/emoji";
 
 export default function Emojis() {
     const [dragging, setDragging] = useState<{
-        emoji: {
-            name: string;
-            emoji: string;
-            category: string;
-            tags: string[];
-            files: string[];
-        };
+        emoji: EmojiData;
         x: number;
         y: number;
     } | null>(null);
@@ -47,16 +42,7 @@ export default function Emojis() {
         };
     }, [dragging]);
 
-    const handlePointerDown = (
-        e: React.PointerEvent<HTMLSpanElement>,
-        emoji: {
-            name: string;
-            emoji: string;
-            category: string;
-            tags: string[];
-            files: string[];
-        },
-    ) => {
+    const handlePointerDown = (e: React.PointerEvent<HTMLSpanElement>, emoji: EmojiData) => {
         e.preventDefault();
         lastX.current = e.clientX;
         setDragging({ emoji, x: e.clientX, y: e.clientY });

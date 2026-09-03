@@ -55,11 +55,11 @@ export default function Base() {
     };
 
     const diceClicked = () => {
-        console.log("Dice clicked");
+        window.dispatchEvent(new CustomEvent("emoji-random-spawn"));
     };
 
     const trashClicked = () => {
-        console.log("Trash clicked");
+        window.dispatchEvent(new CustomEvent("emoji-trash"));
     };
 
     return (
