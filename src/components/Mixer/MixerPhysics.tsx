@@ -171,8 +171,6 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
         };
 
         const handleDropSpawn = () => {
-            const NB_EMOJIS = 5;
-
             if (!bowlRef.current) return;
             const bowlElement = bowlRef.current;
             const rect = bowlElement.getBoundingClientRect();
@@ -181,7 +179,7 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
             const x1 = rect.left + CONFIG.emojiRadius + MARGIN;
             const x2 = rect.right - CONFIG.emojiRadius - MARGIN;
 
-            for (let i = 0; i < NB_EMOJIS; i++) {
+            for (let i = 0; i < CONFIG.numberEmojisSpawned; i++) {
                 spawnEmojis(
                     EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
                     Math.floor(Math.random() * (x2 - x1 + 1)) + x1,
