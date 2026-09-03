@@ -1,5 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=VT323&display=swap");
 
+#root {
+    max-width: 1670px;
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
 html,
 body {
     height: 100%;
@@ -25,6 +33,10 @@ body {
     font-weight: bold;
     box-shadow: #00000075 7px 7px 0px;
     position: absolute;
+
+    &.emojis {
+        width: 400px;
+    }
 }
 
 .input-search {
@@ -83,6 +95,15 @@ body {
     background: #acacb0;
 }
 
+::-moz-selection {
+    background-color: #585857;
+    color: #ffffff;
+}
+::selection {
+    background-color: #585857;
+    color: #ffffff;
+}
+
 @keyframes defilement {
     0% {
         transform: translate3d(0, 0, 0);
@@ -116,5 +137,39 @@ body {
     100% {
         transform: translate(-50%, -50%) scale(1);
         box-shadow: 0 0 0 0 rgba(120, 107, 103, 0);
+    }
+}
+
+@media (max-width: 1720px) {
+    .container.emojis {
+        width: 400px !important;
+    }
+}
+
+@media (max-width: 1600px) {
+    .container.emojis {
+        width: 350px !important;
+    }
+}
+
+@media (max-width: 1500px) {
+    .container.title {
+        width: 40vw !important;
+    }
+
+    .container.emojis {
+        width: 300px !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .container.title {
+        width: 32vw !important;
+    }
+}
+
+@media (max-width: 1130px) {
+    .small-screen {
+        display: flex !important;
     }
 }

@@ -1,7 +1,7 @@
 export default function Title() {
     return (
         <div
-            className="container"
+            className="container title"
             style={{
                 top: "15px",
                 left: "50%",

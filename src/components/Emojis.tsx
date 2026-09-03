@@ -90,7 +90,7 @@ export default function Emojis() {
     return (
         <>
             <div
-                className="container"
+                className="container emojis"
                 style={{
                     top: "50%",
                     left: "15px",
