@@ -1,7 +1,11 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type RefObject } from "react";
 import CONFIG from "../../config/config.json";
 
-export default function Base() {
+interface BaseProps {
+    outputTubeRef: RefObject<HTMLDivElement | null>;
+}
+
+export default function Base({ outputTubeRef }: BaseProps) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [progress, setProgress] = useState(0.0);
 
@@ -447,6 +451,32 @@ export default function Base() {
                     right: "112px",
                     borderBottomRightRadius: "6px",
                     borderBottomLeftRadius: "6px",
+                }}
+            ></span>
+
+            <span
+                ref={outputTubeRef}
+                style={{
+                    background: "#7E716C",
+                    position: "absolute",
+                    width: "53px",
+                    height: "100px",
+                    bottom: "122px",
+                    right: "83px",
+                    zIndex: -1,
+                    borderRadius: "6px",
+                }}
+            ></span>
+            <span
+                style={{
+                    background: "#645d5a",
+                    position: "absolute",
+                    width: "53px",
+                    height: "76px",
+                    bottom: "134px",
+                    right: "72px",
+                    zIndex: -2,
+                    borderRadius: "4px",
                 }}
             ></span>
         </span>

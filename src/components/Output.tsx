@@ -1,6 +1,11 @@
+import type { RefObject } from "react";
 import Decoration from "./Output/Decoration";
 
-export default function Output() {
+interface OutputProps {
+    inputTubeRef: RefObject<HTMLDivElement | null>;
+}
+
+export default function Output({ inputTubeRef }: OutputProps) {
     return (
         <div
             className="container"
@@ -81,7 +86,7 @@ export default function Output() {
                             position: "absolute",
                             width: "200px",
                             height: "350px",
-                            bottom: "70px",
+                            bottom: "88px",
                             left: "50%",
                             zIndex: 2,
                             transform: "translateX(-50%)",
@@ -95,11 +100,11 @@ export default function Output() {
 
                     <canvas
                         style={{
-                            background: "#01c0ff00",
+                            background: "#01c0ffb9",
                             position: "absolute",
                             width: "180px",
                             height: "290px",
-                            bottom: "80px",
+                            bottom: "98px",
                             left: "50%",
                             zIndex: 1,
                             transform: "translateX(-50%)",
@@ -114,7 +119,7 @@ export default function Output() {
                             position: "absolute",
                             width: "180px",
                             height: "340px",
-                            bottom: "80px",
+                            bottom: "98px",
                             left: "50%",
                             zIndex: -1,
                             transform: "translateX(-50%)",
@@ -129,7 +134,7 @@ export default function Output() {
                         background: "#a5988c",
                         position: "absolute",
                         width: "300px",
-                        height: "70px",
+                        height: "88px",
                         bottom: "0px",
                         left: "50%",
                         zIndex: 2,
@@ -143,7 +148,7 @@ export default function Output() {
                             position: "absolute",
                             width: "50px",
                             height: "50px",
-                            bottom: "10px",
+                            bottom: "19px",
                             left: "50%",
                             transform: "translateX(-50%)",
                             zIndex: 1,
@@ -172,7 +177,7 @@ export default function Output() {
                             position: "absolute",
                             width: "50px",
                             height: "50px",
-                            bottom: "10px",
+                            bottom: "19px",
                             left: "25%",
                             transform: "translateX(-50%)",
                             zIndex: 1,
@@ -201,7 +206,7 @@ export default function Output() {
                             position: "absolute",
                             width: "50px",
                             height: "50px",
-                            bottom: "10px",
+                            bottom: "19px",
                             left: "75%",
                             transform: "translateX(-50%)",
                             zIndex: 1,
@@ -224,6 +229,33 @@ export default function Output() {
                         ></span>
                     </span>
                 </span>
+
+                <span
+                    ref={inputTubeRef}
+                    style={{
+                        background: "#7E716C",
+                        position: "absolute",
+                        width: "53px",
+                        height: "70px",
+                        bottom: "8px",
+                        right: "281px",
+                        zIndex: -1,
+                        borderRadius: "6px",
+                    }}
+                ></span>
+
+                <span
+                    style={{
+                        background: "#625d5a",
+                        position: "absolute",
+                        width: "53px",
+                        height: "55px",
+                        bottom: "15.5px",
+                        right: "289px",
+                        zIndex: -2,
+                        borderRadius: "3px",
+                    }}
+                ></span>
             </div>
         </div>
     );

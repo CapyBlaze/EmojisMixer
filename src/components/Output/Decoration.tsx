@@ -11,7 +11,7 @@ export default function Decoration({
                 <span
                     style={{
                         position: "absolute",
-                        bottom: "373px",
+                        bottom: "391px",
                         height: "18%",
                         width: "18%",
 
@@ -63,7 +63,7 @@ export default function Decoration({
                 <span
                     style={{
                         position: "absolute",
-                        bottom: "373px",
+                        bottom: "391px",
                         height: "18%",
                         width: "18%",
 
@@ -115,7 +115,7 @@ export default function Decoration({
                 <span
                     style={{
                         position: "absolute",
-                        bottom: "370px",
+                        bottom: "388px",
                         height: "20%",
                         width: "20%",
 
@@ -167,7 +167,7 @@ export default function Decoration({
                 <span
                     style={{
                         position: "absolute",
-                        bottom: "373px",
+                        bottom: "391px",
                         height: "20%",
                         width: "20%",
 
@@ -219,7 +219,7 @@ export default function Decoration({
                 <span
                     style={{
                         position: "absolute",
-                        bottom: "338px",
+                        bottom: "356px",
                         height: "28%",
                         width: "28%",
 
@@ -301,7 +301,7 @@ export default function Decoration({
                 <span
                     style={{
                         position: "absolute",
-                        bottom: "210px",
+                        bottom: "228px",
                         height: "50%",
                         width: "50%",
 
