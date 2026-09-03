@@ -314,26 +314,26 @@ export default function Decoration({
                 >
                     <svg viewBox="0 0 62 58" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M30 1.43902L0 19H15.375L30.3472 1.47157C30.2315 1.46399 30.1157 1.45314 30 1.43902Z"
                             fill="url(#paint0_linear_2500_2702)"
                         />
                         <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M31.1528 1.47157L46.125 19H61.5L31.5 1.43902C31.3843 1.45314 31.2685 1.46399 31.1528 1.47157Z"
                             fill="url(#paint1_linear_2500_2702)"
                         />
                         <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M30.3472 1.47157L15.375 19H30.75H46.125L31.1528 1.47157C30.8843 1.48915 30.6157 1.48915 30.3472 1.47157Z"
                             fill="url(#paint2_linear_2500_2702)"
                         />
                         <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
+                            fillRule="evenodd"
+                            clipRule="evenodd"
                             d="M30 0.5V1.43902C30.1157 1.45314 30.2315 1.46399 30.3472 1.47157C30.6157 1.48915 30.8843 1.48915 31.1528 1.47157C31.2685 1.46399 31.3843 1.45314 31.5 1.43902V0.5C31.5 0.223858 31.2761 0 31 0H30.5C30.2239 0 30 0.223858 30 0.5Z"
                             fill="white"
                         />
