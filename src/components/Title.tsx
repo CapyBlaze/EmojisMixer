@@ -14,6 +14,7 @@ export default function Title() {
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
+                zIndex: 1,
             }}
         >
             <h1

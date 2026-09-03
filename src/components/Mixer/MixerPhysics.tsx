@@ -3,45 +3,47 @@ import Matter from "matter-js";
 import defaultFile from "../../utils/defaultFile";
 import CONFIG from "../../config/config.json";
 
-type FallingEmoji = { id: number; body: Matter.Body; el: HTMLSpanElement };
+type FallingEmoji = { id: number; body: Matter.Body; el: HTMLImageElement };
 
 const CONTAINER_WIDTH = 500;
 const CONTAINER_HEIGHT = 620;
 
-const WALL1_Y = 103;
-const WALL1_LEFT = 147;
-const WALL1_RIGHT = 344;
+function createThickWallsFromSVG(pathString: string) {
+    const THICKNESS = 4;
+    const OFFSET = { x: 90, y: 83 };
 
-const WALL2_Y = 73;
-const WALL2_LEFT = 132.5;
-const WALL2_RIGHT = 367.5;
+    const pathEl = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathEl.setAttribute("d", pathString);
 
-const WALL3_Y = 319;
-const WALL3_LEFT = 219;
-const WALL3_RIGHT = 281;
+    const totalLength = pathEl.getTotalLength();
+    const step = 6;
+    const bodies: Matter.Body[] = [];
 
-const FLOOR1_Y = 335;
-const FLOOR1_LEFT = 179.5;
-const FLOOR1_RIGHT = 311.5;
+    for (let i = 0; i < totalLength; i += step) {
+        const p1 = pathEl.getPointAtLength(i);
+        const p2 = pathEl.getPointAtLength(Math.min(i + step, totalLength));
 
-const FLOOR2_Y = 317;
-const FLOOR2_LEFT = 219;
-const FLOOR2_RIGHT = 281;
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        const segLength = Math.hypot(dx, dy);
 
-const DEBUG_MODE = false;
+        if (segLength > step * 2.5) continue;
 
-function makeWall(x1: number, y1: number, x2: number, y2: number, thickness: number = 4) {
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const length = Math.hypot(dx, dy);
-    const angle = Math.atan2(dy, dx);
+        const angle = Math.atan2(dy, dx);
+        const midX = (p1.x + p2.x) / 2 + OFFSET.x;
+        const midY = (p1.y + p2.y) / 2 + OFFSET.y;
 
-    return Matter.Bodies.rectangle((x1 + x2) / 2, (y1 + y2) / 2, length, thickness, {
-        isStatic: true,
-        angle: angle,
-        friction: 0.8,
-        restitution: 0.15,
-    });
+        const wallSegment = Matter.Bodies.rectangle(midX, midY, segLength + 1, THICKNESS, {
+            isStatic: true,
+            angle: angle,
+            friction: 0.8,
+            restitution: 0.15,
+        });
+
+        bodies.push(wallSegment);
+    }
+
+    return bodies;
 }
 
 export default function MixerPhysics() {
@@ -53,7 +55,7 @@ export default function MixerPhysics() {
         const engine = Matter.Engine.create();
         engine.gravity.y = 1.1;
 
-        if (DEBUG_MODE) {
+        if (CONFIG.debugMode) {
             const debugCanvas = document.createElement("canvas");
             debugCanvas.width = CONTAINER_WIDTH;
             debugCanvas.height = CONTAINER_HEIGHT;
@@ -73,56 +75,37 @@ export default function MixerPhysics() {
                     height: CONTAINER_HEIGHT,
                     wireframes: true,
                     background: "transparent",
+                    wireframeBackground: "transparent",
                     showAngleIndicator: true,
                 },
             });
             Matter.Render.run(debugRender);
         }
 
-        const leftWall1 = makeWall(WALL1_LEFT, WALL1_Y, FLOOR1_LEFT, FLOOR1_Y);
-        const rightWall1 = makeWall(WALL1_RIGHT, WALL1_Y, FLOOR1_RIGHT, FLOOR1_Y);
-
-        const leftWall2 = makeWall(WALL2_LEFT, WALL2_Y, WALL1_LEFT, WALL1_Y);
-        const rightWall2 = makeWall(WALL2_RIGHT, WALL2_Y, WALL1_RIGHT, WALL1_Y);
-
-        const leftWall3 = makeWall(WALL3_LEFT, WALL3_Y, FLOOR1_LEFT, FLOOR1_Y + 3);
-        const rightWall3 = makeWall(WALL3_RIGHT, WALL3_Y, FLOOR1_RIGHT, FLOOR1_Y + 3);
-
-        const floor1 = Matter.Bodies.rectangle(
-            (FLOOR1_LEFT + FLOOR1_RIGHT) / 2,
-            FLOOR1_Y + 5,
-            FLOOR1_RIGHT - FLOOR1_LEFT,
-            10,
-            { isStatic: true, friction: 0.9, restitution: 0.1 },
+        const bottleWalls = createThickWallsFromSVG(
+            "M90 252.702H78L70 289.202H32L0.5 445.702V493.202H21.5M90 252.702L57 30.7024L43.5 0.202393M90 252.702L128 234.702H192L230 252.702M90 252.702H230M230 252.702H242L250 289.202H288L319.5 445.702V493.202H298.5M230 252.702L263 30.7024L276.5 0.202393M298.5 493.202V506.702H257.5V493.202M298.5 493.202H257.5M257.5 493.202H62.5M21.5 493.202V506.702H62.5V493.202M21.5 493.202H62.5",
         );
-
-        const floor2 = Matter.Bodies.rectangle(
-            (FLOOR2_LEFT + FLOOR2_RIGHT) / 2,
-            FLOOR2_Y + 5,
-            FLOOR2_RIGHT - FLOOR2_LEFT,
-            10,
-            { isStatic: true, friction: 0.9, restitution: 0.1 },
-        );
-
-        Matter.World.add(engine.world, [
-            leftWall1,
-            rightWall1,
-            leftWall2,
-            rightWall2,
-            leftWall3,
-            rightWall3,
-            floor1,
-            floor2,
-        ]);
+        Matter.World.add(engine.world, bottleWalls);
 
         const runner = Matter.Runner.create();
         Matter.Runner.run(runner, engine);
 
         let raf: number;
         const render = () => {
-            for (const item of itemsRef.current) {
+            for (let i = itemsRef.current.length - 1; i >= 0; i--) {
+                const item = itemsRef.current[i];
                 const { x, y } = item.body.position;
-                item.el.style.transform = `translate(${x - CONFIG.emojiRadius}px, ${y - CONFIG.emojiRadius}px) rotate(${item.body.angle}rad)`;
+
+                if (y > CONTAINER_HEIGHT + 50) {
+                    Matter.World.remove(engine.world, item.body);
+                    item.el.remove();
+                    itemsRef.current.splice(i, 1);
+                    continue;
+                }
+
+                item.el.style.transform = `translate(${x - CONFIG.emojiRadius}px, ${
+                    y - CONFIG.emojiRadius
+                }px) rotate(${item.body.angle}rad)`;
             }
             raf = requestAnimationFrame(render);
         };
@@ -136,23 +119,12 @@ export default function MixerPhysics() {
             const localX = x - rect.left;
             const localY = y - rect.top;
 
-            const t = Math.max(0, Math.min(1, (localY - WALL1_Y) / (FLOOR1_Y - WALL1_Y)));
-            const leftBound = WALL1_LEFT + (FLOOR1_LEFT - WALL1_LEFT) * t;
-            const rightBound = WALL1_RIGHT + (FLOOR1_RIGHT - WALL1_RIGHT) * t;
-
-            if (localY < WALL1_Y - 30 || localX < leftBound || localX > rightBound) return;
-
-            const body = Matter.Bodies.circle(
-                localX,
-                Math.max(localY, WALL1_Y),
-                CONFIG.emojiRadius - 2,
-                {
-                    restitution: 0.35,
-                    friction: 0.5,
-                    frictionAir: 0.008,
-                    density: 0.002,
-                },
-            );
+            const body = Matter.Bodies.circle(localX, localY, CONFIG.emojiRadius - 2, {
+                restitution: 0.35,
+                friction: 0.5,
+                frictionAir: 0.008,
+                density: 0.002,
+            });
             Matter.World.add(engine.world, body);
 
             const el = document.createElement("img");
@@ -169,9 +141,31 @@ export default function MixerPhysics() {
             itemsRef.current.push({ id: idCounter.current++, body, el });
         };
 
+        const handleCheckPosition = (e: Event) => {
+            const customEvent = e as CustomEvent;
+            const { x, y, callback } = customEvent.detail;
+            const rect = containerRef.current?.getBoundingClientRect();
+
+            if (!rect) {
+                callback(true);
+                return;
+            }
+
+            const localX = x - rect.left;
+            const localY = y - rect.top;
+
+            const testBody = Matter.Bodies.circle(localX, localY, CONFIG.emojiRadius + 2);
+            const collisions = Matter.Query.collides(testBody, bottleWalls);
+
+            callback(collisions.length === 0);
+        };
+
         window.addEventListener("emoji-drag-end", handleDrop);
+        window.addEventListener("emoji-drag-check", handleCheckPosition);
+
         return () => {
             window.removeEventListener("emoji-drag-end", handleDrop);
+            window.removeEventListener("emoji-drag-check", handleCheckPosition);
             cancelAnimationFrame(raf);
             Matter.Runner.stop(runner);
             Matter.World.clear(engine.world, false);
@@ -189,9 +183,9 @@ export default function MixerPhysics() {
                 inset: 0,
                 width: CONTAINER_WIDTH,
                 height: CONTAINER_HEIGHT,
-                zIndex: 0,
+                zIndex: 2,
                 pointerEvents: "none",
-                overflow: "hidden",
+                overflow: "visible",
             }}
         />
     );

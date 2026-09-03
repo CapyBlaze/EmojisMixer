@@ -300,7 +300,6 @@ export default function Emojis() {
                         left: dragging.x,
                         top: dragging.y,
                         transform: `translate(-50%, -50%) rotate(${rotation}deg) scale(1.4)`,
-                        fontSize: "28px",
                         pointerEvents: "none",
                         zIndex: 4,
                         transition: "transform 0.08s ease-out",
