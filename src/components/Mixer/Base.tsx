@@ -58,8 +58,15 @@ export default function Base({ outputTubeRef }: BaseProps) {
         console.log("Empty clicked");
     };
 
-    const diceClicked = () => {
+    const diceClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
+        const button = event.currentTarget;
+
         window.dispatchEvent(new CustomEvent("emoji-random-spawn"));
+        button.disabled = true;
+
+        setTimeout(() => {
+            button.disabled = false;
+        }, 1500);
     };
 
     const trashClicked = () => {
@@ -81,7 +88,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                     zIndex: 1,
                 }}
             >
-                <span
+                <button
                     onMouseDown={start}
                     onMouseUp={stop}
                     onMouseLeave={stop}
@@ -98,6 +105,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                         borderRadius: "50%",
                         zIndex: 1,
                         cursor: "pointer",
+                        border: "none",
                     }}
                 >
                     <img
@@ -114,7 +122,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                             transform: "translate(-50%, -50%)",
                         }}
                     />
-                </span>
+                </button>
             </span>
 
             <span
@@ -130,7 +138,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                     borderRadius: "5px",
                 }}
             >
-                <span
+                <button
                     onClick={emptyClicked}
                     style={{
                         background: "#786b67",
@@ -143,6 +151,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                         borderRadius: "2px",
                         zIndex: 1,
                         cursor: "pointer",
+                        border: "none",
                     }}
                 >
                     <img
@@ -160,7 +169,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                             opacity: progress >= 1.0 ? 1.0 : 0.3,
                         }}
                     />
-                </span>
+                </button>
             </span>
 
             <span
@@ -176,7 +185,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                     borderRadius: "5px",
                 }}
             >
-                <span
+                <button
                     onClick={diceClicked}
                     style={{
                         background: "#786b67",
@@ -189,6 +198,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                         borderRadius: "2px",
                         zIndex: 1,
                         cursor: "pointer",
+                        border: "none",
                     }}
                 >
                     <img
@@ -205,7 +215,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                             transform: "translate(-50%, -50%)",
                         }}
                     />
-                </span>
+                </button>
             </span>
 
             <span
@@ -221,7 +231,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                     borderRadius: "5px",
                 }}
             >
-                <span
+                <button
                     onClick={trashClicked}
                     style={{
                         background: "#786b67",
@@ -234,6 +244,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                         borderRadius: "2px",
                         zIndex: 1,
                         cursor: "pointer",
+                        border: "none",
                     }}
                 >
                     <img
@@ -250,7 +261,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
                             transform: "translate(-50%, -50%)",
                         }}
                     />
-                </span>
+                </button>
             </span>
 
             <span

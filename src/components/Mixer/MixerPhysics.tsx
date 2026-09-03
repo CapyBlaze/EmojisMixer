@@ -58,7 +58,9 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
     const idCounter = useRef(0);
 
     useEffect(() => {
-        const engine = Matter.Engine.create();
+        const engine = Matter.Engine.create({
+            enableSleeping: true,
+        });
         engine.gravity.y = 1.1;
 
         if (CONFIG.debugMode) {
@@ -175,16 +177,20 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
             const bowlElement = bowlRef.current;
             const rect = bowlElement.getBoundingClientRect();
 
-            const MARGIN = 10;
-            const x1 = rect.left + CONFIG.emojiRadius + MARGIN;
-            const x2 = rect.right - CONFIG.emojiRadius - MARGIN;
+            const overflow = 0;
+            const x1 = rect.left - overflow;
+            const x2 = rect.right + overflow;
 
-            for (let i = 0; i < CONFIG.numberEmojisSpawned; i++) {
-                spawnEmojis(
-                    EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
-                    Math.floor(Math.random() * (x2 - x1 + 1)) + x1,
-                    100,
-                );
+            for (let wave = 0; wave < CONFIG.numberWaves; wave++) {
+                setTimeout(() => {
+                    for (let i = 0; i < CONFIG.numberEmojisSpawned; i++) {
+                        spawnEmojis(
+                            EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+                            Math.floor(Math.random() * (x2 - x1 + 1)) + x1,
+                            -20,
+                        );
+                    }
+                }, wave * 100);
             }
         };
 

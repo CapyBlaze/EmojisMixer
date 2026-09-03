@@ -11,7 +11,8 @@
         "Flags"
     ],
     "emojiRadius": 17,
-    "numberEmojisSpawned": 5,
+    "numberEmojisSpawned": 7,
+    "numberWaves": 10,
     "duration": 10000,
     "colors": [
         "#e28e8e",
