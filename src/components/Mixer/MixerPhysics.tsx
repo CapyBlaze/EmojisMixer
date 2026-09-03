@@ -49,7 +49,7 @@ function createThickWallsFromSVG(pathString: string) {
 }
 
 interface MixerPhysicsProps {
-    bowlRef: RefObject<HTMLDivElement>;
+    bowlRef: RefObject<HTMLDivElement | null>;
 }
 
 export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
@@ -173,6 +173,7 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
         const handleDropSpawn = () => {
             const NB_EMOJIS = 5;
 
+            if (!bowlRef.current) return;
             const bowlElement = bowlRef.current;
             const rect = bowlElement.getBoundingClientRect();
 
