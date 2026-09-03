@@ -58,6 +58,10 @@ export default function Base({ outputTubeRef }: BaseProps) {
         console.log("Empty clicked");
     };
 
+    const bookClicked = () => {
+        console.log("Book clicked");
+    };
+
     const diceClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
         const button = event.currentTarget;
 
@@ -131,6 +135,52 @@ export default function Base({ outputTubeRef }: BaseProps) {
                     position: "absolute",
                     width: "40px",
                     height: "40px",
+                    bottom: "150px",
+                    left: "66.5%",
+                    transform: "translateX(-50%)",
+                    zIndex: 1,
+                    borderRadius: "5px",
+                }}
+            >
+                <button
+                    onClick={bookClicked}
+                    style={{
+                        background: "#786b67",
+                        position: "absolute",
+                        width: "32px",
+                        height: "32px",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        borderRadius: "2px",
+                        zIndex: 1,
+                        cursor: "pointer",
+                        border: "none",
+                    }}
+                >
+                    <img
+                        src="./book.svg"
+                        alt="Book"
+                        draggable="false"
+                        className="not-selected"
+                        style={{
+                            width: "25px",
+                            height: "25px",
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                        }}
+                    />
+                </button>
+            </span>
+
+            <span
+                style={{
+                    background: "#595251",
+                    position: "absolute",
+                    width: "40px",
+                    height: "40px",
                     bottom: "105px",
                     left: "66.5%",
                     transform: "translateX(-50%)",
@@ -140,6 +190,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
             >
                 <button
                     onClick={emptyClicked}
+                    disabled={progress < 1.0}
                     style={{
                         background: "#786b67",
                         position: "absolute",

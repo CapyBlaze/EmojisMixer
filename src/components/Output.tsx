@@ -36,49 +36,6 @@ export default function Output({ inputTubeRef }: OutputProps) {
                     transform: "translateX(-50%)",
                 }}
             >
-                {/* Content 1 */}
-                {/* <span>
-                    <span
-                        style={{
-                            background: "#858E91",
-                            position: "absolute",
-                            width: "275px",
-                            height: "130px",
-                            bottom: "235px",
-                            left: "50%",
-                            zIndex: 1,
-                            transform: "translateX(-50%)",
-                            clipPath: "polygon(0% 0%, 100% 0%, 55% 100%, 45% 100%)",
-                        }}
-                    ></span>
-                    <span
-                        style={{
-                            background: "#858E91",
-                            position: "absolute",
-                            width: "12px",
-                            height: "154px",
-                            bottom: "105px",
-                            left: "50%",
-                            zIndex: 1,
-                            transform: "translateX(-50%)",
-                        }}
-                    ></span>
-                    <span
-                        style={{
-                            background: "#858E91",
-                            position: "absolute",
-                            width: "209px",
-                            height: "35px",
-                            bottom: "70px",
-                            left: "50%",
-                            zIndex: 1,
-                            transform: "translateX(-50%)",
-                            clipPath: "polygon(44% 0%, 56% 0%, 90% 100%, 10% 100%)",
-                        }}
-                    ></span>
-                </span> */}
-
-                {/* Content 2 */}
                 <span>
                     <span
                         style={{
@@ -171,13 +128,13 @@ export default function Output({ inputTubeRef }: OutputProps) {
                             }}
                         >
                             <img
-                                src="./image.svg"
-                                alt="Image"
+                                src="./star-outline.svg"
+                                alt="Star"
                                 draggable="false"
                                 className="not-selected"
                                 style={{
-                                    width: "35px",
-                                    height: "35px",
+                                    width: "30px",
+                                    height: "30px",
                                     position: "absolute",
                                     top: "50%",
                                     left: "50%",
@@ -216,13 +173,13 @@ export default function Output({ inputTubeRef }: OutputProps) {
                             }}
                         >
                             <img
-                                src="./xxxx.svg"
-                                alt=""
+                                src="./image.svg"
+                                alt="Image"
                                 draggable="false"
                                 className="not-selected"
                                 style={{
-                                    width: "35px",
-                                    height: "35px",
+                                    width: "30px",
+                                    height: "30px",
                                     position: "absolute",
                                     top: "50%",
                                     left: "50%",
@@ -266,8 +223,8 @@ export default function Output({ inputTubeRef }: OutputProps) {
                                 draggable="false"
                                 className="not-selected"
                                 style={{
-                                    width: "35px",
-                                    height: "35px",
+                                    width: "30px",
+                                    height: "30px",
                                     position: "absolute",
                                     top: "50%",
                                     left: "50%",
