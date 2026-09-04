@@ -11,7 +11,7 @@ interface MixerProps {
 }
 
 export default function Mixer({ outputTubeRef }: MixerProps) {
-    const bowlRef = useRef<HTMLDivElement>(null);
+    const bowlRef = useRef<HTMLCanvasElement | null>(null);
 
     return (
         <>

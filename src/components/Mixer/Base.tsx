@@ -15,6 +15,8 @@ export default function Base({ outputTubeRef }: BaseProps) {
 
     const start = () => {
         setIsAnimating(true);
+        window.dispatchEvent(new CustomEvent("emoji-start-blend"));
+
         startTimeRef.current = performance.now();
 
         const animate = (currentTime: number) => {
@@ -22,9 +24,12 @@ export default function Base({ outputTubeRef }: BaseProps) {
 
             const elapsed = currentTime - startTimeRef.current;
             const currentProgress =
-                Math.floor(
-                    Math.min(savedProgressRef.current + elapsed / CONFIG.duration, 1.0) * 100.0,
+                Math.round(
+                    Math.min(savedProgressRef.current + elapsed / CONFIG.blendDuration, 1.0) *
+                        100.0,
                 ) / 100.0;
+
+            console.log("Current Progress:", currentProgress);
 
             setProgress(currentProgress);
 
@@ -35,6 +40,7 @@ export default function Base({ outputTubeRef }: BaseProps) {
 
     const stop = () => {
         setIsAnimating(false);
+        window.dispatchEvent(new CustomEvent("emoji-stop-blend"));
 
         if (animationRef.current) {
             cancelAnimationFrame(animationRef.current);
@@ -47,10 +53,14 @@ export default function Base({ outputTubeRef }: BaseProps) {
 
     const handleTouchStart = (e: React.TouchEvent<HTMLSpanElement>) => {
         e.preventDefault();
-        if (progress < 1) start();
+        if (progress < 1) {
+            window.dispatchEvent(new CustomEvent("emoji-start-blend"));
+            start();
+        }
     };
 
     const handleTouchEnd = () => {
+        window.dispatchEvent(new CustomEvent("emoji-stop-blend"));
         stop();
     };
 
@@ -75,6 +85,9 @@ export default function Base({ outputTubeRef }: BaseProps) {
 
     const trashClicked = () => {
         window.dispatchEvent(new CustomEvent("emoji-trash"));
+        setIsAnimating(false);
+        setProgress(0.0);
+        savedProgressRef.current = 0.0;
     };
 
     return (
