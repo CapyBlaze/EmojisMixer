@@ -27,6 +27,7 @@ export default function Button({
     const start = () => {
         setIsAnimating(true);
         window.dispatchEvent(new CustomEvent("emoji-start-blend"));
+        window.dispatchEvent(new CustomEvent("output-empty"));
 
         if (numberEmojisInBowl <= 0) return;
 
@@ -97,6 +98,7 @@ export default function Button({
 
     const trashClicked = () => {
         window.dispatchEvent(new CustomEvent("emoji-trash"));
+        window.dispatchEvent(new CustomEvent("output-empty"));
         resetProgress();
     };
 
