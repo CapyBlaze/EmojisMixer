@@ -10,7 +10,7 @@ const Bowl = forwardRef<HTMLCanvasElement, React.HTMLAttributes<HTMLCanvasElemen
                         position: "absolute",
                         width: "235px",
                         height: "254px",
-                        bottom: "284px",
+                        bottom: "285px",
                         left: "50%",
                         transform: "translateX(-50%)",
                         clipPath:
@@ -27,7 +27,7 @@ const Bowl = forwardRef<HTMLCanvasElement, React.HTMLAttributes<HTMLCanvasElemen
                         position: "absolute",
                         width: "235px",
                         height: "254px",
-                        bottom: "284px",
+                        bottom: "285px",
                         left: "50%",
                         transform: "translateX(-50%)",
                         clipPath:

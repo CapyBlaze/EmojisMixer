@@ -26,6 +26,7 @@ interface MixerPhysicsProps {
 
 export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsProps) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const svgBowlRef = useRef<HTMLSpanElement>(null);
     const itemsRef = useRef<FallingEmoji[]>([]);
     const idCounter = useRef(0);
 
@@ -132,24 +133,52 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             onCountChange?.(itemsRef.current.length);
         }
 
+        const ORIGINAL_SVG_WIDTH = 218;
+        const ORIGINAL_SVG_HEIGHT = 236;
+
+        const SVG_PATH_POLYGON = [
+            { x: 43.4096, y: 235.697 },
+            { x: 12.6028, y: 28.4704 },
+            { x: 0, y: 0 },
+            { x: 54.1453, y: 2.33364 },
+            { x: 163.369, y: 2.33364 },
+            { x: 217.515, y: 0 },
+            { x: 204.912, y: 28.4704 },
+            { x: 204.843, y: 28.9371 },
+            { x: 174.105, y: 235.697 },
+        ];
+
         function isInsideBowl(pos: Matter.Vector) {
-            console.log("isInsideBowl", pos);
+            const container = containerRef.current;
+            const svgBowl = svgBowlRef.current;
 
-            // if (walls.length === 0) return true;
+            if (!container || !svgBowl) return true;
 
-            // const rayEnd = { x: pos.x + 37, y: -1000 };
-            // const collisions = Matter.Query.ray(walls, pos, rayEnd);
+            const containerRect = container.getBoundingClientRect();
+            const svgRect = svgBowl.getBoundingClientRect();
 
-            // const uniqueHits = new Set(
-            //     collisions.map((c) => {
-            //         const support = c.supports?.[0] ?? c.bodyB.position;
-            //         return `${Math.round(support.x)}_${Math.round(support.y)}`;
-            //     }),
-            // );
+            const offsetX = svgRect.left - containerRect.left;
+            const offsetY = svgRect.top - containerRect.top;
 
-            // return !(uniqueHits.size % 2 === 1);
+            const scaleX = svgRect.width / ORIGINAL_SVG_WIDTH;
+            const scaleY = svgRect.height / ORIGINAL_SVG_HEIGHT;
 
-            return true;
+            const x = pos.x;
+            const y = pos.y;
+            let inside = false;
+
+            for (let i = 0, j = SVG_PATH_POLYGON.length - 1; i < SVG_PATH_POLYGON.length; j = i++) {
+                const xi = SVG_PATH_POLYGON[i].x * scaleX + offsetX;
+                const yi = SVG_PATH_POLYGON[i].y * scaleY + offsetY;
+                const xj = SVG_PATH_POLYGON[j].x * scaleX + offsetX;
+                const yj = SVG_PATH_POLYGON[j].y * scaleY + offsetY;
+
+                const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+
+                if (intersect) inside = !inside;
+            }
+
+            return inside;
         }
 
         const drawLiquid = () => {
@@ -291,7 +320,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                     stillPopping = true;
 
                     const popScale =
-                        t < 0.35 ? 1 + (t / 0.35) * 0.3 : 1.3 * (1 - (t - 0.35) / 0.65);
+                        t < 0.35 ? 1 + (t / 0.35) * 0.15 : 1.15 * (1 - (t - 0.35) / 0.65);
                     const opacity = t < 0.7 ? 1 : 1 - (t - 0.7) / 0.3;
 
                     const { x, y } = item.body.position;
@@ -446,17 +475,36 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
     }, [bowlRef, onCountChange]);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: "absolute",
-                inset: 0,
-                width: CONTAINER_WIDTH,
-                height: CONTAINER_HEIGHT,
-                zIndex: 1,
-                pointerEvents: "none",
-                overflow: "visible",
-            }}
-        />
+        <>
+            <div
+                ref={containerRef}
+                style={{
+                    position: "absolute",
+                    inset: 0,
+                    width: CONTAINER_WIDTH,
+                    height: CONTAINER_HEIGHT,
+                    zIndex: 1,
+                    pointerEvents: "none",
+                    overflow: "visible",
+                }}
+            />
+
+            <span
+                ref={svgBowlRef}
+                style={{
+                    position: "absolute",
+                    width: "235px",
+                    height: "254px",
+                    bottom: "285px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    zIndex: -100,
+                }}
+            >
+                <svg viewBox="0 0 218 236" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M43.4096 235.697L12.6028 28.4704L0 0L54.1453 2.33364H163.369L217.515 0L204.912 28.4704L204.843 28.9371L174.105 235.697H43.4096Z" />
+                </svg>
+            </span>
+        </>
     );
 }
