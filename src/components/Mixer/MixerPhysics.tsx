@@ -39,10 +39,18 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
     );
     const bowlWallsRef = useRef<Matter.Body[]>([]);
     const isDrainingRef = useRef(false);
+    const lastInsideCountRef = useRef(0);
 
     const isPoppingRef = useRef(false);
     const POP_DURATION = 280;
     const POP_STAGGER = 25;
+
+    const lastActivityRef = useRef(0);
+    const SETTLE_DELAY = 2500;
+
+    useEffect(() => {
+        lastActivityRef.current = performance.now();
+    }, []);
 
     useEffect(() => {
         const engine = Matter.Engine.create({
@@ -130,7 +138,6 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             });
             containerRef.current?.appendChild(el);
             itemsRef.current.push({ id: idCounter.current++, body, el, scale: 1, baseRadius });
-            onCountChange?.(itemsRef.current.length);
         }
 
         const ORIGINAL_SVG_WIDTH = 218;
@@ -148,21 +155,30 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             { x: 174.105, y: 235.697 },
         ];
 
-        function isInsideBowl(pos: Matter.Vector) {
+        function getBowlTransform() {
             const container = containerRef.current;
             const svgBowl = svgBowlRef.current;
 
-            if (!container || !svgBowl) return true;
+            if (!container || !svgBowl) return null;
 
             const containerRect = container.getBoundingClientRect();
             const svgRect = svgBowl.getBoundingClientRect();
 
-            const offsetX = svgRect.left - containerRect.left;
-            const offsetY = svgRect.top - containerRect.top;
+            return {
+                offsetX: svgRect.left - containerRect.left,
+                offsetY: svgRect.top - containerRect.top,
+                scaleX: svgRect.width / ORIGINAL_SVG_WIDTH,
+                scaleY: svgRect.height / ORIGINAL_SVG_HEIGHT,
+            };
+        }
 
-            const scaleX = svgRect.width / ORIGINAL_SVG_WIDTH;
-            const scaleY = svgRect.height / ORIGINAL_SVG_HEIGHT;
+        function isInsideBowlWithTransform(
+            pos: Matter.Vector,
+            transform: { offsetX: number; offsetY: number; scaleX: number; scaleY: number } | null,
+        ) {
+            if (!transform) return true;
 
+            const { offsetX, offsetY, scaleX, scaleY } = transform;
             const x = pos.x;
             const y = pos.y;
             let inside = false;
@@ -181,7 +197,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             return inside;
         }
 
-        const drawLiquid = () => {
+        const drawLiquid = (now: number) => {
             const canvas = bowlRef.current;
             if (!canvas) return;
             const ctx = canvas.getContext("2d");
@@ -213,7 +229,14 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             const fillRatio = blendProgressRef.current * MAX_FILL_RATIO;
             const liquidY = h - h * fillRatio;
 
-            const targetAmplitude = isBlendingRef.current ? 6 : 2;
+            const timeSinceActivity = now - lastActivityRef.current;
+            const targetAmplitude =
+                isBlendingRef.current || isDrainingRef.current
+                    ? 6
+                    : timeSinceActivity < SETTLE_DELAY
+                      ? 2
+                      : 0;
+
             const SMOOTH_FACTOR = 0.04;
             waveAmplitudeRef.current +=
                 (targetAmplitude - waveAmplitudeRef.current) * SMOOTH_FACTOR;
@@ -245,7 +268,19 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             const delta = now - lastTime;
             lastTime = now;
 
-            if (isBlendingRef.current && itemsRef.current.length > 0) {
+            const bowlTransform = getBowlTransform();
+
+            let insideCount = 0;
+            for (let i = 0; i < itemsRef.current.length; i++) {
+                const item = itemsRef.current[i];
+                if (item.popStartTime !== undefined) continue;
+                if (isInsideBowlWithTransform(item.body.position, bowlTransform)) {
+                    insideCount++;
+                }
+            }
+
+            if (isBlendingRef.current && insideCount > 0) {
+                lastActivityRef.current = now;
                 blendProgressRef.current = Math.min(
                     1,
                     blendProgressRef.current + delta / CONFIG.blendDuration,
@@ -257,7 +292,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                 for (let i = itemsRef.current.length - 1; i >= 0; i--) {
                     const item = itemsRef.current[i];
 
-                    if (!isInsideBowl(item.body.position)) continue;
+                    if (!isInsideBowlWithTransform(item.body.position, bowlTransform)) continue;
 
                     const FORCE_MAGNITUDE = 0.0015;
                     const forceX = (Math.random() - 0.5) * FORCE_MAGNITUDE * item.body.mass;
@@ -289,7 +324,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             if (blendProgressRef.current >= 1) {
                 for (let i = itemsRef.current.length - 1; i >= 0; i--) {
                     const item = itemsRef.current[i];
-                    if (!isInsideBowl(item.body.position)) continue;
+                    if (!isInsideBowlWithTransform(item.body.position, bowlTransform)) continue;
                     Matter.World.remove(engine.world, item.body);
                     item.el.remove();
                     itemsRef.current.splice(i, 1);
@@ -355,6 +390,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             }
 
             if (isDrainingRef.current) {
+                lastActivityRef.current = now;
                 blendProgressRef.current = Math.max(
                     0,
                     blendProgressRef.current - delta / CONFIG.emptyMixerDuration,
@@ -365,7 +401,12 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                 }
             }
 
-            drawLiquid();
+            if (insideCount !== lastInsideCountRef.current) {
+                lastInsideCountRef.current = insideCount;
+                onCountChange?.(insideCount);
+            }
+
+            drawLiquid(now);
 
             raf = requestAnimationFrame(render);
         };

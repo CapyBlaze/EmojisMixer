@@ -1,4 +1,23 @@
-export default function Button() {
+import exportImage from "../../utils/exportImage";
+
+interface ButtonProps {
+    canvas: React.RefObject<HTMLCanvasElement | null>;
+}
+
+export default function Button({ canvas }: ButtonProps) {
+    const addFavorite = () => {
+        console.log("Favorite clicked");
+    };
+
+    const downloadImage = () => {
+        if (!canvas.current) return;
+        exportImage(canvas.current);
+    };
+
+    const shareLink = () => {
+        console.log("Share clicked");
+    };
+
     return (
         <>
             <span
@@ -15,6 +34,7 @@ export default function Button() {
                 }}
             >
                 <button
+                    onClick={addFavorite}
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -60,6 +80,7 @@ export default function Button() {
                 }}
             >
                 <button
+                    onClick={downloadImage}
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -105,6 +126,7 @@ export default function Button() {
                 }}
             >
                 <button
+                    onClick={shareLink}
                     style={{
                         background: "#786b67",
                         position: "absolute",

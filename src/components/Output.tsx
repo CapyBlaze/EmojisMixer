@@ -256,7 +256,7 @@ export default function Output({ inputTubeRef }: OutputProps) {
                         borderRadius: "5px",
                     }}
                 >
-                    <Button />
+                    <Button canvas={canvasRef} />
                 </span>
 
                 <span
