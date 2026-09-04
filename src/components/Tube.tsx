@@ -6,14 +6,18 @@ interface TubeProps {
     liquidColor?: string | string[];
 }
 
-export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
-    const [isFlowing, setIsFlowing] = useState(false);
+const DRAIN_DURATION = 600;
 
+export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
     const liquidPathRef = useRef<SVGPathElement>(null);
     const [pathLength, setPathLength] = useState(0);
 
     const [headProgress, setHeadProgress] = useState(0);
     const [tailProgress, setTailProgress] = useState(0);
+
+    const headRef = useRef(0);
+    const tailRef = useRef(0);
+    const isFlowingRef = useRef(false);
 
     useEffect(() => {
         if (liquidPathRef.current) {
@@ -26,12 +30,17 @@ export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
         let timerId: number;
 
         const handleEmptyMixer = () => {
-            setIsFlowing(true);
+            headRef.current = 0;
+            tailRef.current = 0;
+            setHeadProgress(0);
+            setTailProgress(0);
+
+            isFlowingRef.current = true;
 
             clearTimeout(timerId);
 
-            timerId = setTimeout(() => {
-                setIsFlowing(false);
+            timerId = window.setTimeout(() => {
+                isFlowingRef.current = false;
             }, CONFIG.emptyMixerDuration);
         };
 
@@ -45,21 +54,31 @@ export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
 
     useEffect(() => {
         let animationFrame: number;
+        let lastTime: number | null = null;
 
-        const animate = () => {
-            if (isFlowing) {
-                setHeadProgress((prev) => Math.min(1, prev + 0.008));
-                setTailProgress((prev) => Math.max(0, prev - 0.04));
+        const fillSpeed = 1 / CONFIG.emptyMixerDuration;
+        const drainSpeed = 1 / DRAIN_DURATION;
+
+        const animate = (time: number) => {
+            if (lastTime === null) lastTime = time;
+            const delta = time - lastTime;
+            lastTime = time;
+
+            if (isFlowingRef.current) {
+                headRef.current = Math.min(1, headRef.current + fillSpeed * delta);
             } else {
-                setTailProgress((prev) => Math.min(headProgress, prev + 0.01));
+                tailRef.current = Math.min(headRef.current, tailRef.current + drainSpeed * delta);
             }
+
+            setHeadProgress(headRef.current);
+            setTailProgress(tailRef.current);
 
             animationFrame = requestAnimationFrame(animate);
         };
 
         animationFrame = requestAnimationFrame(animate);
         return () => cancelAnimationFrame(animationFrame);
-    }, [isFlowing, headProgress]);
+    }, []);
 
     if (!coords) return null;
 
@@ -125,7 +144,6 @@ export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
                     style={{
                         strokeDasharray: `${visibleLength} ${pathLength}`,
                         strokeDashoffset: dashoffset,
-                        transition: "stroke-dashoffset 0.05s linear, stroke-dasharray 0.05s linear",
                     }}
                 />
 
