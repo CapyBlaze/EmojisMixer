@@ -11,7 +11,7 @@
         "Flags"
     ],
     "emojiRadius": 17,
-    "numberEmojisSpawned": 3,
+    "numberEmojisSpawned": 6,
     "numberWaves": 10,
     "blendDuration": 10000,
     "emptyMixerDuration": 3000,

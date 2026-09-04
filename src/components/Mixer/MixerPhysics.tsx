@@ -398,17 +398,17 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         };
 
         const handleTrash = () => {
-            if (itemsRef.current.length === 0) return;
+            if (itemsRef.current.length > 0) {
+                const now = performance.now();
 
-            const now = performance.now();
+                itemsRef.current.reverse().forEach((item, index) => {
+                    Matter.World.remove(engine.world, item.body);
+                    item.popStartTime = now;
+                    item.popDelay = index * POP_STAGGER + Math.random() * 40;
+                });
 
-            itemsRef.current.reverse().forEach((item, index) => {
-                Matter.World.remove(engine.world, item.body);
-                item.popStartTime = now;
-                item.popDelay = index * POP_STAGGER + Math.random() * 40;
-            });
-
-            isPoppingRef.current = true;
+                isPoppingRef.current = true;
+            }
 
             handleEmptyMixer();
         };
