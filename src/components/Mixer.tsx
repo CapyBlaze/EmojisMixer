@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from "react";
+import { useRef, useState, type RefObject } from "react";
 import Base from "./Mixer/Base";
 import Bowl from "./Mixer/Bowl";
 import BowlFront from "./Mixer/BowlFront";
@@ -12,6 +12,7 @@ interface MixerProps {
 
 export default function Mixer({ outputTubeRef }: MixerProps) {
     const bowlRef = useRef<HTMLCanvasElement | null>(null);
+    const [numberEmojisInBowl, setNumberEmojisInBowl] = useState(0);
 
     return (
         <>
@@ -28,8 +29,8 @@ export default function Mixer({ outputTubeRef }: MixerProps) {
                 <Lid />
                 <Handle />
                 <Bowl ref={bowlRef} />
-                <Base outputTubeRef={outputTubeRef} />
-                <MixerPhysics bowlRef={bowlRef} />
+                <Base outputTubeRef={outputTubeRef} numberEmojisInBowl={numberEmojisInBowl} />
+                <MixerPhysics bowlRef={bowlRef} onCountChange={setNumberEmojisInBowl} />
             </div>
 
             <div

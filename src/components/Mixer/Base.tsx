@@ -3,9 +3,10 @@ import CONFIG from "../../config/config.json";
 
 interface BaseProps {
     outputTubeRef: RefObject<HTMLDivElement | null>;
+    numberEmojisInBowl: number;
 }
 
-export default function Base({ outputTubeRef }: BaseProps) {
+export default function Base({ outputTubeRef, numberEmojisInBowl }: BaseProps) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [progress, setProgress] = useState(0.0);
 
@@ -16,6 +17,8 @@ export default function Base({ outputTubeRef }: BaseProps) {
     const start = () => {
         setIsAnimating(true);
         window.dispatchEvent(new CustomEvent("emoji-start-blend"));
+
+        if (numberEmojisInBowl <= 0) return;
 
         startTimeRef.current = performance.now();
 
@@ -28,8 +31,6 @@ export default function Base({ outputTubeRef }: BaseProps) {
                     Math.min(savedProgressRef.current + elapsed / CONFIG.blendDuration, 1.0) *
                         100.0,
                 ) / 100.0;
-
-            console.log("Current Progress:", currentProgress);
 
             setProgress(currentProgress);
 

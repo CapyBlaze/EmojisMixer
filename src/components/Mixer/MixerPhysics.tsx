@@ -19,9 +19,10 @@ const CONTAINER_HEIGHT = 620;
 
 interface MixerPhysicsProps {
     bowlRef: RefObject<HTMLCanvasElement | null>;
+    onCountChange?: (count: number) => void;
 }
 
-export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
+export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const itemsRef = useRef<FallingEmoji[]>([]);
     const idCounter = useRef(0);
@@ -30,6 +31,10 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
     const blendProgressRef = useRef(0);
     const wavePhaseRef = useRef(0);
     const waveAmplitudeRef = useRef(2);
+    const bowlBoundsRef = useRef<{ minX: number; minY: number; maxX: number; maxY: number } | null>(
+        null,
+    );
+    const bowlWallsRef = useRef<Matter.Body[]>([]);
 
     useEffect(() => {
         const engine = Matter.Engine.create({
@@ -72,6 +77,19 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
             { x: 90, y: 83 },
         );
         Matter.World.add(engine.world, bottleWalls);
+        bowlWallsRef.current = bottleWalls;
+
+        let minX = Infinity,
+            minY = Infinity,
+            maxX = -Infinity,
+            maxY = -Infinity;
+        bottleWalls.forEach((wall) => {
+            minX = Math.min(minX, wall.bounds.min.x);
+            minY = Math.min(minY, wall.bounds.min.y);
+            maxX = Math.max(maxX, wall.bounds.max.x);
+            maxY = Math.max(maxY, wall.bounds.max.y);
+        });
+        bowlBoundsRef.current = { minX, minY, maxX, maxY };
 
         const runner = Matter.Runner.create();
         Matter.Runner.run(runner, engine);
@@ -104,6 +122,24 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
             });
             containerRef.current?.appendChild(el);
             itemsRef.current.push({ id: idCounter.current++, body, el, scale: 1, baseRadius });
+            onCountChange?.(itemsRef.current.length);
+        }
+
+        function isInsideBowl(pos: Matter.Vector) {
+            const walls = bowlWallsRef.current;
+            if (walls.length === 0) return true;
+
+            const rayEnd = { x: pos.x + 37, y: -1000 };
+            const collisions = Matter.Query.ray(walls, pos, rayEnd);
+
+            const uniqueHits = new Set(
+                collisions.map((c) => {
+                    const support = c.supports?.[0] ?? c.bodyB.position;
+                    return `${Math.round(support.x)}_${Math.round(support.y)}`;
+                }),
+            );
+
+            return uniqueHits.size % 2 === 1;
         }
 
         const drawLiquid = () => {
@@ -182,6 +218,8 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
                 for (let i = itemsRef.current.length - 1; i >= 0; i--) {
                     const item = itemsRef.current[i];
 
+                    if (!isInsideBowl(item.body.position)) continue;
+
                     const FORCE_MAGNITUDE = 0.0015;
                     const JUMP_BIAS = 0.0006;
 
@@ -212,12 +250,14 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
                 }
             }
 
-            if (blendProgressRef.current >= 1 && itemsRef.current.length > 0) {
-                itemsRef.current.forEach((item) => {
+            if (blendProgressRef.current >= 1) {
+                for (let i = itemsRef.current.length - 1; i >= 0; i--) {
+                    const item = itemsRef.current[i];
+                    if (!isInsideBowl(item.body.position)) continue;
                     Matter.World.remove(engine.world, item.body);
                     item.el.remove();
-                });
-                itemsRef.current = [];
+                    itemsRef.current.splice(i, 1);
+                }
             }
 
             for (let i = itemsRef.current.length - 1; i >= 0; i--) {
@@ -329,7 +369,7 @@ export default function MixerPhysics({ bowlRef }: MixerPhysicsProps) {
             itemsRef.current.forEach((i) => i.el.remove());
             itemsRef.current = [];
         };
-    }, [bowlRef]);
+    }, [bowlRef, onCountChange]);
 
     return (
         <div
