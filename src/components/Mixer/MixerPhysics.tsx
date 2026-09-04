@@ -12,6 +12,8 @@ type FallingEmoji = {
     el: HTMLImageElement;
     scale: number;
     baseRadius: number;
+    popStartTime?: number;
+    popDelay?: number;
 };
 
 const CONTAINER_WIDTH = 500;
@@ -35,6 +37,11 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         null,
     );
     const bowlWallsRef = useRef<Matter.Body[]>([]);
+    const isDrainingRef = useRef(false);
+
+    const isPoppingRef = useRef(false);
+    const POP_DURATION = 280;
+    const POP_STAGGER = 25;
 
     useEffect(() => {
         const engine = Matter.Engine.create({
@@ -126,20 +133,23 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         }
 
         function isInsideBowl(pos: Matter.Vector) {
-            const walls = bowlWallsRef.current;
-            if (walls.length === 0) return true;
+            console.log("isInsideBowl", pos);
 
-            const rayEnd = { x: pos.x + 37, y: -1000 };
-            const collisions = Matter.Query.ray(walls, pos, rayEnd);
+            // if (walls.length === 0) return true;
 
-            const uniqueHits = new Set(
-                collisions.map((c) => {
-                    const support = c.supports?.[0] ?? c.bodyB.position;
-                    return `${Math.round(support.x)}_${Math.round(support.y)}`;
-                }),
-            );
+            // const rayEnd = { x: pos.x + 37, y: -1000 };
+            // const collisions = Matter.Query.ray(walls, pos, rayEnd);
 
-            return uniqueHits.size % 2 === 1;
+            // const uniqueHits = new Set(
+            //     collisions.map((c) => {
+            //         const support = c.supports?.[0] ?? c.bodyB.position;
+            //         return `${Math.round(support.x)}_${Math.round(support.y)}`;
+            //     }),
+            // );
+
+            // return !(uniqueHits.size % 2 === 1);
+
+            return true;
         }
 
         const drawLiquid = () => {
@@ -221,11 +231,8 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                     if (!isInsideBowl(item.body.position)) continue;
 
                     const FORCE_MAGNITUDE = 0.0015;
-                    const JUMP_BIAS = 0.0006;
-
                     const forceX = (Math.random() - 0.5) * FORCE_MAGNITUDE * item.body.mass;
-                    const forceY =
-                        ((Math.random() - 0.5) * FORCE_MAGNITUDE - JUMP_BIAS) * item.body.mass;
+                    const forceY = (Math.random() - 0.5) * FORCE_MAGNITUDE * item.body.mass;
                     Matter.Body.applyForce(item.body, item.body.position, { x: forceX, y: forceY });
 
                     item.scale = currentEmojiScale;
@@ -260,8 +267,50 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                 }
             }
 
+            if (isPoppingRef.current) {
+                const now = performance.now();
+                let stillPopping = false;
+
+                for (let i = itemsRef.current.length - 1; i >= 0; i--) {
+                    const item = itemsRef.current[i];
+                    const elapsed = now - (item.popStartTime ?? now) - (item.popDelay ?? 0);
+
+                    if (elapsed < 0) {
+                        stillPopping = true;
+                        continue;
+                    }
+
+                    const t = Math.min(1, elapsed / POP_DURATION);
+
+                    if (t >= 1) {
+                        item.el.remove();
+                        itemsRef.current.splice(i, 1);
+                        continue;
+                    }
+
+                    stillPopping = true;
+
+                    const popScale =
+                        t < 0.35 ? 1 + (t / 0.35) * 0.3 : 1.3 * (1 - (t - 0.35) / 0.65);
+                    const opacity = t < 0.7 ? 1 : 1 - (t - 0.7) / 0.3;
+
+                    const { x, y } = item.body.position;
+                    item.el.style.transform = `translate(${x - CONFIG.emojiRadius}px, ${
+                        y - CONFIG.emojiRadius
+                    }px) scale(${Math.max(0, popScale)})`;
+                    item.el.style.opacity = `${Math.max(0, opacity)}`;
+                }
+
+                if (!stillPopping) {
+                    isPoppingRef.current = false;
+                }
+            }
+
             for (let i = itemsRef.current.length - 1; i >= 0; i--) {
                 const item = itemsRef.current[i];
+
+                if (item.popStartTime !== undefined) continue;
+
                 const { x, y } = item.body.position;
 
                 if (y > CONTAINER_HEIGHT + 50) {
@@ -274,6 +323,17 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                 item.el.style.transform = `translate(${x - CONFIG.emojiRadius}px, ${
                     y - CONFIG.emojiRadius
                 }px) rotate(${item.body.angle}rad) scale(${item.scale})`;
+            }
+
+            if (isDrainingRef.current) {
+                blendProgressRef.current = Math.max(
+                    0,
+                    blendProgressRef.current - delta / CONFIG.emptyMixerDuration,
+                );
+
+                if (blendProgressRef.current <= 0) {
+                    isDrainingRef.current = false;
+                }
             }
 
             drawLiquid();
@@ -338,12 +398,24 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         };
 
         const handleTrash = () => {
-            itemsRef.current.forEach((item) => {
+            if (itemsRef.current.length === 0) return;
+
+            const now = performance.now();
+
+            itemsRef.current.reverse().forEach((item, index) => {
                 Matter.World.remove(engine.world, item.body);
-                item.el.remove();
+                item.popStartTime = now;
+                item.popDelay = index * POP_STAGGER + Math.random() * 40;
             });
-            itemsRef.current = [];
-            blendProgressRef.current = 0;
+
+            isPoppingRef.current = true;
+
+            handleEmptyMixer();
+        };
+
+        const handleEmptyMixer = () => {
+            if (blendProgressRef.current <= 0) return;
+            isDrainingRef.current = true;
             isBlendingRef.current = false;
         };
 
@@ -353,6 +425,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         window.addEventListener("emoji-drag-check", handleCheckPosition);
         window.addEventListener("emoji-random-spawn", handleDropSpawn);
         window.addEventListener("emoji-trash", handleTrash);
+        window.addEventListener("mixer-empty", handleEmptyMixer);
 
         return () => {
             window.removeEventListener("emoji-start-blend", handleStartBlend);
@@ -361,6 +434,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             window.removeEventListener("emoji-drag-check", handleCheckPosition);
             window.removeEventListener("emoji-random-spawn", handleDropSpawn);
             window.removeEventListener("emoji-trash", handleTrash);
+            window.removeEventListener("mixer-empty", handleEmptyMixer);
 
             cancelAnimationFrame(raf);
             Matter.Runner.stop(runner);

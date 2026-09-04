@@ -14,6 +14,7 @@
     "numberEmojisSpawned": 3,
     "numberWaves": 10,
     "blendDuration": 10000,
+    "emptyMixerDuration": 3000,
     "colors": [
         "#e28e8e",
         "#e29e8e",

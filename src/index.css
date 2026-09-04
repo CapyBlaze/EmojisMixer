@@ -140,6 +140,42 @@ body {
     }
 }
 
+@keyframes shake-blender {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+    10% {
+        transform: translate3d(-0.5px, 0.5px, 0) rotate(-0.2deg);
+    }
+    20% {
+        transform: translate3d(0.5px, -0.5px, 0) rotate(0.2deg);
+    }
+    30% {
+        transform: translate3d(-0.7px, -0.2px, 0) rotate(-0.4deg);
+    }
+    40% {
+        transform: translate3d(0.7px, 0.5px, 0) rotate(0.4deg);
+    }
+    50% {
+        transform: translate3d(-0.5px, 0.5px, 0) rotate(-0.2deg);
+    }
+    60% {
+        transform: translate3d(0.5px, -0.5px, 0) rotate(0.2deg);
+    }
+    70% {
+        transform: translate3d(-0.7px, 0.5px, 0) rotate(-0.4deg);
+    }
+    80% {
+        transform: translate3d(0.7px, -0.5px, 0) rotate(0.4deg);
+    }
+    90% {
+        transform: translate3d(-0.5px, -0.2px, 0) rotate(-0.2deg);
+    }
+    100% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+}
+
 @media (max-width: 1720px) {
     .container.emojis {
         width: 400px !important;
