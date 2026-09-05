@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import Matter from "matter-js";
 import defaultFile from "../../utils/defaultFile";
 import CONFIG from "../../config/config.json";
@@ -12,6 +12,7 @@ type FallingEmoji = {
     el: HTMLImageElement;
     scale: number;
     baseRadius: number;
+    emojiIndex: number;
     popStartTime?: number;
     popDelay?: number;
 };
@@ -41,6 +42,9 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
     const isDrainingRef = useRef(false);
     const lastInsideCountRef = useRef(0);
 
+    const [recipe, setRecipe] = useState<number[] | null>(null);
+    const recipeRef = useRef<number[] | null>(null);
+
     const isPoppingRef = useRef(false);
     const POP_DURATION = 280;
     const POP_STAGGER = 25;
@@ -51,6 +55,10 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
     useEffect(() => {
         lastActivityRef.current = performance.now();
     }, []);
+
+    useEffect(() => {
+        recipeRef.current = recipe;
+    }, [recipe]);
 
     useEffect(() => {
         const engine = Matter.Engine.create({
@@ -137,7 +145,17 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                 willChange: "transform",
             });
             containerRef.current?.appendChild(el);
-            itemsRef.current.push({ id: idCounter.current++, body, el, scale: 1, baseRadius });
+
+            const emojiIndex = EMOJIS.findIndex((e) => e === emoji);
+
+            itemsRef.current.push({
+                id: idCounter.current++,
+                body,
+                el,
+                scale: 1,
+                baseRadius,
+                emojiIndex,
+            });
         }
 
         const ORIGINAL_SVG_WIDTH = 218;
@@ -317,6 +335,12 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                         Matter.World.remove(engine.world, item.body);
                         item.el.remove();
                         itemsRef.current.splice(i, 1);
+
+                        setRecipe((prevRecipe) => {
+                            const newRecipe = prevRecipe ? [...prevRecipe] : [];
+                            newRecipe.push(item.emojiIndex);
+                            return newRecipe;
+                        });
                     }
                 }
             }
@@ -328,6 +352,12 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                     Matter.World.remove(engine.world, item.body);
                     item.el.remove();
                     itemsRef.current.splice(i, 1);
+
+                    setRecipe((prevRecipe) => {
+                        const newRecipe = prevRecipe ? [...prevRecipe] : [];
+                        newRecipe.push(item.emojiIndex);
+                        return newRecipe;
+                    });
                 }
             }
 
@@ -480,13 +510,105 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                 isPoppingRef.current = true;
             }
 
-            handleEmptyMixer();
+            if (blendProgressRef.current <= 0) return;
+            isDrainingRef.current = true;
+            isBlendingRef.current = false;
         };
 
         const handleEmptyMixer = () => {
             if (blendProgressRef.current <= 0) return;
             isDrainingRef.current = true;
             isBlendingRef.current = false;
+        };
+
+        const handleShareLink = async () => {
+            const currentRecipe = recipeRef.current;
+            if (!currentRecipe || currentRecipe.length === 0) {
+                await navigator.clipboard.writeText(window.location.href);
+                return;
+            }
+
+            const uint16Array = new Uint16Array(currentRecipe);
+            const blob = new Blob([uint16Array]);
+
+            const compressionStream = blob.stream().pipeThrough(new CompressionStream("deflate"));
+            const compressedBuffer = await new Response(compressionStream).arrayBuffer();
+
+            const binaryString = String.fromCharCode(...new Uint8Array(compressedBuffer));
+            const url = btoa(binaryString)
+                .replace(/\+/g, "-")
+                .replace(/\//g, "_")
+                .replace(/=+$/, "");
+
+            await navigator.clipboard.writeText(`${window.location.href}?data=${url}`);
+        };
+
+        const handleLoadData = async (e: Event) => {
+            const { data } = (e as CustomEvent).detail;
+
+            let base64 = data.replace(/-/g, "+").replace(/_/g, "/");
+            while (base64.length % 4) base64 += "=";
+
+            const binaryString = atob(base64);
+            const bytes = new Uint8Array(binaryString.length).map((_, i) =>
+                binaryString.charCodeAt(i),
+            );
+
+            const decompressionStream = new Blob([bytes])
+                .stream()
+                .pipeThrough(new DecompressionStream("deflate"));
+            const decompressedBuffer = await new Response(decompressionStream).arrayBuffer();
+
+            const uint16Array = new Uint16Array(decompressedBuffer);
+            const result = Array.from(uint16Array);
+
+            if (!bowlRef.current) return;
+            const bowlElement = bowlRef.current;
+            const rect = bowlElement.getBoundingClientRect();
+
+            const offset = 5;
+            const x = rect.left + rect.width / 2;
+
+            for (let index = 0; index < result.length; index++) {
+                setTimeout(() => {
+                    spawnEmojis(
+                        EMOJIS[result[index] % EMOJIS.length],
+                        Math.random() * (x + offset - (x - offset)) + (x - offset),
+                        -100,
+                    );
+                }, index * 75);
+            }
+        };
+
+        const handleRecipeReset = () => {
+            setRecipe(null);
+        };
+
+        const handleRecipeAddFavorite = () => {
+            const currentRecipe = recipeRef.current;
+            if (!currentRecipe || currentRecipe.length === 0) return;
+
+            const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
+            const favorite = getSerializedValue
+                ? (JSON.parse(getSerializedValue) as number[][])
+                : null;
+
+            const isDuplicate = favorite
+                ? favorite.some(
+                      (item) =>
+                          item.length === currentRecipe.length &&
+                          item.every((val, i) => val === currentRecipe[i]),
+                  )
+                : false;
+
+            const value = favorite
+                ? isDuplicate
+                    ? favorite
+                    : [...favorite, currentRecipe]
+                : [currentRecipe];
+
+            const setSerializedValue = JSON.stringify(value);
+            localStorage.setItem("emojis-mixer-favorite", setSerializedValue);
         };
 
         window.addEventListener("emoji-start-blend", handleStartBlend);
@@ -496,6 +618,10 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         window.addEventListener("emoji-random-spawn", handleDropSpawn);
         window.addEventListener("emoji-trash", handleTrash);
         window.addEventListener("mixer-empty", handleEmptyMixer);
+        window.addEventListener("share-link", handleShareLink);
+        window.addEventListener("load-data", handleLoadData);
+        window.addEventListener("recipe-reset", handleRecipeReset);
+        window.addEventListener("recipe-add-favorite", handleRecipeAddFavorite);
 
         return () => {
             window.removeEventListener("emoji-start-blend", handleStartBlend);
@@ -505,6 +631,10 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             window.removeEventListener("emoji-random-spawn", handleDropSpawn);
             window.removeEventListener("emoji-trash", handleTrash);
             window.removeEventListener("mixer-empty", handleEmptyMixer);
+            window.removeEventListener("share-link", handleShareLink);
+            window.removeEventListener("load-data", handleLoadData);
+            window.removeEventListener("recipe-reset", handleRecipeReset);
+            window.removeEventListener("recipe-add-favorite", handleRecipeAddFavorite);
 
             cancelAnimationFrame(raf);
             Matter.Runner.stop(runner);

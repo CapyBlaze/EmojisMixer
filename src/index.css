@@ -97,6 +97,36 @@ h3 {
     background: #36373c !important;
 }
 
+.button-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    .icon-gif,
+    .icon-check,
+    .icon-spinner {
+        transition: opacity 0.3s ease;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+
+        &.active {
+            opacity: 1;
+            pointer-events: auto;
+            position: relative;
+        }
+    }
+
+    .icon-spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(0, 0, 0, 0.15);
+        border-top-color: #1a1a1a;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -193,6 +223,12 @@ h3 {
     }
     100% {
         transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
 

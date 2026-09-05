@@ -133,6 +133,8 @@ export default function Output({ inputTubeRef }: OutputProps) {
         const handleEmpty = () => {
             if (fillProgressRef.current <= 0) return;
 
+            window.dispatchEvent(new CustomEvent("recipe-reset"));
+
             targetFillRef.current = 0;
             isFillingRef.current = true;
         };

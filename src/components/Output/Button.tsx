@@ -1,4 +1,5 @@
 import exportImage from "../../utils/exportImage";
+import ButtonCheck from "./ButtonCheck";
 
 interface ButtonProps {
     canvas: React.RefObject<HTMLCanvasElement | null>;
@@ -6,7 +7,7 @@ interface ButtonProps {
 
 export default function Button({ canvas }: ButtonProps) {
     const addFavorite = () => {
-        console.log("Favorite clicked");
+        window.dispatchEvent(new CustomEvent("recipe-add-favorite"));
     };
 
     const downloadImage = () => {
@@ -15,7 +16,7 @@ export default function Button({ canvas }: ButtonProps) {
     };
 
     const shareLink = () => {
-        console.log("Share clicked");
+        window.dispatchEvent(new CustomEvent("share-link"));
     };
 
     return (
@@ -80,38 +81,7 @@ export default function Button({ canvas }: ButtonProps) {
                     borderRadius: "5px",
                 }}
             >
-                <button
-                    onClick={downloadImage}
-                    className="output-button"
-                    style={{
-                        background: "#786b67",
-                        position: "absolute",
-                        width: "42px",
-                        height: "42px",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        borderRadius: "2px",
-                        zIndex: 1,
-                        cursor: "pointer",
-                        border: "none",
-                    }}
-                >
-                    <img
-                        src="./image.svg"
-                        alt="Image"
-                        draggable="false"
-                        className="not-selected"
-                        style={{
-                            width: "30px",
-                            height: "30px",
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                        }}
-                    />
-                </button>
+                <ButtonCheck onClick={downloadImage} icon="./image.svg" alt="Image" />
             </span>
 
             <span
@@ -127,38 +97,7 @@ export default function Button({ canvas }: ButtonProps) {
                     borderRadius: "5px",
                 }}
             >
-                <button
-                    onClick={shareLink}
-                    className="output-button"
-                    style={{
-                        background: "#786b67",
-                        position: "absolute",
-                        width: "42px",
-                        height: "42px",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        borderRadius: "2px",
-                        zIndex: 1,
-                        cursor: "pointer",
-                        border: "none",
-                    }}
-                >
-                    <img
-                        src="./link.svg"
-                        alt="Link"
-                        draggable="false"
-                        className="not-selected"
-                        style={{
-                            width: "30px",
-                            height: "30px",
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                        }}
-                    />
-                </button>
+                <ButtonCheck onClick={shareLink} icon="./link.svg" alt="Link" />
             </span>
         </>
     );

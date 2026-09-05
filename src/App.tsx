@@ -40,6 +40,15 @@ function App() {
         };
     }, []);
 
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const dataValue = queryParams.get("data");
+
+        if (dataValue) {
+            window.dispatchEvent(new CustomEvent("load-data", { detail: { data: dataValue } }));
+        }
+    }, []);
+
     return (
         <>
             <Emojis />
