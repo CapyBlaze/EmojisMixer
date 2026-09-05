@@ -534,7 +534,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
                 return;
             }
 
-            const uint16Array = new Uint16Array(currentRecipe);
+            const uint16Array = new Uint16Array(currentRecipe.slice(0, 60));
             const blob = new Blob([uint16Array]);
 
             const compressionStream = blob.stream().pipeThrough(new CompressionStream("deflate"));
