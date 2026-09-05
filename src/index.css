@@ -22,6 +22,10 @@ body {
     overflow: hidden;
 }
 
+h3 {
+    margin: 0;
+}
+
 .container {
     background: #404449;
     border: 3px #686d76 solid;
@@ -77,31 +81,35 @@ body {
     -webkit-user-select: none;
 }
 
+.container-compositions:hover {
+    background-color: #00000012;
+    cursor: pointer;
+}
+
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #2c2f33;
+    background: #8e8e8f7b;
     border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #acacb0;
+    background: #626265;
     border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #acacb0;
+    background: #626265;
 }
 
 ::-moz-selection {
-    background-color: #585857;
-    color: #ffffff;
+    background-color: #626265;
 }
 ::selection {
-    background-color: #585857;
+    background-color: #626265;
     color: #ffffff;
 }
 
