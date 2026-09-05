@@ -44,6 +44,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
 
     const [recipe, setRecipe] = useState<number[] | null>(null);
     const recipeRef = useRef<number[] | null>(null);
+    const isFinishedRef = useRef(false);
 
     const isPoppingRef = useRef(false);
     const POP_DURATION = 280;
@@ -513,17 +514,22 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             if (blendProgressRef.current <= 0) return;
             isDrainingRef.current = true;
             isBlendingRef.current = false;
+            isFinishedRef.current = false;
+
+            handleRecipeReset();
         };
 
         const handleEmptyMixer = () => {
             if (blendProgressRef.current <= 0) return;
             isDrainingRef.current = true;
             isBlendingRef.current = false;
+
+            isFinishedRef.current = true;
         };
 
         const handleShareLink = async () => {
             const currentRecipe = recipeRef.current;
-            if (!currentRecipe || currentRecipe.length === 0) {
+            if (!currentRecipe || currentRecipe.length === 0 || !isFinishedRef.current) {
                 await navigator.clipboard.writeText(window.location.href);
                 return;
             }
@@ -582,9 +588,12 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
 
         const handleRecipeReset = () => {
             setRecipe(null);
+            isFinishedRef.current = false;
         };
 
         const handleRecipeAddFavorite = () => {
+            console.log(isDrainingRef.current, isBlendingRef.current);
+
             const currentRecipe = recipeRef.current;
             if (!currentRecipe || currentRecipe.length === 0) return;
 
