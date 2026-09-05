@@ -127,6 +127,7 @@ export default function Button({
                     onMouseLeave={stop}
                     onTouchStart={handleTouchStart}
                     onTouchEnd={handleTouchEnd}
+                    className="mixer-button"
                     style={{
                         background: "#786B67",
                         position: "absolute",
@@ -173,6 +174,7 @@ export default function Button({
             >
                 <button
                     onClick={bookClicked}
+                    className="mixer-button"
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -220,6 +222,7 @@ export default function Button({
                 <button
                     onClick={emptyClicked}
                     disabled={progress < 1.0}
+                    className="mixer-button"
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -267,6 +270,7 @@ export default function Button({
             >
                 <button
                     onClick={diceClicked}
+                    className="mixer-button"
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -313,6 +317,7 @@ export default function Button({
             >
                 <button
                     onClick={trashClicked}
+                    className="mixer-button"
                     style={{
                         background: "#786b67",
                         position: "absolute",

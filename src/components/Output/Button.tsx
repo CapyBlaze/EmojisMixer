@@ -35,6 +35,7 @@ export default function Button({ canvas }: ButtonProps) {
             >
                 <button
                     onClick={addFavorite}
+                    className="output-button"
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -81,6 +82,7 @@ export default function Button({ canvas }: ButtonProps) {
             >
                 <button
                     onClick={downloadImage}
+                    className="output-button"
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -127,6 +129,7 @@ export default function Button({ canvas }: ButtonProps) {
             >
                 <button
                     onClick={shareLink}
+                    className="output-button"
                     style={{
                         background: "#786b67",
                         position: "absolute",

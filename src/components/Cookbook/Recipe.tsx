@@ -157,6 +157,7 @@ export default function Recipe({ recipe }: RecipeProps) {
                         </div>
 
                         <button
+                            className="recipe-button"
                             style={{
                                 width: "100%",
                                 height: "45px",

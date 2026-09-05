@@ -83,7 +83,18 @@ h3 {
 
 .container-compositions:hover {
     background-color: #00000012;
-    cursor: pointer;
+}
+
+.mixer-button:hover {
+    background: #6e625f !important;
+}
+
+.output-button:hover {
+    background: #6e625f !important;
+}
+
+.recipe-button:hover {
+    background: #36373c !important;
 }
 
 ::-webkit-scrollbar {
@@ -97,19 +108,19 @@ h3 {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #626265;
+    background: #202022;
     border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #626265;
+    background: #202022;
 }
 
 ::-moz-selection {
-    background-color: #626265;
+    background-color: #202022;
 }
 ::selection {
-    background-color: #626265;
+    background-color: #202022;
     color: #ffffff;
 }
 
