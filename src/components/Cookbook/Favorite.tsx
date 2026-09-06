@@ -1,6 +1,6 @@
 import defaultFile from "../../utils/defaultFile";
 import EMOJIS from "../../config/emojis.json";
-import { useState, type Dispatch } from "react";
+import { useEffect, useState, type Dispatch } from "react";
 import type { RecipeData } from "../../interface/recipe";
 import { generateRecipeData } from "../../utils/generateRecipeData";
 
@@ -9,9 +9,8 @@ interface FavoriteProps {
 }
 
 export default function Favorite({ setRecipe }: FavoriteProps) {
-    const [favorite] = useState<RecipeData[]>(() => {
+    const loadFavorites = (): RecipeData[] => {
         const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
-
         if (!getSerializedValue) return [];
 
         try {
@@ -19,14 +18,32 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
 
             return favorites.map((fav) => {
                 const emojis = fav.map((index) => EMOJIS[index]?.name || "red_question_mark");
-
                 return generateRecipeData(emojis);
             });
         } catch (error) {
             console.error("Failed to parse favorites", error);
             return [];
         }
-    });
+    };
+
+    const [favorite, setFavorite] = useState<RecipeData[]>(loadFavorites());
+
+    useEffect(() => {
+        const handleUpdateFavorites = () => {
+            setFavorite(loadFavorites());
+        };
+
+        window.addEventListener("recipe-add-favorite", handleUpdateFavorites);
+        window.addEventListener("recipe-remove-favorite", handleUpdateFavorites);
+
+        window.addEventListener("storage", handleUpdateFavorites);
+
+        return () => {
+            window.removeEventListener("recipe-add-favorite", handleUpdateFavorites);
+            window.removeEventListener("recipe-remove-favorite", handleUpdateFavorites);
+            window.removeEventListener("storage", handleUpdateFavorites);
+        };
+    }, []);
 
     return (
         <div
@@ -93,15 +110,6 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
                             }}
                         />
                         {composition.name}
-                        <img
-                            src={`./emojis/${defaultFile(EMOJIS.find((e) => e.name === composition.emojis.at(-1))?.files || ["red_question_mark.png"])}`}
-                            alt={composition.emojis.at(-1)}
-                            className="not-selected"
-                            style={{
-                                width: "24px",
-                                height: "24px",
-                            }}
-                        />
                     </div>
                 ))}
             </div>

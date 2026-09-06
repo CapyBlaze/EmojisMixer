@@ -1,3 +1,4 @@
+import { useState, type CSSProperties } from "react";
 import exportImage from "../../utils/exportImage";
 import ButtonCheck from "./ButtonCheck";
 
@@ -6,8 +7,15 @@ interface ButtonProps {
 }
 
 export default function Button({ canvas }: ButtonProps) {
-    const addFavorite = () => {
-        window.dispatchEvent(new CustomEvent("recipe-add-favorite"));
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    const toggleFavorite = () => {
+        setIsFavorite((prev) => {
+            const newValue = !prev;
+            const eventName = newValue ? "recipe-add-favorite" : "recipe-remove-favorite";
+            window.dispatchEvent(new CustomEvent(eventName));
+            return newValue;
+        });
     };
 
     const downloadImage = () => {
@@ -17,6 +25,15 @@ export default function Button({ canvas }: ButtonProps) {
 
     const shareLink = () => {
         window.dispatchEvent(new CustomEvent("share-link"));
+    };
+
+    const baseIconStyle: CSSProperties = {
+        width: "30px",
+        height: "30px",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transition: "opacity 0.25s ease, transform 0.25s ease",
     };
 
     return (
@@ -35,7 +52,7 @@ export default function Button({ canvas }: ButtonProps) {
                 }}
             >
                 <button
-                    onClick={addFavorite}
+                    onClick={toggleFavorite}
                     className="output-button"
                     style={{
                         background: "#786b67",
@@ -49,20 +66,33 @@ export default function Button({ canvas }: ButtonProps) {
                         zIndex: 1,
                         cursor: "pointer",
                         border: "none",
+                        overflow: "hidden",
                     }}
                 >
                     <img
                         src="./star-outline.svg"
+                        alt="Star empty"
+                        draggable="false"
+                        className="not-selected"
+                        style={{
+                            ...baseIconStyle,
+                            opacity: isFavorite ? 0 : 1,
+                            transform: isFavorite
+                                ? "translate(-50%, -50%) scale(0.6)"
+                                : "translate(-50%, -50%) scale(1)",
+                        }}
+                    />
+                    <img
+                        src="./star.svg"
                         alt="Star"
                         draggable="false"
                         className="not-selected"
                         style={{
-                            width: "30px",
-                            height: "30px",
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
+                            ...baseIconStyle,
+                            opacity: isFavorite ? 1 : 0,
+                            transform: isFavorite
+                                ? "translate(-50%, -50%) scale(1)"
+                                : "translate(-50%, -50%) scale(0.6)",
                         }}
                     />
                 </button>

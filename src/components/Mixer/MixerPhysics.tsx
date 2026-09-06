@@ -592,31 +592,56 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         };
 
         const handleRecipeAddFavorite = () => {
-            console.log(isDrainingRef.current, isBlendingRef.current);
-
             const currentRecipe = recipeRef.current;
             if (!currentRecipe || currentRecipe.length === 0) return;
 
             const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
-            const favorite = getSerializedValue
+            const favorites = getSerializedValue
                 ? (JSON.parse(getSerializedValue) as number[][])
                 : null;
 
-            const isDuplicate = favorite
-                ? favorite.some(
-                      (item) =>
-                          item.length === currentRecipe.length &&
-                          item.every((val, i) => val === currentRecipe[i]),
-                  )
+            const isDuplicate = favorites
+                ? favorites.some((item) => {
+                      if (item.length !== currentRecipe.length) return false;
+
+                      const sortedItem = [...item].sort();
+                      const sortedCurrent = [...currentRecipe].sort();
+
+                      return sortedItem.every((val, i) => val === sortedCurrent[i]);
+                  })
                 : false;
 
-            const value = favorite
+            const value = favorites
                 ? isDuplicate
-                    ? favorite
-                    : [...favorite, currentRecipe]
+                    ? favorites
+                    : [...favorites, currentRecipe]
                 : [currentRecipe];
 
             const setSerializedValue = JSON.stringify(value);
+            localStorage.setItem("emojis-mixer-favorite", setSerializedValue);
+        };
+
+        const handleRecipeRemoveFavorite = () => {
+            const currentRecipe = recipeRef.current;
+            if (!currentRecipe || currentRecipe.length === 0) return;
+
+            const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
+            const favorites = getSerializedValue
+                ? (JSON.parse(getSerializedValue) as number[][])
+                : null;
+
+            const currentSorted = [...currentRecipe].sort().join(",");
+
+            if (!favorites || favorites.length === 0) return;
+
+            const newValue = favorites.filter((item) => {
+                if (item.length !== currentRecipe.length) return true;
+
+                const itemSorted = [...item].sort().join(",");
+                return itemSorted !== currentSorted;
+            });
+
+            const setSerializedValue = JSON.stringify(newValue);
             localStorage.setItem("emojis-mixer-favorite", setSerializedValue);
         };
 
@@ -655,6 +680,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         window.addEventListener("load-data", handleLoadData);
         window.addEventListener("recipe-reset", handleRecipeReset);
         window.addEventListener("recipe-add-favorite", handleRecipeAddFavorite);
+        window.addEventListener("recipe-remove-favorite", handleRecipeRemoveFavorite);
         window.addEventListener("recipe-prepare", handleRecipePrepare);
 
         return () => {
@@ -669,6 +695,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             window.removeEventListener("load-data", handleLoadData);
             window.removeEventListener("recipe-reset", handleRecipeReset);
             window.removeEventListener("recipe-add-favorite", handleRecipeAddFavorite);
+            window.removeEventListener("recipe-remove-favorite", handleRecipeRemoveFavorite);
             window.removeEventListener("recipe-prepare", handleRecipePrepare);
 
             cancelAnimationFrame(raf);
