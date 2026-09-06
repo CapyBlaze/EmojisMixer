@@ -5,6 +5,7 @@ import Output from "./components/Output";
 import Title from "./components/Title";
 import Tube from "./components/Tube";
 import SmallScreen from "./components/SmallScreen";
+import Cookbook from "./components/Cookbook";
 
 function App() {
     const inputTube = useRef<HTMLDivElement | null>(null);
@@ -55,9 +56,10 @@ function App() {
             <Mixer outputTubeRef={outputTube} />
             <Output inputTubeRef={inputTube} />
 
-            <Title />
-
             <Tube coords={coords} liquidColor={["#FF007A", "#7B2CBF", "#00F0FF"]} />
+
+            <Title />
+            <Cookbook />
 
             <SmallScreen />
         </>

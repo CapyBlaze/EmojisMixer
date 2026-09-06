@@ -97,6 +97,10 @@ h3 {
     background: #36373c !important;
 }
 
+.cookbook-button:hover {
+    background: #6d6f75 !important;
+}
+
 .button-check {
     display: inline-flex;
     align-items: center;

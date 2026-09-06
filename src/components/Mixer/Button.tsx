@@ -1,7 +1,5 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import CONFIG from "../../config/config.json";
-import { createPortal } from "react-dom";
-import Cookbook from "../Cookbook";
 
 interface ButtonProps {
     numberEmojisInBowl: number;
@@ -19,8 +17,6 @@ export default function Button({
     const animationRef = useRef<number | null>(null);
     const startTimeRef = useRef<number | null>(null);
     const savedProgressRef = useRef<number>(0);
-
-    const [showCookbook, setShowCookbook] = useState(false);
 
     function resetProgress() {
         setIsAnimating(false);
@@ -86,7 +82,7 @@ export default function Button({
     };
 
     const bookClicked = () => {
-        setShowCookbook(true);
+        window.dispatchEvent(new CustomEvent("cookbook-show"));
     };
 
     const diceClicked = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -348,9 +344,6 @@ export default function Button({
                     />
                 </button>
             </span>
-
-            {showCookbook &&
-                createPortal(<Cookbook />, document.getElementById("root") as HTMLElement)}
         </>
     );
 }

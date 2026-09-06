@@ -1,0 +1,112 @@
+{
+    "adjectives": [
+        "Galactic",
+        "Sparkling",
+        "Radioactive",
+        "Velvety",
+        "Sidereal",
+        "Explosive",
+        "Electric",
+        "Hypnotic",
+        "Volcanic",
+        "Cosmic",
+        "Neon",
+        "Mystical",
+        "Bubbling",
+        "Frosty",
+        "Luminous",
+        "Ancient",
+        "Forbidden",
+        "Feral",
+        "Ghostly",
+        "Molten",
+        "Crystalline",
+        "Whispering",
+        "Rogue",
+        "Ethereal",
+        "Screaming"
+    ],
+    "drinkTypes": [
+        "Elixir",
+        "Nectar",
+        "Juice",
+        "Potion",
+        "Smoothie",
+        "Cocktail",
+        "Infusion",
+        "Concentrate",
+        "Serum",
+        "Brew",
+        "Tonic",
+        "Distillate",
+        "Draught",
+        "Extract",
+        "Punch"
+    ],
+    "rarities": ["Common", "Uncommon", "Rare", "Legendary", "Mythic", "Forbidden", "Experimental"],
+    "textures": [
+        "a surprisingly smooth texture",
+        "a sharp effervescence that sparkles on the tongue",
+        "a mesmerizing holographic glow",
+        "a dense, swirling visual consistency",
+        "a light wispy vapor escaping the glass",
+        "a silky layer floating on top",
+        "an oily sheen that refracts every light source nearby",
+        "a gritty, crystalline sediment at the bottom",
+        "a texture that shifts from liquid to gel with every sip",
+        "a foam that hisses faintly when disturbed"
+    ],
+    "effects": [
+        "delivers an instant feeling of weightlessness.",
+        "leaves a delightful hint of nostalgia.",
+        "boosts your energy to light speed.",
+        "triggers brief visions of vibrant colors.",
+        "instantly clears your mind.",
+        "leaves a refreshing cool aftertaste.",
+        "makes colors seem louder for a few minutes.",
+        "sends a warm hum through your fingertips.",
+        "rewires your sense of time, briefly.",
+        "leaves your thoughts oddly quiet and still."
+    ],
+    "nameTemplates": [
+        "{adj} {type} of {count} Essences",
+        "{type} of the {adj} {category}",
+        "The {rarity} {adj} {type}",
+        "{count}-Essence {adj} {type}",
+        "{adj} {category} {type}",
+        "{type} n°{count}: {adj} {category}",
+        "{rarity} {type} of {category}"
+    ],
+    "descOpeners": [
+        "A unique concoction centered around '{category}'.",
+        "Born from the mysteries of '{category}', this brew defies expectation.",
+        "Rumored to originate deep within the realm of '{category}'.",
+        "This {rarity} recipe draws its power from '{category}'.",
+        "Legends whisper of a '{category}' hidden in every sip.",
+        "Crafted in secret, this potion channels the spirit of '{category}'.",
+        "Somewhere between science and superstition, '{category}' gave birth to this drink."
+    ],
+    "descMiddles": [
+        "This blend fuses the essence of '{primary}' with notes of '{secondary}'.",
+        "At its core, {count} distinct essences swirl together, led by '{primary}' and '{secondary}'.",
+        "'{primary}' and '{secondary}' dance together among {count} carefully chosen ingredients.",
+        "A rare alchemical marriage of '{primary}' and '{secondary}' anchors this {count}-ingredient formula.",
+        "Every sip carries traces of '{primary}', balanced delicately by '{secondary}'.",
+        "The recipe balances {count} ingredients, though '{primary}' and '{secondary}' remain the loudest voices in the mix."
+    ],
+    "descClosers": [
+        "It boasts {texture} and {effect}",
+        "One taste reveals {texture}; soon after, it {effect}",
+        "Expect {texture} — and beware, it {effect}",
+        "The result? {texture}, followed by a sensation that {effect}",
+        "You'll notice {texture} first, then it {effect}"
+    ],
+    "bonusLines": [
+        "Best served in zero gravity.",
+        "Not recommended for consumption during meteor showers.",
+        "Handle with a steady hand; it has opinions of its own.",
+        "Store away from direct sunlight and curious pets.",
+        "Some say it hums faintly if left alone too long.",
+        "Side effects may include an unexplainable craving for stardust."
+    ]
+}

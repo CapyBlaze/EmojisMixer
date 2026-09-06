@@ -620,6 +620,30 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             localStorage.setItem("emojis-mixer-favorite", setSerializedValue);
         };
 
+        const handleRecipePrepare = (e: Event) => {
+            const { data } = (e as CustomEvent).detail;
+
+            if (!bowlRef.current) return;
+            const bowlElement = bowlRef.current;
+            const rect = bowlElement.getBoundingClientRect();
+
+            const offset = 5;
+            const x = rect.left + rect.width / 2;
+
+            for (let index = 0; index < data.length; index++) {
+                setTimeout(() => {
+                    const targetEmoji = EMOJIS.find((emoji) => emoji.name === data[index]);
+                    if (!targetEmoji) return;
+
+                    spawnEmojis(
+                        targetEmoji,
+                        Math.random() * (x + offset - (x - offset)) + (x - offset),
+                        -100,
+                    );
+                }, index * 75);
+            }
+        };
+
         window.addEventListener("emoji-start-blend", handleStartBlend);
         window.addEventListener("emoji-stop-blend", handleStopBlend);
         window.addEventListener("emoji-drag-end", handleDrop);
@@ -631,6 +655,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         window.addEventListener("load-data", handleLoadData);
         window.addEventListener("recipe-reset", handleRecipeReset);
         window.addEventListener("recipe-add-favorite", handleRecipeAddFavorite);
+        window.addEventListener("recipe-prepare", handleRecipePrepare);
 
         return () => {
             window.removeEventListener("emoji-start-blend", handleStartBlend);
@@ -644,6 +669,7 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
             window.removeEventListener("load-data", handleLoadData);
             window.removeEventListener("recipe-reset", handleRecipeReset);
             window.removeEventListener("recipe-add-favorite", handleRecipeAddFavorite);
+            window.removeEventListener("recipe-prepare", handleRecipePrepare);
 
             cancelAnimationFrame(raf);
             Matter.Runner.stop(runner);

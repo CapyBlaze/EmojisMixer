@@ -77,7 +77,7 @@ export default function Recipe({ recipe }: RecipeProps) {
                                         fontSize: "15px",
                                     }}
                                 >
-                                    {recipe.desciption}
+                                    {recipe.description}
                                 </p>
                             </div>
                             <div
@@ -147,6 +147,7 @@ export default function Recipe({ recipe }: RecipeProps) {
                                         key={index}
                                         src={`./emojis/${defaultFile(EMOJIS.find((e) => e.name === emoji)?.files || ["red_question_mark.png"])}`}
                                         alt={emoji}
+                                        className="not-selected"
                                         style={{
                                             width: "28px",
                                             height: "28px",
@@ -158,6 +159,14 @@ export default function Recipe({ recipe }: RecipeProps) {
 
                         <button
                             className="recipe-button"
+                            onClick={() => {
+                                window.dispatchEvent(
+                                    new CustomEvent("recipe-prepare", {
+                                        detail: { data: recipe.emojis },
+                                    }),
+                                );
+                                window.dispatchEvent(new CustomEvent("cookbook-hide"));
+                            }}
                             style={{
                                 width: "100%",
                                 height: "45px",

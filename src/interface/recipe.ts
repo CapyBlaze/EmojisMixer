@@ -1,5 +1,5 @@
 export interface RecipeData {
     name: string;
-    desciption: string;
+    description: string;
     emojis: string[];
 }
