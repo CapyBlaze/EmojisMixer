@@ -81,8 +81,16 @@ h3 {
     -webkit-user-select: none;
 }
 
-.container-compositions:hover {
-    background-color: #00000012;
+.container-compositions {
+    &:hover {
+        background: #dedee0 !important;
+
+        --secondary-container: #cbcbcb;
+    }
+
+    .favorite-recipe:hover {
+        background: #7d7c7c !important;
+    }
 }
 
 .mixer-button:hover {

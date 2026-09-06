@@ -79,8 +79,13 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
                     height: "390px",
                     display: "flex",
                     flexDirection: "column",
-                    overflowY: "auto",
-                    paddingRight: "10px",
+                    overflow: "auto",
+                    paddingLeft: "5px",
+                    paddingRight: "15px",
+                    paddingBottom: "5px",
+                    paddingTop: "5px",
+                    gap: "10px",
+                    boxSizing: "border-box",
                 }}
             >
                 {favorite.map((composition, index) => (
@@ -92,24 +97,121 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
                             width: "100%",
                             height: "75px",
                             minHeight: "75px",
-                            borderBottom: "1px solid #B1B3B8",
+                            background: "#EBEBEE",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                             gap: "10px",
                             cursor: "pointer",
+                            borderRadius: "10px",
+                            boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
+                            padding: "5px",
+                            boxSizing: "border-box",
+                            overflow: "hidden",
+                            position: "relative",
                         }}
                     >
-                        <img
-                            src={`./emojis/${defaultFile(EMOJIS.find((e) => e.name === composition.emojis[0])?.files || ["red_question_mark.png"])}`}
-                            alt={composition.emojis[0]}
-                            className="not-selected"
+                        <div
                             style={{
-                                width: "24px",
-                                height: "24px",
+                                background: "var(--secondary-container, #dedede)",
+                                position: "relative",
+                                border: "1px solid #B1B3B8",
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                boxSizing: "border-box",
+                                borderRadius: "5px",
+                                overflow: "hidden",
                             }}
-                        />
-                        {composition.name}
+                        >
+                            <div
+                                style={{
+                                    width: "20%",
+                                    maxWidth: "20%",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <img
+                                    src={`./emojis/${defaultFile(EMOJIS.find((e) => e.name === composition.emojis[0])?.files || ["red_question_mark.png"])}`}
+                                    alt={composition.emojis[0]}
+                                    className="not-selected"
+                                    style={{
+                                        width: "32px",
+                                        height: "32px",
+                                        objectFit: "contain",
+                                    }}
+                                />
+                            </div>
+                            <div
+                                style={{
+                                    width: "70%",
+                                    maxWidth: "70%",
+                                    height: "60%",
+                                }}
+                            >
+                                <h3
+                                    style={{
+                                        width: "92%",
+                                        height: "100%",
+                                        fontSize: "14px",
+                                        fontWeight: "600",
+                                        display: "-webkit-box",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                    }}
+                                >
+                                    {composition.name}
+                                </h3>
+                            </div>
+                            <div
+                                style={{
+                                    width: "10%",
+                                    maxWidth: "10%",
+                                    height: "100%",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    background: "var(--secondary-container, #dedede)",
+                                    overflow: "hidden",
+                                }}
+                            ></div>
+                        </div>
+
+                        <div
+                            className="favorite-recipe"
+                            style={{
+                                position: "absolute",
+                                top: "5px",
+                                right: "5px",
+                                width: "30px",
+                                height: "30px",
+                                background: "#9b9b9b",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderRadius: "0px 4px 0px 5px",
+                                borderTop: "1px solid #B1B3B8",
+                                borderRight: "1px solid #B1B3B8",
+                            }}
+                        >
+                            <img
+                                src={`./star-white.svg`}
+                                alt="Star"
+                                className="not-selected"
+                                style={{
+                                    width: "20px",
+                                    height: "20px",
+                                    objectFit: "contain",
+                                }}
+                            />
+                        </div>
                     </div>
                 ))}
             </div>
