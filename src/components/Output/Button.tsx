@@ -1,32 +1,37 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import exportImage from "../../utils/exportImage";
 import ButtonCheck from "./ButtonCheck";
 import type { EmojiData } from "../../interface/emoji";
+import { getFavoritesFromStorage } from "../../utils/localStorage";
 
 interface ButtonProps {
     canvas: React.RefObject<HTMLCanvasElement | null>;
     recipe: EmojiData[] | null;
 }
 
-export default function Button({ canvas, recipe }: ButtonProps) {
-    const [isFavorite, setIsFavorite] = useState(false);
-    const isActive = (recipe?.length ?? 0) > 0;
+function checkIsFavorite(recipe: EmojiData[] | null): boolean {
+    if (!recipe || recipe.length === 0) return false;
 
-    useEffect(() => {
-        // const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
-        // const favorites = getSerializedValue
-        //     ? (JSON.parse(getSerializedValue) as number[][])
-        //     : null;
-        // const isDuplicate = favorites
-        //     ? favorites.some((item) => {
-        //           if (item.length !== currentRecipe.length) return false;
-        //           const sortedItem = [...item].sort();
-        //           const sortedCurrent = [...currentRecipe].sort();
-        //           return sortedItem.every((val, i) => val === sortedCurrent[i]);
-        //       })
-        //     : false;
-        // setIsFavorite(isDuplicate);
-    }, [recipe]);
+    const favorites = getFavoritesFromStorage();
+    const sortedCurrent = recipe.map((e) => e.name).sort();
+
+    return favorites.some((item) => {
+        if (item.length !== sortedCurrent.length) return false;
+        const sortedItem = [...item].sort();
+        return sortedItem.every((val, i) => val === sortedCurrent[i]);
+    });
+}
+
+export default function Button({ canvas, recipe }: ButtonProps) {
+    const [prevRecipe, setPrevRecipe] = useState(recipe);
+    const [isFavorite, setIsFavorite] = useState(() => checkIsFavorite(recipe));
+
+    if (recipe !== prevRecipe) {
+        setPrevRecipe(recipe);
+        setIsFavorite(checkIsFavorite(recipe));
+    }
+
+    const isActive = (recipe?.length ?? 0) > 0;
 
     const toggleFavorite = () => {
         const newValue = !isFavorite;

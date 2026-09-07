@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import EMOJIS from "../../../config/emojis.json";
+import { getFavoritesFromStorage, setFavoritesToStorage } from "../../../utils/localStorage";
 
 export default function useRecipeStorage() {
     const [recipe, setRecipe] = useState<string[] | null>(null);
@@ -12,23 +12,6 @@ export default function useRecipeStorage() {
     useEffect(() => {
         const handleReset = () => {
             setRecipe(null);
-        };
-
-        const getFavoritesFromStorage = (): string[][] => {
-            const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
-            if (!getSerializedValue) return [];
-
-            try {
-                const favorites = JSON.parse(getSerializedValue) as (string | number)[][];
-                return favorites.map((fav) =>
-                    fav.map((item) =>
-                        typeof item === "number" ? EMOJIS[item]?.name || "red_question_mark" : item,
-                    ),
-                );
-            } catch (error) {
-                console.error("Failed to parse favorites", error);
-                return [];
-            }
         };
 
         const handleAddFavorite = () => {
@@ -47,7 +30,7 @@ export default function useRecipeStorage() {
             });
 
             const value = isDuplicate ? favorites : [...favorites, currentRecipe];
-            localStorage.setItem("emojis-mixer-favorite", JSON.stringify(value));
+            setFavoritesToStorage(value);
         };
 
         const handleRemoveFavorite = () => {
@@ -66,7 +49,7 @@ export default function useRecipeStorage() {
                 return itemSorted !== currentSorted;
             });
 
-            localStorage.setItem("emojis-mixer-favorite", JSON.stringify(newValue));
+            setFavoritesToStorage(newValue);
         };
 
         window.addEventListener("recipe-reset", handleReset);

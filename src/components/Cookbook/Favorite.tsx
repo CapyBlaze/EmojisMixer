@@ -3,6 +3,7 @@ import EMOJIS from "../../config/emojis.json";
 import { useEffect, useState, type Dispatch } from "react";
 import type { RecipeData } from "../../interface/recipe";
 import { generateRecipeData } from "../../utils/generateRecipeData";
+import { getFavoritesFromStorage } from "../../utils/localStorage";
 
 interface FavoriteProps {
     setRecipe: Dispatch<React.SetStateAction<RecipeData | null>>;
@@ -10,16 +11,7 @@ interface FavoriteProps {
 
 export default function Favorite({ setRecipe }: FavoriteProps) {
     const loadFavorites = (): RecipeData[] => {
-        const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
-        if (!getSerializedValue) return [];
-
-        try {
-            const favorites = JSON.parse(getSerializedValue) as string[][];
-            return favorites.map((fav) => generateRecipeData(fav));
-        } catch (error) {
-            console.error("Failed to parse favorites", error);
-            return [];
-        }
+        return getFavoritesFromStorage().map((fav) => generateRecipeData(fav));
     };
 
     const [favorite, setFavorite] = useState<RecipeData[]>(loadFavorites());
