@@ -3,11 +3,11 @@ import CONFIG from "../../config/config.json";
 import Button from "./Button";
 
 interface BaseProps {
-    outputTubeRef: RefObject<HTMLDivElement | null>;
+    outputPipeRef: RefObject<HTMLDivElement | null>;
     numberEmojisInBowl: number;
 }
 
-export default function Base({ outputTubeRef, numberEmojisInBowl }: BaseProps) {
+export default function Base({ outputPipeRef, numberEmojisInBowl }: BaseProps) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [progress, setProgress] = useState(0.0);
 
@@ -210,7 +210,7 @@ export default function Base({ outputTubeRef, numberEmojisInBowl }: BaseProps) {
             ></span>
 
             <span
-                ref={outputTubeRef}
+                ref={outputPipeRef}
                 style={{
                     background: "#7E716C",
                     position: "absolute",

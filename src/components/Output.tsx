@@ -5,10 +5,10 @@ import Button from "./Output/Button";
 import CONFIG from "../config/config.json";
 
 interface OutputProps {
-    inputTubeRef: RefObject<HTMLDivElement | null>;
+    inputPipeRef: RefObject<HTMLDivElement | null>;
 }
 
-export default function Output({ inputTubeRef }: OutputProps) {
+export default function Output({ inputPipeRef }: OutputProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     const fillProgressRef = useRef(0);
@@ -122,12 +122,17 @@ export default function Output({ inputTubeRef }: OutputProps) {
 
         raf = requestAnimationFrame(render);
 
+        let delayTimer: number;
+
         const handleFill = (e: Event) => {
             const detail = (e as CustomEvent)?.detail;
             const amount = typeof detail?.amount === "number" ? detail.amount : 1; // 0 à 1
 
-            targetFillRef.current = Math.max(0, Math.min(1, amount));
-            isFillingRef.current = true;
+            clearTimeout(delayTimer);
+            delayTimer = window.setTimeout(() => {
+                targetFillRef.current = Math.max(0, Math.min(1, amount));
+                isFillingRef.current = true;
+            }, CONFIG.pipeVelocityDuration);
         };
 
         const handleEmpty = () => {
@@ -145,6 +150,7 @@ export default function Output({ inputTubeRef }: OutputProps) {
         return () => {
             window.removeEventListener("mixer-empty", handleFill);
             window.removeEventListener("output-empty", handleEmpty);
+            clearTimeout(delayTimer);
             cancelAnimationFrame(raf);
         };
     }, []);
@@ -262,7 +268,7 @@ export default function Output({ inputTubeRef }: OutputProps) {
                 </span>
 
                 <span
-                    ref={inputTubeRef}
+                    ref={inputPipeRef}
                     style={{
                         background: "#7E716C",
                         position: "absolute",

@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import CONFIG from "../config/config.json";
 
-interface TubeProps {
+interface PipeProps {
     coords: { x1: number; y1: number; x2: number; y2: number } | null;
     liquidColor?: string | string[];
 }
 
-const DRAIN_DURATION = 600;
-
-export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
+export default function Pipe({ coords, liquidColor = "#FFFFFF" }: PipeProps) {
     const liquidPathRef = useRef<SVGPathElement>(null);
     const [pathLength, setPathLength] = useState(0);
 
@@ -56,8 +54,8 @@ export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
         let animationFrame: number;
         let lastTime: number | null = null;
 
-        const fillSpeed = 1 / CONFIG.emptyMixerDuration;
-        const drainSpeed = 1 / DRAIN_DURATION;
+        const fillSpeed = 1 / CONFIG.pipeVelocityDuration;
+        const drainSpeed = 1 / CONFIG.pipeVelocityDuration;
 
         const animate = (time: number) => {
             if (lastTime === null) lastTime = time;
@@ -128,9 +126,10 @@ export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
                 <path
                     fill="none"
                     d={mainPath}
-                    stroke="#8cb0c066"
-                    strokeWidth="50"
+                    stroke="rgba(97, 114, 122, 0.24)"
+                    strokeWidth="40"
                     strokeLinejoin="round"
+                    strokeLinecap="round"
                 />
 
                 <path
@@ -150,10 +149,9 @@ export default function Tube({ coords, liquidColor = "#FFFFFF" }: TubeProps) {
                 <path
                     fill="none"
                     d={mainPath}
-                    stroke="rgba(57, 70, 76, 0.2)"
-                    strokeWidth="40"
+                    stroke="rgba(140, 176, 192, 0.2)"
+                    strokeWidth="50"
                     strokeLinejoin="round"
-                    strokeLinecap="round"
                 />
             </g>
         </svg>

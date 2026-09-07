@@ -1,4 +1,14 @@
 {
+    "blendDuration": 10000,
+    "emptyMixerDuration": 3000,
+    "fillOutputDuration": 3000,
+    "pipeVelocityDuration": 1000,
+
+    "numberEmojisSpawned": 6,
+    "numberWaves": 10,
+
+    "emojiRadius": 17,
+
     "categorys": [
         "Smileys & Emotion",
         "People & Body",
@@ -10,12 +20,6 @@
         "Symbols",
         "Flags"
     ],
-    "emojiRadius": 17,
-    "numberEmojisSpawned": 6,
-    "numberWaves": 10,
-    "blendDuration": 10000,
-    "emptyMixerDuration": 3000,
-    "fillOutputDuration": 3000,
     "colors": [
         "#e28e8e",
         "#e29e8e",

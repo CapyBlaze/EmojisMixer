@@ -7,10 +7,10 @@ import Lid from "./Mixer/Lid";
 import MixerPhysics from "./Mixer/MixerPhysics";
 
 interface MixerProps {
-    outputTubeRef: RefObject<HTMLDivElement | null>;
+    outputPipeRef: RefObject<HTMLDivElement | null>;
 }
 
-export default function Mixer({ outputTubeRef }: MixerProps) {
+export default function Mixer({ outputPipeRef }: MixerProps) {
     const bowlRef = useRef<HTMLCanvasElement | null>(null);
     const [numberEmojisInBowl, setNumberEmojisInBowl] = useState(0);
 
@@ -55,7 +55,7 @@ export default function Mixer({ outputTubeRef }: MixerProps) {
                 <Lid />
                 <Handle />
                 <Bowl ref={bowlRef} />
-                <Base outputTubeRef={outputTubeRef} numberEmojisInBowl={numberEmojisInBowl} />
+                <Base outputPipeRef={outputPipeRef} numberEmojisInBowl={numberEmojisInBowl} />
                 <MixerPhysics bowlRef={bowlRef} onCountChange={setNumberEmojisInBowl} />
             </div>
 

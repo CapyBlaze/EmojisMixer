@@ -3,22 +3,22 @@ import Emojis from "./components/Emojis";
 import Mixer from "./components/Mixer";
 import Output from "./components/Output";
 import Title from "./components/Title";
-import Tube from "./components/Tube";
+import Pipe from "./components/Pipe";
 import SmallScreen from "./components/SmallScreen";
 import Cookbook from "./components/Cookbook";
 
 function App() {
-    const inputTube = useRef<HTMLDivElement | null>(null);
-    const outputTube = useRef<HTMLDivElement | null>(null);
+    const inputPipe = useRef<HTMLDivElement | null>(null);
+    const outputPipe = useRef<HTMLDivElement | null>(null);
 
     const [coords, setCoords] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(
         null,
     );
 
     const updateLinePosition = () => {
-        if (inputTube.current && outputTube.current) {
-            const rectInput = inputTube.current.getBoundingClientRect();
-            const rectOutput = outputTube.current.getBoundingClientRect();
+        if (inputPipe.current && outputPipe.current) {
+            const rectInput = inputPipe.current.getBoundingClientRect();
+            const rectOutput = outputPipe.current.getBoundingClientRect();
 
             setCoords({
                 x1: rectOutput.left + rectOutput.width / 2,
@@ -53,10 +53,10 @@ function App() {
     return (
         <>
             <Emojis />
-            <Mixer outputTubeRef={outputTube} />
-            <Output inputTubeRef={inputTube} />
+            <Mixer outputPipeRef={outputPipe} />
+            <Output inputPipeRef={inputPipe} />
 
-            <Tube coords={coords} liquidColor={["#FF007A", "#7B2CBF", "#00F0FF"]} />
+            <Pipe coords={coords} />
 
             <Title />
             <Cookbook />
