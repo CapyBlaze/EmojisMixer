@@ -1,13 +1,32 @@
-import { useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import exportImage from "../../utils/exportImage";
 import ButtonCheck from "./ButtonCheck";
+import type { EmojiData } from "../../interface/emoji";
 
 interface ButtonProps {
     canvas: React.RefObject<HTMLCanvasElement | null>;
+    recipe: EmojiData[] | null;
 }
 
-export default function Button({ canvas }: ButtonProps) {
+export default function Button({ canvas, recipe }: ButtonProps) {
     const [isFavorite, setIsFavorite] = useState(false);
+    const isActive = (recipe?.length ?? 0) > 0;
+
+    useEffect(() => {
+        // const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
+        // const favorites = getSerializedValue
+        //     ? (JSON.parse(getSerializedValue) as number[][])
+        //     : null;
+        // const isDuplicate = favorites
+        //     ? favorites.some((item) => {
+        //           if (item.length !== currentRecipe.length) return false;
+        //           const sortedItem = [...item].sort();
+        //           const sortedCurrent = [...currentRecipe].sort();
+        //           return sortedItem.every((val, i) => val === sortedCurrent[i]);
+        //       })
+        //     : false;
+        // setIsFavorite(isDuplicate);
+    }, [recipe]);
 
     const toggleFavorite = () => {
         setIsFavorite((prev) => {
@@ -54,6 +73,7 @@ export default function Button({ canvas }: ButtonProps) {
                 <button
                     onClick={toggleFavorite}
                     className="output-button"
+                    disabled={!isActive}
                     style={{
                         background: "#786b67",
                         position: "absolute",
@@ -112,7 +132,12 @@ export default function Button({ canvas }: ButtonProps) {
                     borderRadius: "5px",
                 }}
             >
-                <ButtonCheck onClick={downloadImage} icon="./image.svg" alt="Image" />
+                <ButtonCheck
+                    onClick={downloadImage}
+                    disabled={!isActive}
+                    icon="./image.svg"
+                    alt="Image"
+                />
             </span>
 
             <span

@@ -33,14 +33,16 @@ interface UseMixerPhysicsParams {
     containerRef: RefObject<HTMLDivElement | null>;
     bowlRef: RefObject<HTMLCanvasElement | null>;
     setRecipe: Dispatch<SetStateAction<number[] | null>>;
-    onCountChange?: (count: number) => void;
+    recipeRef: RefObject<number[] | null>;
+    onContentChange?: (content: EmojiData[] | null) => void;
 }
 
 export default function useMixerPhysics({
     containerRef,
     bowlRef,
     setRecipe,
-    onCountChange,
+    recipeRef,
+    onContentChange,
 }: UseMixerPhysicsParams) {
     const itemsRef = useRef<FallingEmoji[]>([]);
     const idCounter = useRef(0);
@@ -56,7 +58,7 @@ export default function useMixerPhysics({
     const isFinishedRef = useRef(false);
 
     const lastActivityRef = useRef(0);
-    const lastInsideCountRef = useRef(0);
+    const lastInsideIdsRef = useRef<string>("");
 
     const wavePhaseRef = useRef(0);
     const waveAmplitudeRef = useRef(2);
@@ -322,9 +324,35 @@ export default function useMixerPhysics({
                 }
             }
 
-            if (insideCount !== lastInsideCountRef.current) {
-                lastInsideCountRef.current = insideCount;
-                onCountChange?.(insideCount);
+            const physicalEmojis: EmojiData[] = [];
+            const physicalIds: number[] = [];
+
+            for (let i = 0; i < itemsRef.current.length; i++) {
+                const item = itemsRef.current[i];
+                if (item.popStartTime !== undefined) continue;
+
+                if (isInsideBowlWithTransform(item.body.position, bowlTransform)) {
+                    const emojiData = EMOJIS[item.emojiIndex];
+                    if (emojiData) {
+                        physicalEmojis.push(emojiData);
+                        physicalIds.push(item.id);
+                    }
+                }
+            }
+
+            const meltedEmojis: EmojiData[] = (recipeRef.current ?? []).map(
+                (index) => EMOJIS[index],
+            );
+
+            const totalBlenderContent = [...meltedEmojis, ...physicalEmojis];
+
+            const recipeKey = recipeRef.current?.join(",") ?? "";
+            const physicalKey = physicalIds.join(",");
+            const currentContentKey = `recipe:[${recipeKey}]_physical:[${physicalKey}]`;
+
+            if (currentContentKey !== lastInsideIdsRef.current) {
+                lastInsideIdsRef.current = currentContentKey;
+                onContentChange?.(totalBlenderContent);
             }
 
             renderLiquid(
@@ -458,7 +486,7 @@ export default function useMixerPhysics({
             itemsRef.current.forEach((i) => i.el.remove());
             itemsRef.current = [];
         };
-    }, [bowlRef, containerRef, onCountChange, setRecipe, spawnEmojis]);
+    }, [bowlRef, containerRef, onContentChange, setRecipe, recipeRef, spawnEmojis]);
 
     return { spawnEmojis, isFinishedRef };
 }

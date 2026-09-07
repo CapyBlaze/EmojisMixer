@@ -1,15 +1,16 @@
 import { useRef } from "react";
 import CONFIG from "../../config/config.json";
+import type { EmojiData } from "../../interface/emoji";
 
 interface ButtonProps {
-    numberEmojisInBowl: number;
+    emojisInBowl: EmojiData[] | null;
     progress: number;
     setIsAnimating: (isAnimating: boolean) => void;
     setProgress: (progress: number) => void;
 }
 
 export default function Button({
-    numberEmojisInBowl,
+    emojisInBowl,
     progress,
     setIsAnimating,
     setProgress,
@@ -29,7 +30,7 @@ export default function Button({
         window.dispatchEvent(new CustomEvent("emoji-start-blend"));
         window.dispatchEvent(new CustomEvent("output-empty"));
 
-        if (numberEmojisInBowl <= 0) return;
+        if (emojisInBowl === null || emojisInBowl?.length <= 0) return;
 
         startTimeRef.current = performance.now();
 
@@ -77,7 +78,7 @@ export default function Button({
     };
 
     const emptyClicked = () => {
-        window.dispatchEvent(new CustomEvent("mixer-empty"));
+        window.dispatchEvent(new CustomEvent("mixer-empty", { detail: { recipe: emojisInBowl } }));
         resetProgress();
     };
 
@@ -248,7 +249,6 @@ export default function Button({
                             top: "50%",
                             left: "50%",
                             transform: "translate(-50%, -50%)",
-                            opacity: progress >= 1.0 ? 1.0 : 0.3,
                         }}
                     />
                 </button>

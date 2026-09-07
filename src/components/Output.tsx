@@ -1,8 +1,9 @@
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import Decoration from "./Output/Decoration";
 import BaseDecoration from "./Output/BaseDecoration";
 import Button from "./Output/Button";
 import CONFIG from "../config/config.json";
+import type { EmojiData } from "../interface/emoji";
 
 interface OutputProps {
     inputPipeRef: RefObject<HTMLDivElement | null>;
@@ -16,6 +17,8 @@ export default function Output({ inputPipeRef }: OutputProps) {
     const isFillingRef = useRef(false);
     const wavePhaseRef = useRef(0);
     const waveAmplitudeRef = useRef(2);
+
+    const [recipe, setRecipe] = useState<EmojiData[] | null>(null);
 
     const lastActivityRef = useRef(0);
     const SETTLE_DELAY = 2500;
@@ -125,13 +128,13 @@ export default function Output({ inputPipeRef }: OutputProps) {
         let delayTimer: number;
 
         const handleFill = (e: Event) => {
-            const detail = (e as CustomEvent)?.detail;
-            const amount = typeof detail?.amount === "number" ? detail.amount : 1; // 0 à 1
+            const detail = (e as CustomEvent).detail;
 
             clearTimeout(delayTimer);
             delayTimer = window.setTimeout(() => {
-                targetFillRef.current = Math.max(0, Math.min(1, amount));
+                targetFillRef.current = 1;
                 isFillingRef.current = true;
+                setRecipe(detail.recipe);
             }, CONFIG.pipeVelocityDuration);
         };
 
@@ -142,6 +145,7 @@ export default function Output({ inputPipeRef }: OutputProps) {
 
             targetFillRef.current = 0;
             isFillingRef.current = true;
+            setRecipe(null);
         };
 
         window.addEventListener("mixer-empty", handleFill);
@@ -264,7 +268,7 @@ export default function Output({ inputPipeRef }: OutputProps) {
                         borderRadius: "5px",
                     }}
                 >
-                    <Button canvas={canvasRef} />
+                    <Button canvas={canvasRef} recipe={recipe} />
                 </span>
 
                 <span

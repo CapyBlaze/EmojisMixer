@@ -93,12 +93,28 @@ h3 {
     }
 }
 
-.mixer-button:hover {
-    background: #6e625f !important;
+.mixer-button {
+    &:hover {
+        background: #6e625f !important;
+    }
+
+    &:disabled {
+        background: #786b67 !important;
+        cursor: default !important;
+        opacity: 0.3 !important;
+    }
 }
 
-.output-button:hover {
-    background: #6e625f !important;
+.output-button {
+    &:hover {
+        background: #6e625f !important;
+    }
+
+    &:disabled {
+        background: #786b67 !important;
+        cursor: default !important;
+        opacity: 0.3 !important;
+    }
 }
 
 .recipe-button:hover {

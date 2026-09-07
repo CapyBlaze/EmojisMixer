@@ -4,10 +4,12 @@ export default function ButtonCheck({
     icon,
     alt,
     onClick,
+    disabled,
 }: {
     icon: string;
     alt: string;
     onClick: () => void | Promise<void>;
+    disabled?: boolean;
 }) {
     const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
 
@@ -40,7 +42,7 @@ export default function ButtonCheck({
                 cursor: "pointer",
                 border: "none",
             }}
-            disabled={status === "loading"}
+            disabled={status === "loading" || disabled}
         >
             <img
                 src={icon}

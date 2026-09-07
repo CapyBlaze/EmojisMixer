@@ -1,20 +1,21 @@
 import { useState, type RefObject } from "react";
 import CONFIG from "../../config/config.json";
 import Button from "./Button";
+import type { EmojiData } from "../../interface/emoji";
 
 interface BaseProps {
     outputPipeRef: RefObject<HTMLDivElement | null>;
-    numberEmojisInBowl: number;
+    emojisInBowl: EmojiData[] | null;
 }
 
-export default function Base({ outputPipeRef, numberEmojisInBowl }: BaseProps) {
+export default function Base({ outputPipeRef, emojisInBowl }: BaseProps) {
     const [isAnimating, setIsAnimating] = useState(false);
     const [progress, setProgress] = useState(0.0);
 
     return (
         <span>
             <Button
-                numberEmojisInBowl={numberEmojisInBowl}
+                emojisInBowl={emojisInBowl}
                 progress={progress}
                 setIsAnimating={setIsAnimating}
                 setProgress={setProgress}

@@ -2,13 +2,14 @@ import { useRef, type RefObject } from "react";
 import useRecipeStorage from "./hooks/useRecipeStorage";
 import useMixerPhysics from "./hooks/useMixerPhysics";
 import useRecipeShare from "./hooks/useRecipeShare";
+import type { EmojiData } from "../../interface/emoji";
 
 interface MixerPhysicsProps {
     bowlRef: RefObject<HTMLCanvasElement | null>;
-    onCountChange?: (count: number) => void;
+    onContentChange?: (content: EmojiData[] | null) => void;
 }
 
-export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsProps) {
+export default function MixerPhysics({ bowlRef, onContentChange }: MixerPhysicsProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const { setRecipe, recipeRef } = useRecipeStorage();
@@ -16,7 +17,8 @@ export default function MixerPhysics({ bowlRef, onCountChange }: MixerPhysicsPro
         containerRef,
         bowlRef,
         setRecipe,
-        onCountChange,
+        recipeRef,
+        onContentChange,
     });
     useRecipeShare({
         recipeRef,
