@@ -85,6 +85,7 @@ export default function useMixerPhysics({
 
             const el = document.createElement("img");
             el.src = `./emojis/${defaultFile(emoji.files)}`;
+            el.className = "not-selected";
             Object.assign(el.style, {
                 position: "absolute",
                 left: "0",
