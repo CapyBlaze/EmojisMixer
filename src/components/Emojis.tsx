@@ -102,6 +102,7 @@ export default function Emojis() {
             >
                 <div className="input-search">
                     <img
+                        className="not-selected"
                         src="./search.svg"
                         alt="Search"
                         fetchPriority="high"
@@ -118,6 +119,7 @@ export default function Emojis() {
                         }}
                     />
                     <img
+                        className="not-selected"
                         src="./clear.svg"
                         alt="Clear"
                         fetchPriority="high"
@@ -163,6 +165,7 @@ export default function Emojis() {
                         }}
                     >
                         <img
+                            className="not-selected"
                             src="./chevron.svg"
                             alt="Previous"
                             fetchPriority="high"
@@ -224,6 +227,7 @@ export default function Emojis() {
                         }}
                     >
                         <img
+                            className="not-selected"
                             src="./chevron.svg"
                             alt="Next"
                             fetchPriority="high"

@@ -6,7 +6,7 @@ export default function Decoration({
     side: "left" | "right";
 }) {
     return (
-        <span style={{ zIndex: 0 }}>
+        <span className="not-selected" style={{ zIndex: 0 }}>
             {style === "lemon1" && (
                 <span
                     style={{

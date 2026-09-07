@@ -4,6 +4,7 @@ import BaseDecoration from "./Output/BaseDecoration";
 import Button from "./Output/Button";
 import CONFIG from "../config/config.json";
 import type { EmojiData } from "../interface/emoji";
+import Particles from "./Output/Particles";
 
 interface OutputProps {
     inputPipeRef: RefObject<HTMLDivElement | null>;
@@ -223,6 +224,8 @@ export default function Output({ inputPipeRef }: OutputProps) {
                             borderBottomLeftRadius: "10px",
                         }}
                     ></canvas>
+
+                    <Particles type="steam" />
 
                     <span
                         style={{

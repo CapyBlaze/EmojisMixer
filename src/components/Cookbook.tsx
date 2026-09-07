@@ -149,7 +149,7 @@ export default function Cookbook() {
                 onClick={() => {
                     window.dispatchEvent(new CustomEvent("cookbook-hide"));
                 }}
-                className="cookbook-button"
+                className="cookbook-button not-selected"
                 style={{
                     background: "#7C7E84",
                     width: "42px",
