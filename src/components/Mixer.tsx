@@ -13,7 +13,6 @@ interface MixerProps {
 export default function Mixer({ outputPipeRef }: MixerProps) {
     const bowlRef = useRef<HTMLCanvasElement | null>(null);
     const [numberEmojisInBowl, setNumberEmojisInBowl] = useState(0);
-
     const [isBlending, setIsBlending] = useState(false);
 
     useEffect(() => {

@@ -42,7 +42,7 @@ function parseSVGPath(d: string) {
     return subpaths;
 }
 
-export function createThickWallsFromSVG(
+export default function createThickWallsFromSVG(
     pathString: string,
     thickness: number,
     offset: { x: number; y: number },
