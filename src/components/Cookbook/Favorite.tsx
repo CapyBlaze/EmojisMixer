@@ -14,12 +14,8 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
         if (!getSerializedValue) return [];
 
         try {
-            const favorites = JSON.parse(getSerializedValue) as number[][];
-
-            return favorites.map((fav) => {
-                const emojis = fav.map((index) => EMOJIS[index]?.name || "red_question_mark");
-                return generateRecipeData(emojis);
-            });
+            const favorites = JSON.parse(getSerializedValue) as string[][];
+            return favorites.map((fav) => generateRecipeData(fav));
         } catch (error) {
             console.error("Failed to parse favorites", error);
             return [];

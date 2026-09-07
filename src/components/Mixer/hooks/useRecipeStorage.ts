@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import EMOJIS from "../../../config/emojis.json";
 
 export default function useRecipeStorage() {
-    const [recipe, setRecipe] = useState<number[] | null>(null);
-    const recipeRef = useRef<number[] | null>(null);
+    const [recipe, setRecipe] = useState<string[] | null>(null);
+    const recipeRef = useRef<string[] | null>(null);
 
     useEffect(() => {
         recipeRef.current = recipe;
@@ -13,48 +14,50 @@ export default function useRecipeStorage() {
             setRecipe(null);
         };
 
+        const getFavoritesFromStorage = (): string[][] => {
+            const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
+            if (!getSerializedValue) return [];
+
+            try {
+                const favorites = JSON.parse(getSerializedValue) as (string | number)[][];
+                return favorites.map((fav) =>
+                    fav.map((item) =>
+                        typeof item === "number" ? EMOJIS[item]?.name || "red_question_mark" : item,
+                    ),
+                );
+            } catch (error) {
+                console.error("Failed to parse favorites", error);
+                return [];
+            }
+        };
+
         const handleAddFavorite = () => {
             const currentRecipe = recipeRef.current;
             if (!currentRecipe || currentRecipe.length === 0) return;
 
-            const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
-            const favorites = getSerializedValue
-                ? (JSON.parse(getSerializedValue) as number[][])
-                : null;
+            const favorites = getFavoritesFromStorage();
 
-            const isDuplicate = favorites
-                ? favorites.some((item) => {
-                      if (item.length !== currentRecipe.length) return false;
+            const isDuplicate = favorites.some((item) => {
+                if (item.length !== currentRecipe.length) return false;
 
-                      const sortedItem = [...item].sort();
-                      const sortedCurrent = [...currentRecipe].sort();
+                const sortedItem = [...item].sort();
+                const sortedCurrent = [...currentRecipe].sort();
 
-                      return sortedItem.every((val, i) => val === sortedCurrent[i]);
-                  })
-                : false;
+                return sortedItem.every((val, i) => val === sortedCurrent[i]);
+            });
 
-            const value = favorites
-                ? isDuplicate
-                    ? favorites
-                    : [...favorites, currentRecipe]
-                : [currentRecipe];
-
-            const setSerializedValue = JSON.stringify(value);
-            localStorage.setItem("emojis-mixer-favorite", setSerializedValue);
+            const value = isDuplicate ? favorites : [...favorites, currentRecipe];
+            localStorage.setItem("emojis-mixer-favorite", JSON.stringify(value));
         };
 
         const handleRemoveFavorite = () => {
             const currentRecipe = recipeRef.current;
             if (!currentRecipe || currentRecipe.length === 0) return;
 
-            const getSerializedValue = localStorage.getItem("emojis-mixer-favorite");
-            const favorites = getSerializedValue
-                ? (JSON.parse(getSerializedValue) as number[][])
-                : null;
+            const favorites = getFavoritesFromStorage();
+            if (favorites.length === 0) return;
 
             const currentSorted = [...currentRecipe].sort().join(",");
-
-            if (!favorites || favorites.length === 0) return;
 
             const newValue = favorites.filter((item) => {
                 if (item.length !== currentRecipe.length) return true;
@@ -63,8 +66,7 @@ export default function useRecipeStorage() {
                 return itemSorted !== currentSorted;
             });
 
-            const setSerializedValue = JSON.stringify(newValue);
-            localStorage.setItem("emojis-mixer-favorite", setSerializedValue);
+            localStorage.setItem("emojis-mixer-favorite", JSON.stringify(newValue));
         };
 
         window.addEventListener("recipe-reset", handleReset);

@@ -29,12 +29,11 @@ export default function Button({ canvas, recipe }: ButtonProps) {
     }, [recipe]);
 
     const toggleFavorite = () => {
-        setIsFavorite((prev) => {
-            const newValue = !prev;
-            const eventName = newValue ? "recipe-add-favorite" : "recipe-remove-favorite";
-            window.dispatchEvent(new CustomEvent(eventName));
-            return newValue;
-        });
+        const newValue = !isFavorite;
+        setIsFavorite(newValue);
+
+        const eventName = newValue ? "recipe-add-favorite" : "recipe-remove-favorite";
+        window.dispatchEvent(new CustomEvent(eventName));
     };
 
     const downloadImage = () => {

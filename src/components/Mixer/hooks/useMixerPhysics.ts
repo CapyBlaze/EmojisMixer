@@ -32,8 +32,8 @@ type FallingEmoji = {
 interface UseMixerPhysicsParams {
     containerRef: RefObject<HTMLDivElement | null>;
     bowlRef: RefObject<HTMLCanvasElement | null>;
-    setRecipe: Dispatch<SetStateAction<number[] | null>>;
-    recipeRef: RefObject<number[] | null>;
+    setRecipe: Dispatch<SetStateAction<string[] | null>>;
+    recipeRef: RefObject<string[] | null>;
     onContentChange?: (content: EmojiData[] | null) => void;
 }
 
@@ -231,7 +231,8 @@ export default function useMixerPhysics({
 
                         setRecipe((prevRecipe) => {
                             const newRecipe = prevRecipe ? [...prevRecipe] : [];
-                            newRecipe.push(item.emojiIndex);
+                            const emojiName = EMOJIS[item.emojiIndex]?.name || "red_question_mark";
+                            newRecipe.push(emojiName);
                             return newRecipe;
                         });
                     }
@@ -248,7 +249,8 @@ export default function useMixerPhysics({
 
                     setRecipe((prevRecipe) => {
                         const newRecipe = prevRecipe ? [...prevRecipe] : [];
-                        newRecipe.push(item.emojiIndex);
+                        const emojiName = EMOJIS[item.emojiIndex]?.name || "red_question_mark";
+                        newRecipe.push(emojiName);
                         return newRecipe;
                     });
                 }
@@ -340,9 +342,9 @@ export default function useMixerPhysics({
                 }
             }
 
-            const meltedEmojis: EmojiData[] = (recipeRef.current ?? []).map(
-                (index) => EMOJIS[index],
-            );
+            const meltedEmojis: EmojiData[] = (recipeRef.current ?? [])
+                .map((name) => EMOJIS.find((e) => e.name === name))
+                .filter((e): e is EmojiData => e !== undefined);
 
             const totalBlenderContent = [...meltedEmojis, ...physicalEmojis];
 

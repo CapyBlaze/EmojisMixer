@@ -3,7 +3,7 @@ import EMOJIS from "../../../config/emojis.json";
 import type { EmojiData } from "../../../interface/emoji";
 
 interface UseRecipeShareParams {
-    recipeRef: React.RefObject<number[] | null>;
+    recipeRef: React.RefObject<string[] | null>;
     isFinishedRef: React.RefObject<boolean>;
     bowlRef: React.RefObject<HTMLCanvasElement | null>;
     spawnEmojis: (emoji: EmojiData, x: number, y: number) => void;
@@ -23,7 +23,11 @@ export default function useRecipeShare({
                 return;
             }
 
-            const uint16Array = new Uint16Array(currentRecipe.slice(0, 60));
+            const indices = currentRecipe
+                .map((name) => EMOJIS.findIndex((e) => e.name === name))
+                .filter((index) => index !== -1);
+
+            const uint16Array = new Uint16Array(indices.slice(0, 60));
             const blob = new Blob([uint16Array]);
 
             const compressionStream = blob.stream().pipeThrough(new CompressionStream("deflate"));
