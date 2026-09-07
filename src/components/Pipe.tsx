@@ -2,11 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import CONFIG from "../config/config.json";
 
 interface PipeProps {
-    coords: { x1: number; y1: number; x2: number; y2: number } | null;
+    inputPipeRef: React.RefObject<HTMLDivElement | null>;
+    outputPipeRef: React.RefObject<HTMLDivElement | null>;
     liquidColor?: string | string[];
 }
 
-export default function Pipe({ coords, liquidColor = "#FFFFFF" }: PipeProps) {
+export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFFFF" }: PipeProps) {
+    const [coords, setCoords] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(
+        null,
+    );
+
     const liquidPathRef = useRef<SVGPathElement>(null);
     const [pathLength, setPathLength] = useState(0);
 
@@ -27,6 +32,20 @@ export default function Pipe({ coords, liquidColor = "#FFFFFF" }: PipeProps) {
     useEffect(() => {
         let timerId: number;
 
+        const updateLinePosition = () => {
+            if (inputPipeRef.current && outputPipeRef.current) {
+                const rectInput = inputPipeRef.current.getBoundingClientRect();
+                const rectOutput = outputPipeRef.current.getBoundingClientRect();
+
+                setCoords({
+                    x1: rectOutput.left + rectOutput.width / 2,
+                    y1: rectOutput.top + rectOutput.height / 2,
+                    x2: rectInput.left + rectInput.width / 2,
+                    y2: rectInput.top + rectInput.height / 2,
+                });
+            }
+        };
+
         const handleEmptyMixer = () => {
             headRef.current = 0;
             tailRef.current = 0;
@@ -42,13 +61,21 @@ export default function Pipe({ coords, liquidColor = "#FFFFFF" }: PipeProps) {
             }, CONFIG.emptyMixerDuration);
         };
 
+        updateLinePosition();
+
+        window.addEventListener("resize", updateLinePosition);
+        window.addEventListener("scroll", updateLinePosition);
+
         window.addEventListener("mixer-empty", handleEmptyMixer);
 
         return () => {
+            window.removeEventListener("resize", updateLinePosition);
+            window.removeEventListener("scroll", updateLinePosition);
+
             window.removeEventListener("mixer-empty", handleEmptyMixer);
             clearTimeout(timerId);
         };
-    }, []);
+    }, [inputPipeRef, outputPipeRef]);
 
     useEffect(() => {
         let animationFrame: number;
