@@ -101,7 +101,12 @@ export default function Emojis() {
                 }}
             >
                 <div className="input-search">
-                    <img src="./search.svg" alt="Search" style={{ width: "20px", opacity: 0.5 }} />
+                    <img
+                        src="./search.svg"
+                        alt="Search"
+                        fetchPriority="high"
+                        style={{ width: "20px", opacity: 0.5 }}
+                    />
                     <input
                         id="search-bar"
                         type="text"
@@ -115,6 +120,7 @@ export default function Emojis() {
                     <img
                         src="./clear.svg"
                         alt="Clear"
+                        fetchPriority="high"
                         style={{
                             width: "20px",
                             transition: "opacity 0.2s",
@@ -159,6 +165,7 @@ export default function Emojis() {
                         <img
                             src="./chevron.svg"
                             alt="Previous"
+                            fetchPriority="high"
                             style={{ width: "20px", opacity: 0.5, transform: "rotate(180deg)" }}
                         />
                     </button>
@@ -219,6 +226,7 @@ export default function Emojis() {
                         <img
                             src="./chevron.svg"
                             alt="Next"
+                            fetchPriority="high"
                             style={{ width: "20px", opacity: 0.5 }}
                         />
                     </button>

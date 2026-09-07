@@ -205,6 +205,7 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
                                 src={`./star-white.svg`}
                                 alt="Star"
                                 className="not-selected"
+                                fetchPriority="high"
                                 style={{
                                     width: "20px",
                                     height: "20px",

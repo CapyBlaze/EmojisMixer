@@ -142,6 +142,7 @@ export default function Button({
                         src="./flash.svg"
                         alt="Flash"
                         draggable="false"
+                        fetchPriority="high"
                         className="not-selected"
                         style={{
                             width: "50px",
@@ -189,6 +190,7 @@ export default function Button({
                         src="./book.svg"
                         alt="Book"
                         draggable="false"
+                        fetchPriority="high"
                         className="not-selected"
                         style={{
                             width: "25px",
@@ -237,6 +239,7 @@ export default function Button({
                         src="./empty.svg"
                         alt="Empty"
                         draggable="false"
+                        fetchPriority="high"
                         className="not-selected"
                         style={{
                             width: "25px",
@@ -285,6 +288,7 @@ export default function Button({
                         src="./dice.svg"
                         alt="Dice"
                         draggable="false"
+                        fetchPriority="high"
                         className="not-selected"
                         style={{
                             width: "25px",
@@ -332,6 +336,7 @@ export default function Button({
                         src="./trash.svg"
                         alt="Trash"
                         draggable="false"
+                        fetchPriority="high"
                         className="not-selected"
                         style={{
                             width: "25px",

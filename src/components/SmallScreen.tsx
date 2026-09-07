@@ -34,6 +34,7 @@ export default function SmallScreen() {
                 <img
                     src="./mixerScreenSmall.svg"
                     alt="Mixer Screen Small"
+                    fetchPriority="high"
                     style={{
                         width: "200px",
                     }}

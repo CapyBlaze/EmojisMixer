@@ -46,6 +46,7 @@ export default function ButtonCheck({
                 src={icon}
                 alt={alt}
                 draggable="false"
+                fetchPriority="high"
                 className={`not-selected icon-gif ${status === "idle" ? "active" : ""}`}
                 style={{
                     width: "30px",
@@ -61,6 +62,7 @@ export default function ButtonCheck({
                 src="./checkmark.svg"
                 alt="checkmark"
                 draggable="false"
+                fetchPriority="high"
                 className={`not-selected icon-check ${status === "done" ? "active" : ""}`}
                 style={{
                     width: "30px",

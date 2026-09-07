@@ -163,7 +163,12 @@ export default function Cookbook() {
                     translate: "-2px -31px",
                 }}
             >
-                <img src="./close.svg" alt="Close" style={{ width: "100%", height: "100%" }} />
+                <img
+                    src="./close.svg"
+                    alt="Close"
+                    fetchPriority="high"
+                    style={{ width: "100%", height: "100%" }}
+                />
             </button>
         </div>
     );

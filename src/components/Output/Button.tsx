@@ -73,6 +73,7 @@ export default function Button({ canvas }: ButtonProps) {
                         src="./star-outline.svg"
                         alt="Star empty"
                         draggable="false"
+                        fetchPriority="high"
                         className="not-selected"
                         style={{
                             ...baseIconStyle,
