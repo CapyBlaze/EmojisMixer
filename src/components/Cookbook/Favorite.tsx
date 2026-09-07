@@ -3,7 +3,8 @@ import EMOJIS from "../../config/emojis.json";
 import { useEffect, useState, type Dispatch } from "react";
 import type { RecipeData } from "../../interface/recipe";
 import { generateRecipeData } from "../../utils/generateRecipeData";
-import { getFavoritesFromStorage } from "../../utils/localStorage";
+import { getFavoritesFromStorage, setFavoritesToStorage } from "../../utils/localStorage";
+import PopUp from "../PopUp";
 
 interface FavoriteProps {
     setRecipe: Dispatch<React.SetStateAction<RecipeData | null>>;
@@ -14,7 +15,29 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
         return getFavoritesFromStorage().map((fav) => generateRecipeData(fav));
     };
 
-    const [favorite, setFavorite] = useState<RecipeData[]>(loadFavorites());
+    const [favorite, setFavorite] = useState<RecipeData[]>(loadFavorites);
+    const [selectedForDelete, setSelectedForDelete] = useState<RecipeData | null>(null);
+
+    const removeFavorite = () => {
+        if (!selectedForDelete) return;
+
+        const favorites = getFavoritesFromStorage();
+        if (favorites.length === 0) return;
+
+        const currentSorted = [...selectedForDelete.emojis].sort().join(",");
+
+        const newValue = favorites.filter((item) => {
+            if (item.length !== selectedForDelete.emojis.length) return true;
+
+            const itemSorted = [...item].sort().join(",");
+            return itemSorted !== currentSorted;
+        });
+
+        setFavoritesToStorage(newValue);
+
+        setSelectedForDelete(null);
+        setFavorite(loadFavorites());
+    };
 
     useEffect(() => {
         const handleUpdateFavorites = () => {
@@ -23,7 +46,6 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
 
         window.addEventListener("recipe-add-favorite", handleUpdateFavorites);
         window.addEventListener("recipe-remove-favorite", handleUpdateFavorites);
-
         window.addEventListener("storage", handleUpdateFavorites);
 
         return () => {
@@ -61,6 +83,7 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
             >
                 Favorites
             </h2>
+
             <div
                 style={{
                     width: "100%",
@@ -78,7 +101,7 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
             >
                 {favorite.map((composition, index) => (
                     <div
-                        key={index}
+                        key={composition.name || index}
                         onClick={() => setRecipe(composition)}
                         className="container-compositions"
                         style={{
@@ -124,7 +147,10 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
                                 }}
                             >
                                 <img
-                                    src={`./emojis/${defaultFile(EMOJIS.find((e) => e.name === composition.emojis[0])?.files || ["red_question_mark.png"])}`}
+                                    src={`./emojis/${defaultFile(
+                                        EMOJIS.find((e) => e.name === composition.emojis[0])
+                                            ?.files || ["red_question_mark.png"],
+                                    )}`}
                                     alt={composition.emojis[0]}
                                     className="not-selected"
                                     style={{
@@ -169,10 +195,14 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
                                     background: "var(--secondary-container, #dedede)",
                                     overflow: "hidden",
                                 }}
-                            ></div>
+                            />
                         </div>
 
-                        <div
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedForDelete(composition);
+                            }}
                             className="favorite-recipe"
                             style={{
                                 position: "absolute",
@@ -187,10 +217,13 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
                                 borderRadius: "0px 4px 0px 5px",
                                 borderTop: "1px solid #B1B3B8",
                                 borderRight: "1px solid #B1B3B8",
+                                borderBottom: "none",
+                                borderLeft: "none",
+                                cursor: "pointer",
                             }}
                         >
                             <img
-                                src={`./star-white.svg`}
+                                src="./star-white.svg"
                                 alt="Star"
                                 className="not-selected"
                                 fetchPriority="high"
@@ -200,10 +233,25 @@ export default function Favorite({ setRecipe }: FavoriteProps) {
                                     objectFit: "contain",
                                 }}
                             />
-                        </div>
+                        </button>
                     </div>
                 ))}
             </div>
+
+            {selectedForDelete && (
+                <PopUp
+                    popupContent={
+                        <>
+                            Do you want to remove "
+                            <span style={{ fontWeight: "700" }}>{selectedForDelete.name}</span>"
+                            from your favorites?
+                        </>
+                    }
+                    onAction={removeFavorite}
+                    onClose={() => setSelectedForDelete(null)}
+                    actionText="Remove"
+                />
+            )}
         </div>
     );
 }
