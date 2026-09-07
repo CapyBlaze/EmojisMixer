@@ -22,7 +22,7 @@ export default function Decoration({
                                 : "translateX(50%) scaleX(-1.0) rotate(124deg)",
                     }}
                 >
-                    <img src="./decoration/lemon1.svg" alt="lemon1" />
+                    <img src="./decoration/lemon1.svg" alt="lemon1" fetchPriority="high" />
                 </span>
             )}
 
@@ -41,7 +41,7 @@ export default function Decoration({
                                 : "translateX(50%) scaleX(-1.0) rotate(74deg)",
                     }}
                 >
-                    <img src="./decoration/lemon2.svg" alt="lemon2" />
+                    <img src="./decoration/lemon2.svg" alt="lemon2" fetchPriority="high" />
                 </span>
             )}
 
@@ -60,7 +60,7 @@ export default function Decoration({
                                 : "translateX(50%) scaleX(-1.0) rotate(124deg)",
                     }}
                 >
-                    <img src="./decoration/orange1.svg" alt="orange1" />
+                    <img src="./decoration/orange1.svg" alt="orange1" fetchPriority="high" />
                 </span>
             )}
 
@@ -79,7 +79,7 @@ export default function Decoration({
                                 : "translateX(50%) scaleX(-1.0) rotate(74deg)",
                     }}
                 >
-                    <img src="./decoration/orange2.svg" alt="orange2" />
+                    <img src="./decoration/orange2.svg" alt="orange2" fetchPriority="high" />
                 </span>
             )}
 
@@ -98,7 +98,7 @@ export default function Decoration({
                                 : "translateX(50%) scaleX(-1.0)",
                     }}
                 >
-                    <img src="./decoration/leaf.svg" alt="leaf" />
+                    <img src="./decoration/leaf.svg" alt="leaf" fetchPriority="high" />
                 </span>
             )}
 
@@ -117,7 +117,7 @@ export default function Decoration({
                                 : "translateX(50%) scaleX(-1.0) rotate(13deg)",
                     }}
                 >
-                    <img src="./decoration/umbrella.svg" alt="umbrella" />
+                    <img src="./decoration/umbrella.svg" alt="umbrella" fetchPriority="high" />
                 </span>
             )}
         </span>
