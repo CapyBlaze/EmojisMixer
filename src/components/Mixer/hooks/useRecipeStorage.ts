@@ -9,11 +9,11 @@ export default function useRecipeStorage() {
     }, [recipe]);
 
     useEffect(() => {
-        const handleRecipeReset = () => {
+        const handleReset = () => {
             setRecipe(null);
         };
 
-        const handleRecipeAddFavorite = () => {
+        const handleAddFavorite = () => {
             const currentRecipe = recipeRef.current;
             if (!currentRecipe || currentRecipe.length === 0) return;
 
@@ -43,7 +43,7 @@ export default function useRecipeStorage() {
             localStorage.setItem("emojis-mixer-favorite", setSerializedValue);
         };
 
-        const handleRecipeRemoveFavorite = () => {
+        const handleRemoveFavorite = () => {
             const currentRecipe = recipeRef.current;
             if (!currentRecipe || currentRecipe.length === 0) return;
 
@@ -67,14 +67,14 @@ export default function useRecipeStorage() {
             localStorage.setItem("emojis-mixer-favorite", setSerializedValue);
         };
 
-        window.addEventListener("recipe-reset", handleRecipeReset);
-        window.addEventListener("recipe-add-favorite", handleRecipeAddFavorite);
-        window.addEventListener("recipe-remove-favorite", handleRecipeRemoveFavorite);
+        window.addEventListener("recipe-reset", handleReset);
+        window.addEventListener("recipe-add-favorite", handleAddFavorite);
+        window.addEventListener("recipe-remove-favorite", handleRemoveFavorite);
 
         return () => {
-            window.removeEventListener("recipe-reset", handleRecipeReset);
-            window.removeEventListener("recipe-add-favorite", handleRecipeAddFavorite);
-            window.removeEventListener("recipe-remove-favorite", handleRecipeRemoveFavorite);
+            window.removeEventListener("recipe-reset", handleReset);
+            window.removeEventListener("recipe-add-favorite", handleAddFavorite);
+            window.removeEventListener("recipe-remove-favorite", handleRemoveFavorite);
         };
     }, [recipeRef]);
 

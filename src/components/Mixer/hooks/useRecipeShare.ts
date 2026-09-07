@@ -75,7 +75,7 @@ export default function useRecipeShare({
             }
         };
 
-        const handleRecipePrepare = (e: Event) => {
+        const handlePrepare = (e: Event) => {
             const { data } = (e as CustomEvent).detail;
 
             if (!bowlRef.current) return;
@@ -101,12 +101,12 @@ export default function useRecipeShare({
 
         window.addEventListener("share-link", handleShareLink);
         window.addEventListener("load-data", handleLoadData);
-        window.addEventListener("recipe-prepare", handleRecipePrepare);
+        window.addEventListener("recipe-prepare", handlePrepare);
 
         return () => {
             window.removeEventListener("share-link", handleShareLink);
             window.removeEventListener("load-data", handleLoadData);
-            window.removeEventListener("recipe-prepare", handleRecipePrepare);
+            window.removeEventListener("recipe-prepare", handlePrepare);
         };
     }, [spawnEmojis, bowlRef, isFinishedRef, recipeRef]);
 }
