@@ -41,6 +41,7 @@ export default function Mixer({ outputPipeRef }: MixerProps) {
                 transformOrigin: "center bottom",
                 backfaceVisibility: "hidden",
                 willChange: "transform",
+                zIndex: 1,
 
                 animation: isBlending ? "shake-blender 0.1s linear infinite" : "none",
             }}

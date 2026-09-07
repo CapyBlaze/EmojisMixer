@@ -303,7 +303,7 @@ export default function useMixerPhysics({
 
                 const { x, y } = item.body.position;
 
-                if (y > container.clientHeight + 50) {
+                if (y > container.clientHeight + 300) {
                     Matter.World.remove(engine.world, item.body);
                     item.el.remove();
                     itemsRef.current.splice(i, 1);
