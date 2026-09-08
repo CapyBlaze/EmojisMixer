@@ -20,9 +20,7 @@ export default function Output({ inputPipeRef }: OutputProps) {
     const waveAmplitudeRef = useRef(2);
 
     const [recipe, setRecipe] = useState<EmojiData[] | null>(null);
-
     const lastActivityRef = useRef(0);
-    const SETTLE_DELAY = 2500;
 
     useEffect(() => {
         lastActivityRef.current = performance.now();
@@ -57,14 +55,13 @@ export default function Output({ inputPipeRef }: OutputProps) {
                 return;
             }
 
-            const MAX_FILL_RATIO = 0.85;
-            const fillRatio = fillProgressRef.current * MAX_FILL_RATIO;
+            const fillRatio = fillProgressRef.current * CONFIG.outputMaxFillLevel;
             const liquidY = h - h * fillRatio;
 
             const timeSinceActivity = now - lastActivityRef.current;
             const targetAmplitude = isFillingRef.current
                 ? 6
-                : timeSinceActivity < SETTLE_DELAY
+                : timeSinceActivity < CONFIG.liquidSettleDelay
                   ? 2
                   : 0;
 

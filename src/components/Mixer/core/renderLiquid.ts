@@ -1,4 +1,4 @@
-const SETTLE_DELAY = 2500;
+import CONFIG from "../../../config/config.json";
 
 export default function renderLiquid(
     canvas: HTMLCanvasElement | null,
@@ -36,12 +36,12 @@ export default function renderLiquid(
         return;
     }
 
-    const MAX_FILL_RATIO = 0.8;
-    const fillRatio = progress * MAX_FILL_RATIO;
+    const fillRatio = progress * CONFIG.mixerMaxFillLevel;
     const liquidY = h - h * fillRatio;
 
     const timeSinceActivity = now - lastActivityTime;
-    const targetAmplitude = isBlending || isDraining ? 6 : timeSinceActivity < SETTLE_DELAY ? 2 : 0;
+    const targetAmplitude =
+        isBlending || isDraining ? 6 : timeSinceActivity < CONFIG.liquidSettleDelay ? 2 : 0;
 
     const SMOOTH_FACTOR = 0.04;
     waveAmplitudeRef.current += (targetAmplitude - waveAmplitudeRef.current) * SMOOTH_FACTOR;

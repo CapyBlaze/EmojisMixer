@@ -1,12 +1,12 @@
-const FAVORITES_STORAGE_KEY = "emojis-mixer-favorite";
+import CONFIG from "../config/config.json";
 
 export function getFavoritesFromStorage() {
-    const getSerializedValue = localStorage.getItem(FAVORITES_STORAGE_KEY);
+    const getSerializedValue = localStorage.getItem(CONFIG.favoritesStorageKey);
     if (!getSerializedValue) return [];
 
     return JSON.parse(getSerializedValue) as string[][];
 }
 
 export function setFavoritesToStorage(favorites: string[][]) {
-    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(favorites));
+    localStorage.setItem(CONFIG.favoritesStorageKey, JSON.stringify(favorites));
 }

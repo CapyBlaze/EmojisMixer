@@ -4,10 +4,19 @@
     "fillOutputDuration": 3000,
     "pipeVelocityDuration": 1000,
 
+    "liquidSettleDelay": 2500,
+    "mixerMaxFillLevel": 0.8,
+    "outputMaxFillLevel": 0.85,
+    "popDuration": 280,
+    "popStagger": 50,
+    "shrinkEase": 2,
+
     "numberEmojisSpawned": 6,
     "numberWaves": 10,
 
     "emojiRadius": 17,
+
+    "favoritesStorageKey": "emojis-mixer-favorite",
 
     "categorys": [
         "Smileys & Emotion",

@@ -7,8 +7,6 @@ import { getBowlTransform, isInsideBowlWithTransform } from "../utils/geometryUt
 import type { EmojiData } from "../../../interface/emoji";
 import type { FallingEmoji } from "../hooks/useMixerPhysics";
 
-const POP_DURATION = 280;
-
 export interface RenderDependencies {
     container: HTMLDivElement;
     bowlRef: RefObject<HTMLCanvasElement | null>;
@@ -71,8 +69,7 @@ export function createRenderLoop(deps: RenderDependencies) {
                 blendProgressRef.current + delta / CONFIG.blendDuration,
             );
 
-            const SHRINK_EASE = 2;
-            const currentEmojiScale = 1 - Math.pow(blendProgressRef.current, SHRINK_EASE);
+            const currentEmojiScale = 1 - Math.pow(blendProgressRef.current, CONFIG.shrinkEase);
 
             for (let i = itemsRef.current.length - 1; i >= 0; i--) {
                 const item = itemsRef.current[i];
@@ -143,7 +140,7 @@ export function createRenderLoop(deps: RenderDependencies) {
                     continue;
                 }
 
-                const t = Math.min(1, elapsed / POP_DURATION);
+                const t = Math.min(1, elapsed / CONFIG.popDuration);
 
                 if (t >= 1) {
                     item.el.remove();

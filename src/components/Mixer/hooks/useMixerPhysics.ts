@@ -15,8 +15,6 @@ import { setupEngine } from "../core/engine";
 import { createRenderLoop } from "../core/render";
 import { spawnEmoji } from "../core/spawnEmojis";
 
-export const POP_STAGGER = 25;
-
 export type FallingEmoji = {
     id: number;
     body: Matter.Body;
@@ -171,7 +169,7 @@ export default function useMixerPhysics({
                 itemsRef.current.reverse().forEach((item, index) => {
                     Matter.World.remove(engine.world, item.body);
                     item.popStartTime = now;
-                    item.popDelay = index * POP_STAGGER + Math.random() * 40;
+                    item.popDelay = index * CONFIG.popStagger + Math.random() * 40;
                 });
 
                 isPoppingRef.current = true;
