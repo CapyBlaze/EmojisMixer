@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import CONFIG from "../../../config/config.json";
 
 export default function renderLiquid(
@@ -6,8 +7,8 @@ export default function renderLiquid(
     progress: number,
     isBlending: boolean,
     isDraining: boolean,
-    waveAmplitudeRef: React.MutableRefObject<number>,
-    wavePhaseRef: React.MutableRefObject<number>,
+    waveAmplitudeRef: RefObject<number>,
+    wavePhaseRef: RefObject<number>,
     lastActivityTime: number,
 ) {
     if (!canvas) return;
