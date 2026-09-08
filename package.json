@@ -7,14 +7,16 @@
         "dev": "vite",
         "build": "tsc -b && vite build",
         "lint": "eslint .",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "script:colors": "node script/scriptColors.mjs"
     },
     "dependencies": {
         "@types/matter-js": "^0.20.2",
         "matter-js": "^0.20.0",
         "poly-decomp": "^0.3.0",
         "react": "^19.2.8",
-        "react-dom": "^19.2.8"
+        "react-dom": "^19.2.8",
+        "sharp": "^0.35.4"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
