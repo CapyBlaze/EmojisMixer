@@ -6,7 +6,7 @@
 
     "liquidSettleDelay": 2500,
     "mixerMaxFillLevel": 0.72,
-    "outputMaxFillLevel": 0.85,
+    "outputMaxFillLevel": 0.77,
     "popDuration": 280,
     "popStagger": 50,
     "shrinkEase": 2,

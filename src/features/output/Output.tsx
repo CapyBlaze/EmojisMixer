@@ -5,6 +5,7 @@ import Button from "./components/Button";
 import CONFIG from "../../configs/config.json";
 import type { EmojiData } from "../../interfaces/emoji";
 import Particles from "./components/Particles";
+import LiquidCanvas from "../../graphics/LiquidCanvas";
 
 interface OutputProps {
     inputPipeRef: RefObject<HTMLDivElement | null>;
@@ -16,80 +17,13 @@ export default function Output({ inputPipeRef }: OutputProps) {
     const fillProgressRef = useRef(0);
     const targetFillRef = useRef(0);
     const isFillingRef = useRef(false);
-    const wavePhaseRef = useRef(0);
-    const waveAmplitudeRef = useRef(2);
+
+    const isBlendingRef = useRef(false);
+    const isDrainingRef = useRef(false);
 
     const [recipe, setRecipe] = useState<EmojiData[] | null>(null);
-    const lastActivityRef = useRef(0);
 
     useEffect(() => {
-        lastActivityRef.current = performance.now();
-    }, []);
-
-    useEffect(() => {
-        const drawLiquid = (now: number) => {
-            const canvas = canvasRef.current;
-            if (!canvas) return;
-            const ctx = canvas.getContext("2d");
-            if (!ctx) return;
-
-            const dpr = window.devicePixelRatio || 1;
-            const displayWidth = canvas.clientWidth;
-            const displayHeight = canvas.clientHeight;
-
-            if (canvas.width !== displayWidth * dpr || canvas.height !== displayHeight * dpr) {
-                canvas.width = displayWidth * dpr;
-                canvas.height = displayHeight * dpr;
-            }
-
-            ctx.save();
-            ctx.scale(dpr, dpr);
-
-            const w = displayWidth;
-            const h = displayHeight;
-
-            ctx.clearRect(0, 0, w, h);
-
-            if (fillProgressRef.current <= 0) {
-                ctx.restore();
-                return;
-            }
-
-            const fillRatio = fillProgressRef.current * CONFIG.outputMaxFillLevel;
-            const liquidY = h - h * fillRatio;
-
-            const timeSinceActivity = now - lastActivityRef.current;
-            const targetAmplitude = isFillingRef.current
-                ? 6
-                : timeSinceActivity < CONFIG.liquidSettleDelay
-                  ? 2
-                  : 0;
-
-            const SMOOTH_FACTOR = 0.04;
-            waveAmplitudeRef.current +=
-                (targetAmplitude - waveAmplitudeRef.current) * SMOOTH_FACTOR;
-
-            const speedRatio = (waveAmplitudeRef.current - 2) / (6 - 2);
-            const currentSpeed = 0.03 + speedRatio * (0.12 - 0.03);
-            wavePhaseRef.current += currentSpeed;
-
-            ctx.fillStyle = "#FFFFFF";
-            ctx.beginPath();
-            ctx.moveTo(0, h);
-
-            for (let x = 0; x <= w; x++) {
-                const y =
-                    liquidY + Math.sin(x * 0.03 + wavePhaseRef.current) * waveAmplitudeRef.current;
-                ctx.lineTo(x, y);
-            }
-
-            ctx.lineTo(w, h);
-            ctx.closePath();
-            ctx.fill();
-
-            ctx.restore();
-        };
-
         let lastTime = performance.now();
         let raf: number;
 
@@ -98,12 +32,14 @@ export default function Output({ inputPipeRef }: OutputProps) {
             lastTime = now;
 
             if (isFillingRef.current) {
-                lastActivityRef.current = now;
-
                 const direction = targetFillRef.current > fillProgressRef.current ? 1 : -1;
-                fillProgressRef.current += (direction * delta) / CONFIG.fillOutputDuration;
 
+                fillProgressRef.current += (direction * delta) / CONFIG.fillOutputDuration;
                 fillProgressRef.current = Math.max(0, Math.min(1, fillProgressRef.current));
+
+                // direction courante → active la bonne ref pour LiquidCanvas
+                isBlendingRef.current = direction > 0;
+                isDrainingRef.current = direction < 0;
 
                 const reachedTarget =
                     direction > 0
@@ -113,11 +49,11 @@ export default function Output({ inputPipeRef }: OutputProps) {
                 if (reachedTarget) {
                     fillProgressRef.current = targetFillRef.current;
                     isFillingRef.current = false;
-                    lastActivityRef.current = now;
+                    isBlendingRef.current = false;
+                    isDrainingRef.current = false;
                 }
             }
 
-            drawLiquid(now);
             raf = requestAnimationFrame(render);
         };
 
@@ -206,8 +142,13 @@ export default function Output({ inputPipeRef }: OutputProps) {
                     <Decoration style="lemon1" side="right" />
                     <Decoration style="umbrella" side="left" />
 
-                    <canvas
+                    <LiquidCanvas
                         ref={canvasRef}
+                        emojis={recipe ?? []}
+                        progressRef={fillProgressRef}
+                        isBlendingRef={isBlendingRef}
+                        isDrainingRef={isDrainingRef}
+                        maxFillLevel={CONFIG.outputMaxFillLevel}
                         style={{
                             background: "#ffffff00",
                             position: "absolute",
@@ -220,7 +161,7 @@ export default function Output({ inputPipeRef }: OutputProps) {
                             borderBottomRightRadius: "10px",
                             borderBottomLeftRadius: "10px",
                         }}
-                    ></canvas>
+                    />
 
                     <Particles type="steam" />
 

@@ -20,6 +20,7 @@ interface LiquidSceneProps {
     progressRef: RefObject<number>;
     isBlendingRef: RefObject<boolean>;
     isDrainingRef: RefObject<boolean>;
+    maxFillLevel?: number;
 }
 
 const WAVE_SPEED = 4.0;
@@ -27,7 +28,13 @@ const LIQUID_SPEED = 1.0;
 
 const MAX_COLORS = 6;
 
-const LiquidScene = ({ emojis, progressRef, isBlendingRef, isDrainingRef }: LiquidSceneProps) => {
+const LiquidScene = ({
+    emojis,
+    progressRef,
+    isBlendingRef,
+    isDrainingRef,
+    maxFillLevel = CONFIG.mixerMaxFillLevel,
+}: LiquidSceneProps) => {
     const materialRef = useRef<THREE.ShaderMaterial>(null);
 
     const targetColorsRef = useRef<THREE.Color[]>(
@@ -71,7 +78,7 @@ const LiquidScene = ({ emojis, progressRef, isBlendingRef, isDrainingRef }: Liqu
 
         mat.uniforms.uTime.value = shaderTimeRef.current;
         mat.uniforms.uWaveTime.value = waveTimeRef.current;
-        mat.uniforms.uProgress.value = progressRef.current * CONFIG.mixerMaxFillLevel;
+        mat.uniforms.uProgress.value = progressRef.current * maxFillLevel;
         mat.uniforms.uActivity.value = activityRef.current;
 
         for (let i = 0; i < MAX_COLORS; i++) {
@@ -122,7 +129,7 @@ const LiquidCanvas = forwardRef<HTMLCanvasElement, LiquidCanvasProps>(
                 className={className}
                 style={style}
                 camera={{ position: [0, 0, 1] }}
-                gl={{ alpha: true, antialias: false }}
+                gl={{ alpha: true, antialias: false, preserveDrawingBuffer: true }}
                 onCreated={({ gl }) => {
                     if (typeof ref === "function") ref(gl.domElement);
                     else if (ref) ref.current = gl.domElement;
