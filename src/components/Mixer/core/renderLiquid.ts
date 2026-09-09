@@ -104,12 +104,11 @@ export default function renderLiquid(
     ctx.beginPath();
     ctx.moveTo(0, h);
     for (let x = 0; x <= w; x++) {
-        const y = liquidY + Math.sin(x * 0.03 + wavePhaseRef.current) * waveAmplitudeRef.current;
+        const y = liquidY + Math.sin(x * 0.02 + wavePhaseRef.current) * waveAmplitudeRef.current;
         ctx.lineTo(x, y);
     }
     ctx.lineTo(w, h);
     ctx.closePath();
-
     ctx.save();
     ctx.clip();
 
@@ -119,11 +118,10 @@ export default function renderLiquid(
     } else {
         colors = lastKnownColors;
     }
-
     colors.sort();
+
     const seedStr = colors.join("-");
     let seed = Math.abs(hashCode(seedStr));
-
     const random = () => {
         seed = (seed * 16807) % 2147483647;
         return (seed - 1) / 2147483646;
@@ -132,23 +130,23 @@ export default function renderLiquid(
     const marblePalette: string[] = [];
     colors.forEach((c) => {
         marblePalette.push(c);
-        marblePalette.push(adjustColor(c, -45));
-        marblePalette.push(adjustColor(c, 55));
+        marblePalette.push(adjustColor(c, -60));
+        marblePalette.push(adjustColor(c, 70));
         marblePalette.push(adjustColor(c, -20));
     });
 
-    const numVortices = 7 + (seed % 4);
+    const numVortices = 6 + (seed % 3);
     const vortices: { x: number; y: number; strength: number; radius: number }[] = [];
     for (let i = 0; i < numVortices; i++) {
         vortices.push({
             x: random() * w,
             y: liquidY + random() * (h - liquidY),
-            strength: (random() > 0.5 ? 1 : -1) * (1.4 + random() * 2.2),
-            radius: 220 + random() * 220,
+            strength: (random() > 0.5 ? 1 : -1) * (1.8 + random() * 2.5),
+            radius: 150 + random() * 250,
         });
     }
 
-    const animTime = now * 0.0008;
+    const animTime = now * 0.0005;
 
     const swirlPass = (px: number, py: number) => {
         let wx = px;
@@ -161,7 +159,8 @@ export default function renderLiquid(
 
             if (dist < v.radius) {
                 const t = 1 - dist / v.radius;
-                const factor = t * t * v.strength * activityRatio;
+                const smoothT = t * t * (3 - 2 * t);
+                const factor = smoothT * v.strength * activityRatio;
                 const angle = Math.atan2(dy, dx) + factor;
                 wx = v.x + Math.cos(angle) * dist;
                 wy = v.y + Math.sin(angle) * dist;
@@ -173,36 +172,41 @@ export default function renderLiquid(
     const warp = (px: number, py: number) => {
         let wx = px;
         let wy = py;
-        let freq = 0.015;
-        let amp = 30 * activityRatio;
-        for (let o = 0; o < 3; o++) {
-            wx += Math.sin(wy * freq + animTime * (0.8 + o * 0.25)) * amp;
-            wy += Math.cos(wx * freq - animTime * (0.6 + o * 0.2)) * amp;
-            freq *= 2.1;
-            amp *= 0.45;
-        }
+        let freq = 0.006;
+        let amp = 50 * activityRatio;
 
-        const p1 = swirlPass(wx, wy);
-        return swirlPass(p1.x, p1.y);
+        for (let o = 0; o < 4; o++) {
+            wx += Math.sin(wy * freq + animTime * (0.5 + o * 0.2)) * amp;
+            wy += Math.cos(wx * freq - animTime * (0.4 + o * 0.2)) * amp;
+            freq *= 1.9;
+            amp *= 0.5;
+        }
+        return swirlPass(wx, wy);
     };
 
     ctx.fillStyle = marblePalette[0];
     ctx.fillRect(0, 0, w, h);
 
-    const numRibbons = 42;
-    const ribbonHeight = (h - liquidY + 80) / numRibbons;
-    const stepX = 5;
+    const numRibbons = 80;
+    const ribbonHeight = (h - liquidY + 200) / numRibbons;
+    const stepX = 4;
+
+    ctx.globalAlpha = 0.85;
+    ctx.lineJoin = "round";
 
     for (let i = 0; i < numRibbons; i++) {
-        const color = marblePalette[i % marblePalette.length];
-        const baseY = liquidY - 30 + i * ribbonHeight;
+        const color = marblePalette[(i * 3) % marblePalette.length];
+        const baseY = liquidY - 50 + i * ribbonHeight;
 
         ctx.fillStyle = color;
-        ctx.beginPath();
+        ctx.strokeStyle = adjustColor(color, -40);
+        ctx.lineWidth = 0.5;
 
+        ctx.beginPath();
         let first = true;
-        for (let x = -20; x <= w + 20; x += stepX) {
-            const rawY = baseY + Math.sin(x * 0.02 + i) * 8;
+
+        for (let x = -50; x <= w + 50; x += stepX) {
+            const rawY = baseY + Math.sin(x * 0.01 + i) * 20;
             const pt = warp(x, rawY);
             if (first) {
                 ctx.moveTo(pt.x, pt.y);
@@ -212,34 +216,14 @@ export default function renderLiquid(
             }
         }
 
-        for (let x = w + 20; x >= -20; x -= stepX) {
-            const rawY = baseY + ribbonHeight + 3 + Math.sin(x * 0.02 + i + 1) * 8;
+        for (let x = w + 50; x >= -50; x -= stepX) {
+            const rawY = baseY + ribbonHeight * 2.5 + Math.sin(x * 0.01 + i + 1) * 20;
             const pt = warp(x, rawY);
             ctx.lineTo(pt.x, pt.y);
         }
 
         ctx.closePath();
         ctx.fill();
-    }
-
-    ctx.lineWidth = 1.5;
-    ctx.globalAlpha = 0.45;
-    for (let i = 0; i < marblePalette.length; i++) {
-        const color = adjustColor(marblePalette[i], 70);
-        ctx.strokeStyle = color;
-        ctx.beginPath();
-        const baseY = liquidY + (i + 0.5) * ((h - liquidY) / marblePalette.length);
-        let first = true;
-
-        for (let x = -20; x <= w + 20; x += stepX) {
-            const pt = warp(x, baseY + Math.sin(x * 0.03) * 10);
-            if (first) {
-                ctx.moveTo(pt.x, pt.y);
-                first = false;
-            } else {
-                ctx.lineTo(pt.x, pt.y);
-            }
-        }
         ctx.stroke();
     }
 

@@ -16,6 +16,11 @@ export default function Mixer({ outputPipeRef }: MixerProps) {
     const [emojisInBowl, setEmojisInBowl] = useState<EmojiData[] | null>(null);
     const [isBlending, setIsBlending] = useState(false);
 
+    const blendProgressRef = useRef(0);
+    const isBlendingRef = useRef(false);
+    const isDrainingRef = useRef(false);
+    const lastActivityRef = useRef(0);
+
     useEffect(() => {
         const handleStartBlend = () => setIsBlending(true);
         const handleStopBlend = () => setIsBlending(false);
@@ -55,9 +60,23 @@ export default function Mixer({ outputPipeRef }: MixerProps) {
             >
                 <Lid />
                 <Handle />
-                <Bowl ref={bowlRef} />
+                <Bowl
+                    ref={bowlRef}
+                    emojis={emojisInBowl ?? []}
+                    progressRef={blendProgressRef}
+                    isBlendingRef={isBlendingRef}
+                    isDrainingRef={isDrainingRef}
+                    lastActivityRef={lastActivityRef}
+                />
                 <Base outputPipeRef={outputPipeRef} emojisInBowl={emojisInBowl} />
-                <MixerPhysics bowlRef={bowlRef} onContentChange={setEmojisInBowl} />
+                <MixerPhysics
+                    bowlRef={bowlRef}
+                    onContentChange={setEmojisInBowl}
+                    blendProgressRef={blendProgressRef}
+                    isBlendingRef={isBlendingRef}
+                    isDrainingRef={isDrainingRef}
+                    lastActivityRef={lastActivityRef}
+                />
             </div>
 
             <div

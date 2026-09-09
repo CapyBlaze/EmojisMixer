@@ -1,7 +1,17 @@
-import { forwardRef } from "react";
+import { forwardRef, type RefObject } from "react";
+import LiquidCanvas from "./LiquidCanvas";
+import type { EmojiData } from "../../interface/emoji";
 
-const Bowl = forwardRef<HTMLCanvasElement, React.HTMLAttributes<HTMLCanvasElement>>(
-    (props, ref) => {
+interface BowlProps {
+    emojis: EmojiData[];
+    progressRef: RefObject<number>;
+    isBlendingRef: RefObject<boolean>;
+    isDrainingRef: RefObject<boolean>;
+    lastActivityRef: RefObject<number>;
+}
+
+const Bowl = forwardRef<HTMLCanvasElement, BowlProps>(
+    ({ emojis, progressRef, isBlendingRef, isDrainingRef, lastActivityRef }, ref) => {
         return (
             <>
                 <span
@@ -17,13 +27,16 @@ const Bowl = forwardRef<HTMLCanvasElement, React.HTMLAttributes<HTMLCanvasElemen
                             "polygon(0% 0%, 20% 1%, 80% 1%, 100% 0%, 94% 12%, 80% 100%, 20% 100%, 6% 12%)",
                         zIndex: 0,
                     }}
-                    {...props}
                 ></span>
 
-                <canvas
+                <LiquidCanvas
                     ref={ref}
+                    emojis={emojis}
+                    progressRef={progressRef}
+                    isBlendingRef={isBlendingRef}
+                    isDrainingRef={isDrainingRef}
+                    lastActivityRef={lastActivityRef}
                     style={{
-                        background: "#ffffff00",
                         position: "absolute",
                         width: "235px",
                         height: "254px",
@@ -34,7 +47,7 @@ const Bowl = forwardRef<HTMLCanvasElement, React.HTMLAttributes<HTMLCanvasElemen
                             "polygon(0% 0%, 20% 1%, 80% 1%, 100% 0%, 94% 12%, 80% 100%, 20% 100%, 6% 12%)",
                         zIndex: 2,
                     }}
-                ></canvas>
+                />
             </>
         );
     },

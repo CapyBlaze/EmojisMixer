@@ -32,6 +32,10 @@ interface UseMixerPhysicsParams {
     setRecipe: Dispatch<SetStateAction<string[] | null>>;
     recipeRef: RefObject<string[] | null>;
     onContentChange?: (content: EmojiData[] | null) => void;
+    blendProgressRef: RefObject<number>;
+    isBlendingRef: RefObject<boolean>;
+    isDrainingRef: RefObject<boolean>;
+    lastActivityRef: RefObject<number>;
 }
 
 export default function useMixerPhysics({
@@ -40,6 +44,10 @@ export default function useMixerPhysics({
     setRecipe,
     recipeRef,
     onContentChange,
+    blendProgressRef,
+    isBlendingRef,
+    isDrainingRef,
+    lastActivityRef,
 }: UseMixerPhysicsParams) {
     const itemsRef = useRef<FallingEmoji[]>([]);
     const idCounter = useRef(0);
@@ -48,13 +56,8 @@ export default function useMixerPhysics({
         null,
     );
 
-    const isBlendingRef = useRef(false);
-    const blendProgressRef = useRef(0);
-    const isDrainingRef = useRef(false);
     const isPoppingRef = useRef(false);
     const isFinishedRef = useRef(false);
-
-    const lastActivityRef = useRef(0);
     const lastInsideIdsRef = useRef<string>("");
 
     const wavePhaseRef = useRef(0);
@@ -83,9 +86,9 @@ export default function useMixerPhysics({
         if (!containerRef.current) return;
         const container = containerRef.current;
 
-        const { engine, runner, bottleWalls, bowlBounds } = setupEngine(container);
+        const { engine, runner, mixerWalls, bowlBounds } = setupEngine(container);
         engineRef.current = engine;
-        bowlWallsRef.current = bottleWalls;
+        bowlWallsRef.current = mixerWalls;
         bowlBoundsRef.current = bowlBounds;
 
         const renderer = createRenderLoop({
@@ -135,7 +138,7 @@ export default function useMixerPhysics({
             const localY = y - rect.top;
 
             const testBody = Matter.Bodies.circle(localX, localY, CONFIG.emojiRadius + 2);
-            const collisions = Matter.Query.collides(testBody, bottleWalls);
+            const collisions = Matter.Query.collides(testBody, mixerWalls);
 
             callback(collisions.length === 0);
         };
@@ -225,7 +228,18 @@ export default function useMixerPhysics({
             itemsRef.current.forEach((i) => i.el.remove());
             itemsRef.current = [];
         };
-    }, [bowlRef, containerRef, onContentChange, setRecipe, recipeRef, spawnEmojis]);
+    }, [
+        bowlRef,
+        containerRef,
+        onContentChange,
+        setRecipe,
+        recipeRef,
+        spawnEmojis,
+        blendProgressRef,
+        isBlendingRef,
+        isDrainingRef,
+        lastActivityRef,
+    ]);
 
     return { spawnEmojis, isFinishedRef };
 }

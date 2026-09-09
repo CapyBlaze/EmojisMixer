@@ -7,9 +7,20 @@ import type { EmojiData } from "../../interface/emoji";
 interface MixerPhysicsProps {
     bowlRef: RefObject<HTMLCanvasElement | null>;
     onContentChange?: (content: EmojiData[] | null) => void;
+    blendProgressRef: RefObject<number>;
+    isBlendingRef: RefObject<boolean>;
+    isDrainingRef: RefObject<boolean>;
+    lastActivityRef: RefObject<number>;
 }
 
-export default function MixerPhysics({ bowlRef, onContentChange }: MixerPhysicsProps) {
+export default function MixerPhysics({
+    bowlRef,
+    onContentChange,
+    blendProgressRef,
+    isBlendingRef,
+    isDrainingRef,
+    lastActivityRef,
+}: MixerPhysicsProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const { setRecipe, recipeRef } = useRecipeStorage();
@@ -19,6 +30,10 @@ export default function MixerPhysics({ bowlRef, onContentChange }: MixerPhysicsP
         setRecipe,
         recipeRef,
         onContentChange,
+        blendProgressRef,
+        isBlendingRef,
+        isDrainingRef,
+        lastActivityRef,
     });
     useRecipeShare({
         recipeRef,
