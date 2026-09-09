@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import CONFIG from "../config/config.json";
+import CONFIG from "../configs/config.json";
 
 interface PipeProps {
     inputPipeRef: React.RefObject<HTMLDivElement | null>;

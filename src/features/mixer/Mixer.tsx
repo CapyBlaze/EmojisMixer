@@ -5,7 +5,7 @@ import BowlFront from "./components/BowlFront";
 import { Handle } from "./components/Handle";
 import Lid from "./components/Lid";
 import MixerPhysics from "./components/MixerPhysics";
-import type { EmojiData } from "../../interface/emoji";
+import type { EmojiData } from "../../interfaces/emoji";
 
 interface MixerProps {
     outputPipeRef: RefObject<HTMLDivElement | null>;

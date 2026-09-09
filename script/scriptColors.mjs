@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const JSON_PATH = path.join(__dirname, "../src/config/emojis.json");
+const JSON_PATH = path.join(__dirname, "../src/configs/emojis.json");
 const IMAGES_DIR = path.join(__dirname, "../public/emojis");
 
 const COUNT_COLORS = 5;

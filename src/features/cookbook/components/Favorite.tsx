@@ -1,7 +1,7 @@
 import defaultFile from "../../../utils/defaultFile";
-import EMOJIS from "../../../config/emojis.json";
+import EMOJIS from "../../../configs/emojis.json";
 import { useEffect, useState, type Dispatch } from "react";
-import type { RecipeData } from "../../../interface/recipe";
+import type { RecipeData } from "../../../interfaces/recipe";
 import { generateRecipeData } from "../../../utils/generateRecipeData";
 import { getFavoritesFromStorage, setFavoritesToStorage } from "../../../utils/localStorage";
 import PopUp from "../../../components/PopUp";

@@ -2,8 +2,8 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import Decoration from "./components/Decoration";
 import BaseDecoration from "./components/BaseDecoration";
 import Button from "./components/Button";
-import CONFIG from "../../config/config.json";
-import type { EmojiData } from "../../interface/emoji";
+import CONFIG from "../../configs/config.json";
+import type { EmojiData } from "../../interfaces/emoji";
 import Particles from "./components/Particles";
 
 interface OutputProps {

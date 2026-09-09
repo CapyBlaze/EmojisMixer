@@ -1,9 +1,9 @@
 import type { RefObject } from "react";
 import Matter from "matter-js";
-import CONFIG from "../../../config/config.json";
-import EMOJIS from "../../../config/emojis.json";
+import CONFIG from "../../../configs/config.json";
+import EMOJIS from "../../../configs/emojis.json";
 import defaultFile from "../../../utils/defaultFile";
-import type { EmojiData } from "../../../interface/emoji";
+import type { EmojiData } from "../../../interfaces/emoji";
 import type { FallingEmoji } from "../hooks/useMixerPhysics";
 
 export interface SpawnEmojiParams {

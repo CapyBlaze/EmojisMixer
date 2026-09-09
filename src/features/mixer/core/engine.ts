@@ -1,5 +1,5 @@
 import Matter from "matter-js";
-import CONFIG from "../../../config/config.json";
+import CONFIG from "../../../configs/config.json";
 import createThickWallsFromSVG from "../../../utils/thickWallsFromSVG";
 
 export function setupEngine(container: HTMLDivElement) {

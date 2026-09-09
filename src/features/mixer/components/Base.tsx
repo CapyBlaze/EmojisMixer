@@ -1,7 +1,7 @@
 import { useState, type RefObject } from "react";
-import CONFIG from "../../../config/config.json";
+import CONFIG from "../../../configs/config.json";
 import Button from "./Button";
-import type { EmojiData } from "../../../interface/emoji";
+import type { EmojiData } from "../../../interfaces/emoji";
 
 interface BaseProps {
     outputPipeRef: RefObject<HTMLDivElement | null>;

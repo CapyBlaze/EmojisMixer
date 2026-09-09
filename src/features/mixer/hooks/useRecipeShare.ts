@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import EMOJIS from "../../../config/emojis.json";
-import type { EmojiData } from "../../../interface/emoji";
+import EMOJIS from "../../../configs/emojis.json";
+import type { EmojiData } from "../../../interfaces/emoji";
 
 interface UseRecipeShareParams {
     recipeRef: React.RefObject<string[] | null>;

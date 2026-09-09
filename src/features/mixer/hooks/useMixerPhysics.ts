@@ -7,9 +7,9 @@ import {
     type RefObject,
     type SetStateAction,
 } from "react";
-import CONFIG from "../../../config/config.json";
-import EMOJIS from "../../../config/emojis.json";
-import type { EmojiData } from "../../../interface/emoji";
+import CONFIG from "../../../configs/config.json";
+import EMOJIS from "../../../configs/emojis.json";
+import type { EmojiData } from "../../../interfaces/emoji";
 
 import { setupEngine } from "../core/engine";
 import { createRenderLoop } from "../core/render";

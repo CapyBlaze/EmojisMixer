@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import defaultFile from "../utils/defaultFile";
-import EMOJIS from "../config/emojis.json";
-import CONFIG from "../config/config.json";
-import type { EmojiData } from "../interface/emoji";
+import EMOJIS from "../configs/emojis.json";
+import CONFIG from "../configs/config.json";
+import type { EmojiData } from "../interfaces/emoji";
 
 export default function Emojis() {
     const [dragging, setDragging] = useState<{

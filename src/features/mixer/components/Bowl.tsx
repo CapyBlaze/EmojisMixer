@@ -1,6 +1,6 @@
 import { forwardRef, type RefObject } from "react";
 import LiquidCanvas from "../../../graphics/LiquidCanvas";
-import type { EmojiData } from "../../../interface/emoji";
+import type { EmojiData } from "../../../interfaces/emoji";
 
 interface BowlProps {
     emojis: EmojiData[];

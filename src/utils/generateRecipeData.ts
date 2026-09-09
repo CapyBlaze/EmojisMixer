@@ -1,5 +1,5 @@
-import EMOJIS from "../config/emojis.json";
-import RECIPE_TEXT from "../config/recipeText.json";
+import EMOJIS from "../configs/emojis.json";
+import RECIPE_TEXT from "../configs/recipeText.json";
 
 interface RecipeResult {
     name: string;

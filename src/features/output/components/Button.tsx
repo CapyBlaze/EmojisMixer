@@ -1,7 +1,7 @@
 import { useState, type CSSProperties } from "react";
 import exportImage from "../../../utils/exportImage";
 import ButtonCheck from "./ButtonCheck";
-import type { EmojiData } from "../../../interface/emoji";
+import type { EmojiData } from "../../../interfaces/emoji";
 import { getFavoritesFromStorage } from "../../../utils/localStorage";
 
 interface ButtonProps {

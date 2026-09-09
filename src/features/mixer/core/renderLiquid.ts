@@ -1,6 +1,6 @@
 import type { RefObject } from "react";
-import CONFIG from "../../../config/config.json";
-import type { EmojiData } from "../../../interface/emoji";
+import CONFIG from "../../../configs/config.json";
+import type { EmojiData } from "../../../interfaces/emoji";
 
 function stringToColor(str: string) {
     let hash = 0;

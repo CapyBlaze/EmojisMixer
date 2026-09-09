@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import CONFIG from "../../../config/config.json";
-import type { EmojiData } from "../../../interface/emoji";
+import CONFIG from "../../../configs/config.json";
+import type { EmojiData } from "../../../interfaces/emoji";
 
 interface ButtonProps {
     emojisInBowl: EmojiData[] | null;

@@ -1,4 +1,4 @@
-import CONFIG from "../config/config.json";
+import CONFIG from "../configs/config.json";
 
 export function getFavoritesFromStorage() {
     const getSerializedValue = localStorage.getItem(CONFIG.favoritesStorageKey);
