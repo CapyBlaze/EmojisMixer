@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Favorite from "./Cookbook/Favorite";
-import Recipe from "./Cookbook/Recipe";
-import type { RecipeData } from "../interface/recipe";
+import Favorite from "./components/Favorite";
+import Recipe from "./components/Recipe";
+import type { RecipeData } from "../../interface/recipe";
 
 export default function Cookbook() {
     const [recipe, setRecipe] = useState<RecipeData | null>(null);

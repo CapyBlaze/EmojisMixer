@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
-import Decoration from "./Output/Decoration";
-import BaseDecoration from "./Output/BaseDecoration";
-import Button from "./Output/Button";
-import CONFIG from "../config/config.json";
-import type { EmojiData } from "../interface/emoji";
-import Particles from "./Output/Particles";
+import Decoration from "./components/Decoration";
+import BaseDecoration from "./components/BaseDecoration";
+import Button from "./components/Button";
+import CONFIG from "../../config/config.json";
+import type { EmojiData } from "../../interface/emoji";
+import Particles from "./components/Particles";
 
 interface OutputProps {
     inputPipeRef: RefObject<HTMLDivElement | null>;

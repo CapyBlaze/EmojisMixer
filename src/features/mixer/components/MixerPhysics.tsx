@@ -1,8 +1,8 @@
 import { useRef, type RefObject } from "react";
-import useRecipeStorage from "./hooks/useRecipeStorage";
-import useMixerPhysics from "./hooks/useMixerPhysics";
-import useRecipeShare from "./hooks/useRecipeShare";
-import type { EmojiData } from "../../interface/emoji";
+import useRecipeStorage from "../hooks/useRecipeStorage";
+import useMixerPhysics from "../hooks/useMixerPhysics";
+import useRecipeShare from "../hooks/useRecipeShare";
+import type { EmojiData } from "../../../interface/emoji";
 
 interface MixerPhysicsProps {
     bowlRef: RefObject<HTMLCanvasElement | null>;

@@ -1,7 +1,7 @@
-import defaultFile from "../../utils/defaultFile";
-import CONFIG from "../../config/config.json";
-import EMOJIS from "../../config/emojis.json";
-import type { RecipeData } from "../../interface/recipe";
+import defaultFile from "../../../utils/defaultFile";
+import CONFIG from "../../../config/config.json";
+import EMOJIS from "../../../config/emojis.json";
+import type { RecipeData } from "../../../interface/recipe";
 import Glass from "./Glass";
 
 interface RecipeProps {

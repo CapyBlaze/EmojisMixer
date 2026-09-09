@@ -1,8 +1,8 @@
 import { useState, type CSSProperties } from "react";
-import exportImage from "../../utils/exportImage";
+import exportImage from "../../../utils/exportImage";
 import ButtonCheck from "./ButtonCheck";
-import type { EmojiData } from "../../interface/emoji";
-import { getFavoritesFromStorage } from "../../utils/localStorage";
+import type { EmojiData } from "../../../interface/emoji";
+import { getFavoritesFromStorage } from "../../../utils/localStorage";
 
 interface ButtonProps {
     canvas: React.RefObject<HTMLCanvasElement | null>;

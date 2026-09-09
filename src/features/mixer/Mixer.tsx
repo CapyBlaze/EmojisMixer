@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
-import Base from "./Mixer/Base";
-import Bowl from "./Mixer/Bowl";
-import BowlFront from "./Mixer/BowlFront";
-import { Handle } from "./Mixer/Handle";
-import Lid from "./Mixer/Lid";
-import MixerPhysics from "./Mixer/MixerPhysics";
-import type { EmojiData } from "../interface/emoji";
+import Base from "./components/Base";
+import Bowl from "./components/Bowl";
+import BowlFront from "./components/BowlFront";
+import { Handle } from "./components/Handle";
+import Lid from "./components/Lid";
+import MixerPhysics from "./components/MixerPhysics";
+import type { EmojiData } from "../../interface/emoji";
 
 interface MixerProps {
     outputPipeRef: RefObject<HTMLDivElement | null>;
@@ -66,7 +66,6 @@ export default function Mixer({ outputPipeRef }: MixerProps) {
                     progressRef={blendProgressRef}
                     isBlendingRef={isBlendingRef}
                     isDrainingRef={isDrainingRef}
-                    lastActivityRef={lastActivityRef}
                 />
                 <Base outputPipeRef={outputPipeRef} emojisInBowl={emojisInBowl} />
                 <MixerPhysics

@@ -1,17 +1,16 @@
 import { forwardRef, type RefObject } from "react";
-import LiquidCanvas from "./LiquidCanvas";
-import type { EmojiData } from "../../interface/emoji";
+import LiquidCanvas from "../../../graphics/LiquidCanvas";
+import type { EmojiData } from "../../../interface/emoji";
 
 interface BowlProps {
     emojis: EmojiData[];
     progressRef: RefObject<number>;
     isBlendingRef: RefObject<boolean>;
     isDrainingRef: RefObject<boolean>;
-    lastActivityRef: RefObject<number>;
 }
 
 const Bowl = forwardRef<HTMLCanvasElement, BowlProps>(
-    ({ emojis, progressRef, isBlendingRef, isDrainingRef, lastActivityRef }, ref) => {
+    ({ emojis, progressRef, isBlendingRef, isDrainingRef }, ref) => {
         return (
             <>
                 <span
@@ -35,7 +34,6 @@ const Bowl = forwardRef<HTMLCanvasElement, BowlProps>(
                     progressRef={progressRef}
                     isBlendingRef={isBlendingRef}
                     isDrainingRef={isDrainingRef}
-                    lastActivityRef={lastActivityRef}
                     style={{
                         position: "absolute",
                         width: "235px",

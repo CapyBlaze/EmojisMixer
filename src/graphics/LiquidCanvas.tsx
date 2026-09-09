@@ -2,10 +2,10 @@ import { forwardRef, useRef, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import type { RefObject } from "react";
-import type { EmojiData } from "../../interface/emoji";
+import type { EmojiData } from "../interface/emoji";
 import vertexShader from "./shaders/vertex.glsl";
 import fragmentShader from "./shaders/fragment.glsl";
-import CONFIG from "../../config/config.json";
+import CONFIG from "../config/config.json";
 
 function stringToColor(str: string) {
     let hash = 0;

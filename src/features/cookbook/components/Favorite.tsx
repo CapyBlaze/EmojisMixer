@@ -1,10 +1,10 @@
-import defaultFile from "../../utils/defaultFile";
-import EMOJIS from "../../config/emojis.json";
+import defaultFile from "../../../utils/defaultFile";
+import EMOJIS from "../../../config/emojis.json";
 import { useEffect, useState, type Dispatch } from "react";
-import type { RecipeData } from "../../interface/recipe";
-import { generateRecipeData } from "../../utils/generateRecipeData";
-import { getFavoritesFromStorage, setFavoritesToStorage } from "../../utils/localStorage";
-import PopUp from "../PopUp";
+import type { RecipeData } from "../../../interface/recipe";
+import { generateRecipeData } from "../../../utils/generateRecipeData";
+import { getFavoritesFromStorage, setFavoritesToStorage } from "../../../utils/localStorage";
+import PopUp from "../../../components/PopUp";
 
 interface FavoriteProps {
     setRecipe: Dispatch<React.SetStateAction<RecipeData | null>>;
