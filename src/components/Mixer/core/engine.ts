@@ -37,19 +37,19 @@ export function setupEngine(container: HTMLDivElement) {
         Matter.Render.run(debugRender);
     }
 
-    const bottleWalls = createThickWallsFromSVG(
-        "M90 252.702H78L70 289.202H32L0.5 445.702V493.202H21.5M90 252.702L57 30.7024L43.5 0.202393M90 252.702L128 234.702H192L230 252.702M90 252.702H230M230 252.702H242L250 289.202H288L319.5 445.702V493.202H298.5M230 252.702L263 30.7024L276.5 0.202393M298.5 493.202V506.702H257.5V493.202M298.5 493.202H257.5M257.5 493.202H62.5M21.5 493.202V506.702H62.5V493.202M21.5 493.202H62.5",
+    const mixerWalls = createThickWallsFromSVG(
+        "M277.865 0.404297L278.779 0.808594L265.292 31.3066L265.237 31.6768L232.379 252.929H244.062L244.234 253.715L252.087 289.577H290.22L290.382 290.38L321.98 447.515L322 447.612V495.404H320V447.812L288.582 291.577H250.478L250.306 290.791L242.452 254.929H79.5479L71.6943 290.791L71.5225 291.577H33.418L2 447.812V495.404H0V447.612L0.0195312 447.515L31.6182 290.38L31.7803 289.577H69.9131L77.7656 253.715L77.9385 252.929H89.6211L56.707 31.3066L43.2207 0.808594L44.1348 0.404297L45.0498 0L58.5918 30.624L58.6465 30.7471L58.666 30.8809L91.5713 252.447L128.472 234.952L128.675 234.855H193.325L193.528 234.952L230.428 252.447L263.259 31.3828L263.334 30.8809L263.354 30.7471L263.408 30.624L276.95 0L277.865 0.404297Z",
         4,
-        { x: 90, y: 83 },
+        { x: 90, y: 84 },
     );
-    Matter.World.add(engine.world, bottleWalls);
+    Matter.World.add(engine.world, mixerWalls);
 
     let minX = Infinity,
         minY = Infinity,
         maxX = -Infinity,
         maxY = -Infinity;
 
-    bottleWalls.forEach((wall) => {
+    mixerWalls.forEach((wall) => {
         minX = Math.min(minX, wall.bounds.min.x);
         minY = Math.min(minY, wall.bounds.min.y);
         maxX = Math.max(maxX, wall.bounds.max.x);
@@ -62,7 +62,7 @@ export function setupEngine(container: HTMLDivElement) {
     return {
         engine,
         runner,
-        bottleWalls,
+        mixerWalls,
         bowlBounds: { minX, minY, maxX, maxY },
     };
 }
