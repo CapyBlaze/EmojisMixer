@@ -148,17 +148,20 @@ export default function useMixerPhysics({
             const overflow = 0;
             const x1 = rect.left - overflow;
             const x2 = rect.right + overflow;
+            const centerX = rect.left + rect.width / 2;
 
             for (let wave = 0; wave < CONFIG.numberWaves; wave++) {
                 setTimeout(() => {
                     for (let i = 0; i < CONFIG.numberEmojisSpawned; i++) {
                         spawnEmojis(
                             EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
-                            Math.floor(Math.random() * (x2 - x1 + 1)) + x1,
-                            -20,
+                            CONFIG.dropType === "random"
+                                ? Math.floor(Math.random() * (x2 - x1 + 1)) + x1
+                                : centerX,
+                            -70,
                         );
                     }
-                }, wave * 100);
+                }, wave * CONFIG.waveDelay);
             }
         };
 

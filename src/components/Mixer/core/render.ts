@@ -235,6 +235,7 @@ export function createRenderLoop(deps: RenderDependencies) {
             waveAmplitudeRef,
             wavePhaseRef,
             lastActivityRef.current,
+            totalBlenderContent,
         );
 
         rafId = requestAnimationFrame(render);

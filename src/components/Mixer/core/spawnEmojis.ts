@@ -29,7 +29,7 @@ export function spawnEmoji({
     const localX = x - rect.left;
     const localY = y - rect.top;
 
-    const baseRadius = CONFIG.emojiRadius - 2;
+    const baseRadius = CONFIG.emojiBodyRadius;
     const body = Matter.Bodies.circle(localX, localY, baseRadius, {
         restitution: 0.35,
         friction: 0.5,

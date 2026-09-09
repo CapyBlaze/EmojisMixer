@@ -5,4 +5,5 @@ export interface EmojiData {
     tags: string[];
     files: string[];
     order: number;
+    colors: string[];
 }

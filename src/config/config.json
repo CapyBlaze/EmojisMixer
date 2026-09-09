@@ -11,10 +11,13 @@
     "popStagger": 50,
     "shrinkEase": 2,
 
-    "numberEmojisSpawned": 6,
-    "numberWaves": 10,
+    "numberEmojisSpawned": 1,
+    "numberWaves": 3,
+    "waveDelay": 500,
+    "dropType": "center",
 
-    "emojiRadius": 17,
+    "emojiRadius": 45,
+    "emojiBodyRadius": 40,
 
     "favoritesStorageKey": "emojis-mixer-favorite",
 
