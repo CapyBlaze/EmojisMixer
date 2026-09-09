@@ -1,10 +1,11 @@
+#define MAX_COLORS 6
+
 uniform float uTime;
 uniform float uWaveTime;
 uniform float uProgress;
 uniform float uActivity;
-uniform vec3 uColor1;
-uniform vec3 uColor2;
-uniform vec3 uColor3;
+uniform vec3 uColors[MAX_COLORS];
+uniform float uColorPresence[MAX_COLORS];
 
 varying vec2 vUv;
 
@@ -22,8 +23,8 @@ float snoise(vec2 v) {
     i = mod289(i);
     vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0 )) + i.x + vec3(0.0, i1.x, 1.0 ));
     vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-    m = m*m ;
-    m = m*m ;
+    m = m*m;
+    m = m*m;
     vec3 x = 2.0 * fract(p * C.www) - 1.0;
     vec3 h = abs(x) - 0.5;
     vec3 ox = floor(x + 0.5);
@@ -57,10 +58,26 @@ void main() {
     r.x = fbm(vUv + 1.0 * q + vec2(1.7, 9.2) + 0.15 * uTime);
     r.y = fbm(vUv + 1.0 * q + vec2(8.3, 2.8) + 0.126 * uTime);
 
-    float f = fbm(vUv + r);
+    vec2 warped = vUv + r;
 
-    vec3 color = mix(uColor1, uColor2, clamp((f*f)*4.0, 0.0, 1.0));
-    color = mix(color, uColor3, clamp(length(q), 0.0, 1.0));
+    float weights[MAX_COLORS];
+    float totalWeight = 0.0;
+
+    for (int i = 0; i < MAX_COLORS; i++) {
+        vec2 offset = vec2(float(i) * 12.9898, float(i) * 78.233);
+        float n = fbm(warped * 1.4 + offset);
+        float w = pow(smoothstep(-0.5, 0.5, n), 2.0) * uColorPresence[i];
+        weights[i] = w;
+        totalWeight += w;
+    }
+
+    vec3 color = uColors[0];
+    if (totalWeight > 0.0001) {
+        color = vec3(0.0);
+        for (int i = 0; i < MAX_COLORS; i++) {
+            color += uColors[i] * (weights[i] / totalWeight);
+        }
+    }
 
     float wave = sin(vUv.x * 10.0 + uWaveTime) * 0.03 * uActivity;
     float currentFill = uProgress + wave;

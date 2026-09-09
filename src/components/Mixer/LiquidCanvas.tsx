@@ -22,38 +22,41 @@ interface LiquidSceneProps {
     isDrainingRef: RefObject<boolean>;
 }
 
-const LiquidScene = ({ emojis, progressRef, isBlendingRef, isDrainingRef }: LiquidSceneProps) => {
-    const WAVE_SPEED = 4.0;
-    const LIQUID_SPEED = 1.0;
+const WAVE_SPEED = 4.0;
+const LIQUID_SPEED = 1.0;
 
+const MAX_COLORS = 6;
+
+const LiquidScene = ({ emojis, progressRef, isBlendingRef, isDrainingRef }: LiquidSceneProps) => {
     const materialRef = useRef<THREE.ShaderMaterial>(null);
 
-    const shaderTimeRef = useRef(0);
-    const waveTimeRef = useRef(0);
-    const activityRef = useRef(0);
-
-    const targetColorsRef = useRef<[THREE.Color, THREE.Color, THREE.Color]>([
-        new THREE.Color("#a3d9ff"),
-        new THREE.Color("#000000"),
-        new THREE.Color("#a3d9ff"),
-    ]);
+    const targetColorsRef = useRef<THREE.Color[]>(
+        Array.from({ length: MAX_COLORS }, () => new THREE.Color("#a3d9ff")),
+    );
+    const targetPresenceRef = useRef<number[]>(
+        Array.from({ length: MAX_COLORS }, (_, i) => (i === 0 ? 1 : 0)),
+    );
 
     useEffect(() => {
         const uniqueColors = Array.from(
             new Set(emojis.map((e) => e.colors[0] || stringToColor(e.name))),
-        );
-        uniqueColors.sort();
+        ).sort();
 
-        if (uniqueColors.length === 0) {
-            return;
+        if (uniqueColors.length === 0) return;
+
+        for (let i = 0; i < MAX_COLORS; i++) {
+            if (i < uniqueColors.length) {
+                targetColorsRef.current[i].set(uniqueColors[i]);
+                targetPresenceRef.current[i] = 1;
+            } else {
+                targetPresenceRef.current[i] = 0;
+            }
         }
-
-        targetColorsRef.current = [
-            new THREE.Color(uniqueColors[0]),
-            new THREE.Color(uniqueColors[1] || uniqueColors[0]),
-            new THREE.Color(uniqueColors[2] || uniqueColors[0]),
-        ];
     }, [emojis]);
+
+    const shaderTimeRef = useRef(0);
+    const waveTimeRef = useRef(0);
+    const activityRef = useRef(0);
 
     useFrame((_, delta) => {
         const mat = materialRef.current;
@@ -71,10 +74,11 @@ const LiquidScene = ({ emojis, progressRef, isBlendingRef, isDrainingRef }: Liqu
         mat.uniforms.uProgress.value = progressRef.current * CONFIG.mixerMaxFillLevel;
         mat.uniforms.uActivity.value = activityRef.current;
 
-        const [target1, target2, target3] = targetColorsRef.current;
-        mat.uniforms.uColor1.value.lerp(target1, 0.05);
-        mat.uniforms.uColor2.value.lerp(target2, 0.05);
-        mat.uniforms.uColor3.value.lerp(target3, 0.05);
+        for (let i = 0; i < MAX_COLORS; i++) {
+            (mat.uniforms.uColors.value[i] as THREE.Color).lerp(targetColorsRef.current[i], 0.05);
+            mat.uniforms.uColorPresence.value[i] +=
+                (targetPresenceRef.current[i] - mat.uniforms.uColorPresence.value[i]) * 0.05;
+        }
     });
 
     const uniforms = useMemo(
@@ -83,9 +87,12 @@ const LiquidScene = ({ emojis, progressRef, isBlendingRef, isDrainingRef }: Liqu
             uWaveTime: { value: 0 },
             uProgress: { value: 0 },
             uActivity: { value: 0 },
-            uColor1: { value: new THREE.Color("#a3d9ff") },
-            uColor2: { value: new THREE.Color("#000000") },
-            uColor3: { value: new THREE.Color("#a3d9ff") },
+            uColors: {
+                value: Array.from({ length: MAX_COLORS }, () => new THREE.Color("#a3d9ff")),
+            },
+            uColorPresence: {
+                value: Array.from({ length: MAX_COLORS }, (_, i) => (i === 0 ? 1 : 0)),
+            },
         }),
         [],
     );
