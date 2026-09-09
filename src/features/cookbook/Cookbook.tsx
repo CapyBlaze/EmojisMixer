@@ -43,6 +43,7 @@ export default function Cookbook() {
                 height: "500px",
                 boxShadow: "rgba(0, 0, 0, 0.5) 0px 0px 10px 2px",
                 borderRadius: "15px",
+                zIndex: 5,
             }}
         >
             <div
