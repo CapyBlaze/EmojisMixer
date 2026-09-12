@@ -15,7 +15,7 @@ const Bowl = forwardRef<HTMLCanvasElement, BowlProps>(
             <>
                 <span
                     style={{
-                        background: "#7f7f7f",
+                        background: "#657679",
                         position: "absolute",
                         width: "235px",
                         height: "254px",

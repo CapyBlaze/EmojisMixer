@@ -126,7 +126,7 @@ export default function Output({ inputPipeRef }: OutputProps) {
                 <span>
                     <span
                         style={{
-                            background: "#6f868e21",
+                            background: "rgba(136, 195, 208, 0.08)",
                             position: "absolute",
                             width: "200px",
                             height: "350px",

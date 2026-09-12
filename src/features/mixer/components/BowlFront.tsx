@@ -3,7 +3,7 @@ export default function BowlFront() {
         <span>
             <span
                 style={{
-                    background: "#427d8a3d",
+                    background: "rgba(66, 125, 138, 0.12)",
                     position: "absolute",
                     width: "235px",
                     height: "254px",
@@ -16,7 +16,7 @@ export default function BowlFront() {
             ></span>
             <span
                 style={{
-                    background: "#61909a3d",
+                    background: "rgba(97, 144, 154, 0.12)",
                     position: "absolute",
                     width: "235px",
                     height: "254px",
@@ -29,7 +29,7 @@ export default function BowlFront() {
             ></span>
             <span
                 style={{
-                    background: "#427d8a3d",
+                    background: "rgba(66, 125, 138, 0.12)",
                     position: "absolute",
                     width: "235px",
                     height: "254px",
@@ -43,7 +43,7 @@ export default function BowlFront() {
 
             <span
                 style={{
-                    background: "#61aebf3d",
+                    background: "rgba(97, 174, 191, 0.12)",
                     position: "absolute",
                     width: "235px",
                     height: "254px",
@@ -56,7 +56,7 @@ export default function BowlFront() {
             ></span>
             <span
                 style={{
-                    background: "#88c3d03d",
+                    background: "rgba(136, 195, 208, 0.12)",
                     position: "absolute",
                     width: "235px",
                     height: "254px",
@@ -69,7 +69,7 @@ export default function BowlFront() {
             ></span>
             <span
                 style={{
-                    background: "#61aebf3d",
+                    background: "rgba(97, 174, 191, 0.12)",
                     position: "absolute",
                     width: "235px",
                     height: "254px",
