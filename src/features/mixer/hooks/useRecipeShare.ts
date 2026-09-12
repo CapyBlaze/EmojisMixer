@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import EMOJIS from "../../../configs/emojis.json";
+import CONFIG from "../../../configs/config.json";
 import type { EmojiData } from "../../../interfaces/emoji";
 
 interface UseRecipeShareParams {
@@ -65,17 +66,21 @@ export default function useRecipeShare({
             const bowlElement = bowlRef.current;
             const rect = bowlElement.getBoundingClientRect();
 
-            const offset = 5;
-            const x = rect.left + rect.width / 2;
+            const overflow = 5;
+            const x1 = rect.left - overflow;
+            const x2 = rect.right + overflow;
+            const centerX = rect.left + rect.width / 2;
 
             for (let index = 0; index < result.length; index++) {
                 setTimeout(() => {
                     spawnEmojis(
                         EMOJIS[result[index] % EMOJIS.length],
-                        Math.random() * (x + offset - (x - offset)) + (x - offset),
-                        -100,
+                        CONFIG.dropType === "random"
+                            ? Math.floor(Math.random() * (x2 - x1 + 1)) + x1
+                            : centerX,
+                        -70,
                     );
-                }, index * 75);
+                }, index * CONFIG.waveDelay);
             }
         };
 
@@ -86,8 +91,10 @@ export default function useRecipeShare({
             const bowlElement = bowlRef.current;
             const rect = bowlElement.getBoundingClientRect();
 
-            const offset = 5;
-            const x = rect.left + rect.width / 2;
+            const overflow = 5;
+            const x1 = rect.left - overflow;
+            const x2 = rect.right + overflow;
+            const centerX = rect.left + rect.width / 2;
 
             for (let index = 0; index < data.length; index++) {
                 setTimeout(() => {
@@ -96,10 +103,12 @@ export default function useRecipeShare({
 
                     spawnEmojis(
                         targetEmoji,
-                        Math.random() * (x + offset - (x - offset)) + (x - offset),
-                        -100,
+                        CONFIG.dropType === "random"
+                            ? Math.floor(Math.random() * (x2 - x1 + 1)) + x1
+                            : centerX,
+                        -70,
                     );
-                }, index * 75);
+                }, index * CONFIG.waveDelay);
             }
         };
 
