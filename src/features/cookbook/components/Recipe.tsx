@@ -90,7 +90,7 @@ export default function Recipe({ recipe }: RecipeProps) {
                                     background: "#424348",
                                 }}
                             >
-                                <Glass />
+                                <Glass emojis={recipe.emojis} />
                             </div>
                         </div>
 

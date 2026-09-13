@@ -1,8 +1,14 @@
-import { useRef } from "react";
 import Decoration from "./Decoration";
+import LiquidCanvas from "../../../graphics/LiquidCanvas";
+import { useRef } from "react";
+import CONFIG from "../../../configs/config.json";
 
-export default function Glass() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+interface GlassProps {
+    emojis: string[];
+}
+
+export default function Glass({ emojis }: GlassProps) {
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     return (
         <span
@@ -46,8 +52,12 @@ export default function Glass() {
                 <Decoration style="lemon1" side="right" />
                 <Decoration style="umbrella" side="left" />
 
-                <canvas
+                <LiquidCanvas
                     ref={canvasRef}
+                    emojis={emojis}
+                    progress={1}
+                    maxFillLevel={CONFIG.outputMaxFillLevel}
+                    static
                     style={{
                         background: "#ffffff00",
                         position: "absolute",
@@ -60,7 +70,7 @@ export default function Glass() {
                         borderBottomRightRadius: "10px",
                         borderBottomLeftRadius: "10px",
                     }}
-                ></canvas>
+                />
 
                 <span
                     style={{

@@ -1,11 +1,12 @@
 import { forwardRef, useRef, useMemo, useEffect } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { RefObject } from "react";
 import type { EmojiData } from "../interfaces/emoji";
 import vertexShader from "./shaders/vertex.glsl";
 import fragmentShader from "./shaders/fragment.glsl";
 import CONFIG from "../configs/config.json";
+import EMOJIS from "../configs/emojis.json";
 
 function stringToColor(str: string) {
     let hash = 0;
@@ -16,11 +17,13 @@ function stringToColor(str: string) {
 }
 
 interface LiquidSceneProps {
-    emojis: EmojiData[];
-    progressRef: RefObject<number>;
-    isBlendingRef: RefObject<boolean>;
-    isDrainingRef: RefObject<boolean>;
+    emojis: EmojiData[] | string[];
+    progressRef?: RefObject<number>;
+    progress?: number;
+    isBlendingRef?: RefObject<boolean>;
+    isDrainingRef?: RefObject<boolean>;
     maxFillLevel?: number;
+    static?: boolean;
 }
 
 const WAVE_SPEED = 4.0;
@@ -31,11 +34,35 @@ const MAX_COLORS = 6;
 const LiquidScene = ({
     emojis,
     progressRef,
+    progress = 0,
     isBlendingRef,
     isDrainingRef,
     maxFillLevel = CONFIG.mixerMaxFillLevel,
+    static: isStatic = false,
 }: LiquidSceneProps) => {
     const materialRef = useRef<THREE.ShaderMaterial>(null);
+    const { invalidate } = useThree();
+
+    const resolvedColors = useMemo(() => {
+        if (!emojis || emojis.length === 0) return [];
+
+        const isStringArray = typeof emojis[0] === "string";
+
+        const uniqueColors = isStringArray
+            ? Array.from(
+                  new Set(
+                      (emojis as string[]).map(
+                          (name) =>
+                              EMOJIS.find((e) => e.name === name)?.colors[0] || stringToColor(name),
+                      ),
+                  ),
+              )
+            : Array.from(
+                  new Set((emojis as EmojiData[]).map((e) => e.colors[0] || stringToColor(e.name))),
+              );
+
+        return uniqueColors.sort();
+    }, [emojis]);
 
     const targetColorsRef = useRef<THREE.Color[]>(
         Array.from({ length: MAX_COLORS }, () => new THREE.Color("#a3d9ff")),
@@ -45,31 +72,44 @@ const LiquidScene = ({
     );
 
     useEffect(() => {
-        const uniqueColors = Array.from(
-            new Set(emojis.map((e) => e.colors[0] || stringToColor(e.name))),
-        ).sort();
-
-        if (uniqueColors.length === 0) return;
+        if (resolvedColors.length === 0) return;
 
         for (let i = 0; i < MAX_COLORS; i++) {
-            if (i < uniqueColors.length) {
-                targetColorsRef.current[i].set(uniqueColors[i]);
+            if (i < resolvedColors.length) {
+                targetColorsRef.current[i].set(resolvedColors[i]);
                 targetPresenceRef.current[i] = 1;
             } else {
                 targetPresenceRef.current[i] = 0;
             }
         }
-    }, [emojis]);
+
+        if (isStatic) {
+            const mat = materialRef.current;
+            if (mat) {
+                for (let i = 0; i < MAX_COLORS; i++) {
+                    (mat.uniforms.uColors.value[i] as THREE.Color).copy(targetColorsRef.current[i]);
+                    mat.uniforms.uColorPresence.value[i] = targetPresenceRef.current[i];
+                }
+                mat.uniforms.uProgress.value = progress * maxFillLevel;
+                mat.uniforms.uActivity.value = 0;
+                mat.uniforms.uTime.value = 0;
+                mat.uniforms.uWaveTime.value = 0;
+                invalidate();
+            }
+        }
+    }, [invalidate, isStatic, maxFillLevel, progress, emojis, resolvedColors]);
 
     const shaderTimeRef = useRef(0);
     const waveTimeRef = useRef(0);
     const activityRef = useRef(0);
 
     useFrame((_, delta) => {
+        if (isStatic) return;
+
         const mat = materialRef.current;
         if (!mat) return;
 
-        const target = isBlendingRef.current || isDrainingRef.current ? 1 : 0;
+        const target = isBlendingRef?.current || isDrainingRef?.current ? 1 : 0;
         const lerpFactor = target > activityRef.current ? 0.08 : 0.015;
         activityRef.current += (target - activityRef.current) * lerpFactor;
 
@@ -78,7 +118,7 @@ const LiquidScene = ({
 
         mat.uniforms.uTime.value = shaderTimeRef.current;
         mat.uniforms.uWaveTime.value = waveTimeRef.current;
-        mat.uniforms.uProgress.value = progressRef.current * maxFillLevel;
+        mat.uniforms.uProgress.value = (progressRef?.current ?? progress) * maxFillLevel;
         mat.uniforms.uActivity.value = activityRef.current;
 
         for (let i = 0; i < MAX_COLORS; i++) {
@@ -130,6 +170,8 @@ const LiquidCanvas = forwardRef<HTMLCanvasElement, LiquidCanvasProps>(
                 style={style}
                 camera={{ position: [0, 0, 1] }}
                 gl={{ alpha: true, antialias: false, preserveDrawingBuffer: true }}
+                frameloop={sceneProps.static ? "demand" : "always"}
+                resize={{ offsetSize: true }}
                 onCreated={({ gl }) => {
                     if (typeof ref === "function") ref(gl.domElement);
                     else if (ref) ref.current = gl.domElement;
