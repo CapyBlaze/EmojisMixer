@@ -35,6 +35,7 @@ const Bowl = forwardRef<HTMLCanvasElement, BowlProps>(
                     isBlendingRef={isBlendingRef}
                     isDrainingRef={isDrainingRef}
                     style={{
+                        background: "#ffffff00",
                         position: "absolute",
                         width: "235px",
                         height: "254px",
