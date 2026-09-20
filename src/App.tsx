@@ -6,6 +6,7 @@ import Title from "./components/Title";
 import Pipe from "./components/Pipe";
 import SmallScreen from "./components/SmallScreen";
 import Cookbook from "./features/cookbook/Cookbook";
+import LoadingScreen from "./components/LoadingScreen";
 
 function App() {
     const inputPipe = useRef<HTMLDivElement | null>(null);
@@ -22,6 +23,7 @@ function App() {
             <Title />
             <Cookbook />
 
+            <LoadingScreen />
             <SmallScreen />
         </>
     );
