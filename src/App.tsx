@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Emojis from "./components/Emojis";
 import Mixer from "./features/mixer/Mixer";
 import Output from "./features/output/Output";
@@ -10,15 +10,6 @@ import Cookbook from "./features/cookbook/Cookbook";
 function App() {
     const inputPipe = useRef<HTMLDivElement | null>(null);
     const outputPipe = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        const queryParams = new URLSearchParams(window.location.search);
-        const dataValue = queryParams.get("data");
-
-        if (dataValue) {
-            window.dispatchEvent(new CustomEvent("load-data", { detail: { data: dataValue } }));
-        }
-    }, []);
 
     return (
         <>

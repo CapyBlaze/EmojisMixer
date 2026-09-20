@@ -17,10 +17,15 @@ export default function useRecipeShare({
     spawnEmojis,
 }: UseRecipeShareParams) {
     useEffect(() => {
+        let cancelled = false;
+        let rafId: number;
+
         const handleShareLink = async () => {
             const currentRecipe = recipeRef.current;
+            const pageUrl = window.location.origin + window.location.pathname;
+
             if (!currentRecipe || currentRecipe.length === 0 || !isFinishedRef.current) {
-                await navigator.clipboard.writeText(window.location.href);
+                await navigator.clipboard.writeText(pageUrl);
                 return;
             }
 
@@ -40,12 +45,10 @@ export default function useRecipeShare({
                 .replace(/\//g, "_")
                 .replace(/=+$/, "");
 
-            await navigator.clipboard.writeText(`${window.location.href}?data=${url}`);
+            await navigator.clipboard.writeText(`${pageUrl}?data=${url}`);
         };
 
-        const handleLoadData = async (e: Event) => {
-            const { data } = (e as CustomEvent).detail;
-
+        const handleLoadData = async (data: string) => {
             let base64 = data.replace(/-/g, "+").replace(/_/g, "/");
             while (base64.length % 4) base64 += "=";
 
@@ -112,13 +115,36 @@ export default function useRecipeShare({
             }
         };
 
+        const waitForBowl = (): Promise<void> =>
+            new Promise((resolve) => {
+                const check = () => {
+                    if (cancelled) return;
+                    if (bowlRef.current) {
+                        resolve();
+                    } else {
+                        rafId = requestAnimationFrame(check);
+                    }
+                };
+                check();
+            });
+
+        const queryParams = new URLSearchParams(window.location.search);
+        const dataValue = queryParams.get("data");
+
+        if (dataValue) {
+            waitForBowl().then(() => {
+                if (!cancelled) handleLoadData(dataValue);
+            });
+        }
+
         window.addEventListener("share-link", handleShareLink);
-        window.addEventListener("load-data", handleLoadData);
         window.addEventListener("recipe-prepare", handlePrepare);
 
         return () => {
+            cancelled = true;
+            if (rafId) cancelAnimationFrame(rafId);
+
             window.removeEventListener("share-link", handleShareLink);
-            window.removeEventListener("load-data", handleLoadData);
             window.removeEventListener("recipe-prepare", handlePrepare);
         };
     }, [spawnEmojis, bowlRef, isFinishedRef, recipeRef]);
