@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import CONFIG from "../configs/config.json";
+import LiquidCanvas from "../graphics/LiquidCanvas";
+import type { EmojiData } from "../interfaces/emoji";
 
 interface PipeProps {
     inputPipeRef: React.RefObject<HTMLDivElement | null>;
     outputPipeRef: React.RefObject<HTMLDivElement | null>;
-    liquidColor?: string | string[];
 }
 
-export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFFFF" }: PipeProps) {
+export default function Pipe({ inputPipeRef, outputPipeRef }: PipeProps) {
     const [coords, setCoords] = useState<{ x1: number; y1: number; x2: number; y2: number } | null>(
         null,
     );
@@ -15,6 +16,7 @@ export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFF
     const liquidPathRef = useRef<SVGPathElement>(null);
     const [pathLength, setPathLength] = useState(0);
 
+    const [emojis, setEmojis] = useState<EmojiData[]>([]);
     const [headProgress, setHeadProgress] = useState(0);
     const [tailProgress, setTailProgress] = useState(0);
 
@@ -46,7 +48,10 @@ export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFF
             }
         };
 
-        const handleEmptyMixer = () => {
+        const handleEmptyMixer = (e: Event) => {
+            const detail = (e as CustomEvent).detail;
+            setEmojis(detail.recipe || []);
+
             headRef.current = 0;
             tailRef.current = 0;
             setHeadProgress(0);
@@ -65,13 +70,11 @@ export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFF
 
         window.addEventListener("resize", updateLinePosition);
         window.addEventListener("scroll", updateLinePosition);
-
         window.addEventListener("mixer-empty", handleEmptyMixer);
 
         return () => {
             window.removeEventListener("resize", updateLinePosition);
             window.removeEventListener("scroll", updateLinePosition);
-
             window.removeEventListener("mixer-empty", handleEmptyMixer);
             clearTimeout(timerId);
         };
@@ -113,8 +116,10 @@ export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFF
     const visibleLength = Math.max(0, (headProgress - tailProgress) * pathLength);
     const dashoffset = -tailProgress * pathLength;
 
-    const isGradient = Array.isArray(liquidColor);
-    const strokeValue = isGradient ? "url(#liquidGradient)" : liquidColor;
+    const minX = Math.min(coords.x1, coords.x2) - 30;
+    const minY = Math.min(coords.y1, coords.y2) - 30;
+    const width = Math.abs(coords.x2 - coords.x1) + 60;
+    const height = Math.abs(coords.y2 - coords.y1) + 60;
 
     return (
         <svg
@@ -129,24 +134,21 @@ export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFF
             }}
         >
             <defs>
-                {isGradient && (
-                    <linearGradient
-                        id="liquidGradient"
-                        x1={coords.x1}
-                        y1={coords.y1}
-                        x2={coords.x2}
-                        y2={coords.y2}
-                        gradientUnits="userSpaceOnUse"
-                    >
-                        {liquidColor.map((color, index) => (
-                            <stop
-                                key={index}
-                                offset={`${(index / (liquidColor.length - 1)) * 100}%`}
-                                stopColor={color}
-                            />
-                        ))}
-                    </linearGradient>
-                )}
+                <mask id="pipeLiquidMask">
+                    <path
+                        ref={liquidPathRef}
+                        fill="none"
+                        d={mainPath}
+                        stroke="#FFFFFF"
+                        strokeWidth="36"
+                        strokeLinejoin="round"
+                        strokeLinecap="round"
+                        style={{
+                            strokeDasharray: `${visibleLength} ${pathLength}`,
+                            strokeDashoffset: dashoffset,
+                        }}
+                    />
+                </mask>
             </defs>
 
             <g>
@@ -159,19 +161,18 @@ export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFF
                     strokeLinecap="round"
                 />
 
-                <path
-                    ref={liquidPathRef}
-                    fill="none"
-                    d={mainPath}
-                    stroke={strokeValue}
-                    strokeWidth="36"
-                    strokeLinejoin="round"
-                    strokeLinecap="round"
-                    style={{
-                        strokeDasharray: `${visibleLength} ${pathLength}`,
-                        strokeDashoffset: dashoffset,
-                    }}
-                />
+                <g mask="url(#pipeLiquidMask)">
+                    <foreignObject x={minX} y={minY} width={width} height={height}>
+                        <div style={{ width: "100%", height: "100%" }}>
+                            <LiquidCanvas
+                                emojis={emojis}
+                                progress={1}
+                                maxFillLevel={1}
+                                style={{ width: "100%", height: "100%" }}
+                            />
+                        </div>
+                    </foreignObject>
+                </g>
 
                 <path
                     fill="none"
@@ -179,6 +180,7 @@ export default function Pipe({ inputPipeRef, outputPipeRef, liquidColor = "#FFFF
                     stroke="rgba(140, 176, 192, 0.2)"
                     strokeWidth="50"
                     strokeLinejoin="round"
+                    strokeLinecap="round"
                 />
             </g>
         </svg>
