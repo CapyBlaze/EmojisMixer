@@ -7,6 +7,7 @@ import vertexShader from "./shaders/vertex.glsl";
 import fragmentShader from "./shaders/fragment.glsl";
 import CONFIG from "../configs/config.json";
 import EMOJIS from "../configs/emojis.json";
+import { getBoolValue } from "../utils/getBoolValue";
 
 function stringToColor(str: string) {
     let hash = 0;
@@ -20,7 +21,7 @@ interface LiquidSceneProps {
     emojis: EmojiData[] | string[];
     progressRef?: RefObject<number>;
     progress?: number;
-    isBlendingRef?: RefObject<boolean>;
+    isBlendingRef?: RefObject<boolean> | boolean;
     isDrainingRef?: RefObject<boolean>;
     maxFillLevel?: number;
     static?: boolean;
@@ -109,7 +110,7 @@ const LiquidScene = ({
         const mat = materialRef.current;
         if (!mat) return;
 
-        const target = isBlendingRef?.current || isDrainingRef?.current ? 1 : 0;
+        const target = getBoolValue(isBlendingRef) || getBoolValue(isDrainingRef) ? 1 : 0;
         const lerpFactor = target > activityRef.current ? 0.08 : 0.015;
         activityRef.current += (target - activityRef.current) * lerpFactor;
 

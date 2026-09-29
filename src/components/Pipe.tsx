@@ -168,6 +168,7 @@ export default function Pipe({ inputPipeRef, outputPipeRef }: PipeProps) {
                                 emojis={emojis}
                                 progress={1}
                                 maxFillLevel={1}
+                                isBlendingRef={true}
                                 style={{ width: "100%", height: "100%" }}
                             />
                         </div>
