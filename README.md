@@ -1,33 +1,35 @@
 # Emojis Mixer
 
-An interactive physics playground where dropping, crushing and mixing emojis fills a glass with colorful procedural liquids, turning simple physics interactions into unique generative artwork
+Choose your emojis, blend them together and create a unique drink based on your ingredients. Then save your best recipes in your book or share them with your friends.
 
 ## Test the website
 
-You can test it directly in your browser by clicking on the following link: [Emojis Mixer](https://capyblaze.github.io/EmojisMixer/)
+You can try it out directly in your browser by clicking on the following link : [Emojis Mixer](https://capyblaze.github.io/EmojisMixer/)
 
 ## What is the project?
 
-It is a web-based procedural art generator powered by dynamic emoji physics. You can throw various emojis into a blender, grind them down into fluid particles and pour them into a glass to create a custom layered drink. I built this using React, TypeScript and Vite as the build tool with Matter.js handling the real-time physical simulation and custom canvas rendering algorithms generating the fluid art
+This is a web-based procedural art generator for drinks using emojis. You can throw any emojis into the blender’s container (they are subject to gravity) and blend them to transform them into a magnificent drink with a liquid marbling effect. You can then pour it into a glass and save the recipe in your recipe book.
+This application is developed using React, TypeScript and Vite. Mapper.js is used for the physical simulation of the emojis, whilst the liquid rendering algorithm utilises Three.js with custom shaders.
 
 ## Why did you build it?
 
-I wanted to bridge the gap between playful physics simulations and procedural art generation. Emojis are universal symbols with vibrant, distinct colors. By treating them as physical objects that crush into fluid media, the app turns chaotic, casual interactions into unpredictable and visually appealing digital art pieces
+I wanted to recreate this effect in code ([Marble Liquid](https://www.vectorstock.com/royalty-free-vector/colorful-marble-texture-vector-18345291)) and I wanted something satisfying to use to achieve this result. Making a blender to create your own liquid marble drink was a good idea for this and using emojis as ingredients opens up a huge range of colour possibilities.
 
 ## Inspiration
 
-The idea came from looking at everyday digital pop culture, emojis and asking what happens when you treat them as physical raw materials rather than static text characters. Blending emojis transforms familiar symbols into abstract liquid gradients, creating a satisfying bridge between internet iconography and fluid generative visualizers
+This project draws its inspiration primarily from the visual effects of liquid marble art and the blending of coloured ingredients. The idea was to combine an abstract, fluid artistic aesthetic with a playful and satisfying user experience by transforming everyday symbols (emojis) into colour palettes.
 
 ## Theme
 
 Theme selected: **Electroart**
 
-This project fits the Electroart theme because it uses code-driven physics and procedural color algorithms to generate unique visual artwork in real time. The interplay between Matter.js rigid body dynamics and custom fluid mixing algorithms transforms simple user inputs into vibrant, glowing digital compositions that are different every single time
+This project falls under the 'Electroart' theme as it generates visual art using a range of emojis. An algorithm converts the emojis into colours and uses these colours to create an artistic pattern. As it is generated algorithmically, changing the emojis results in a different pattern. It is therefore possible to create an infinite number of different patterns (1595 emojis with between 1 and an infinite number of emojis per pattern).
+The project is therefore a procedural visual art generator.
 
 ## How do I test it?
 
-The fastest way to test it is to use the live link above
-If you want to run it locally on your machine just follow these steps
+The quickest way to test it is to use the [Emojis Mixer](https://capyblaze.github.io/EmojisMixer/) website
+If you want to run it locally on your computer, simply follow these steps
 
 1. Clone this repository
    `git clone https://github.com/CapyBlaze/EmojisMixer.git`
