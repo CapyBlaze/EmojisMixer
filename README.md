@@ -23,7 +23,7 @@ This project draws its inspiration primarily from the visual effects of liquid m
 
 Theme selected: **Electroart**
 
-This project falls under the 'Electroart' theme as it generates visual art using a range of emojis. An algorithm converts the emojis into colours and uses these colours to create an artistic pattern. As it is generated algorithmically, changing the emojis results in a different pattern. It is therefore possible to create an infinite number of different patterns (1595 emojis with between 1 and an infinite number of emojis per pattern).
+This project falls under the 'Electroart' theme as it generates visual art using a range of emojis. An algorithm converts the emojis into colours and uses these colours to create an artistic pattern. As it is generated algorithmically, changing the emojis results in a different pattern. It is therefore possible to create 16 475 423 850 748 780 120 different patterns (1 595 emojis, with between 1 and 6 emojis per pattern).
 The project is therefore a procedural visual art generator.
 
 ## How do I test it?
