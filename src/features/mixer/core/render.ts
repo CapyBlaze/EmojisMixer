@@ -25,6 +25,38 @@ export interface RenderDependencies {
     onContentChange?: (content: EmojiData[] | null) => void;
 }
 
+function spawnBurst(container: HTMLElement, x: number, y: number) {
+    const COUNT = 8;
+    for (let i = 0; i < COUNT; i++) {
+        const angle = (Math.PI * 2 * i) / COUNT + Math.random() * 0.5;
+        const dist = 16 + Math.random() * 14;
+        const size = 3 + Math.random() * 3;
+
+        const p = document.createElement("div");
+        p.style.cssText = `
+            position:absolute; left:0; top:0;
+            width:${size}px; height:${size}px;
+            margin:${-size / 2}px 0 0 ${-size / 2}px;
+            border-radius:50%;
+            background:radial-gradient(circle,#fff 0%,#ffe9a8 55%,transparent 100%);
+            pointer-events:none; z-index:5;
+        `;
+        container.appendChild(p);
+
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist;
+
+        const anim = p.animate(
+            [
+                { transform: `translate(${x}px, ${y}px) scale(1)`, opacity: 1 },
+                { transform: `translate(${x + dx}px, ${y + dy}px) scale(0)`, opacity: 0 },
+            ],
+            { duration: 450, easing: "cubic-bezier(.2,.8,.3,1)" },
+        );
+        anim.onfinish = () => p.remove();
+    }
+}
+
 export function createRenderLoop(deps: RenderDependencies) {
     let lastTime = performance.now();
     let rafId: number;
@@ -141,8 +173,11 @@ export function createRenderLoop(deps: RenderDependencies) {
                 }
 
                 const t = Math.min(1, elapsed / CONFIG.popDuration);
+                const { x, y } = item.body.position;
 
                 if (t >= 1) {
+                    spawnBurst(container, x, y);
+                    Matter.World.remove(engine.world, item.body);
                     item.el.remove();
                     itemsRef.current.splice(i, 1);
                     continue;
@@ -150,13 +185,17 @@ export function createRenderLoop(deps: RenderDependencies) {
 
                 stillPopping = true;
 
-                const popScale = t < 0.35 ? 1 + (t / 0.35) * 0.15 : 1.15 * (1 - (t - 0.35) / 0.65);
-                const opacity = t < 0.7 ? 1 : 1 - (t - 0.7) / 0.3;
+                const ease = t * t;
+                const scale = item.scale * (1 - ease);
+                const spin = ease * 0.8;
+                const blur = ease * 6;
+                const glow = 1 + ease * 0.8;
+                const opacity = t < 0.6 ? 1 : 1 - (t - 0.6) / 0.4;
 
-                const { x, y } = item.body.position;
                 item.el.style.transform = `translate(${x - CONFIG.emojiRadius}px, ${
                     y - CONFIG.emojiRadius
-                }px) scale(${Math.max(0, popScale)})`;
+                }px) rotate(${item.body.angle + spin}rad) scale(${Math.max(0, scale)})`;
+                item.el.style.filter = `blur(${blur}px) brightness(${glow})`;
                 item.el.style.opacity = `${Math.max(0, opacity)}`;
             }
 
