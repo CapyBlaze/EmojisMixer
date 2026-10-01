@@ -47,22 +47,22 @@ const LiquidScene = ({
     const resolvedColors = useMemo(() => {
         if (!emojis || emojis.length === 0) return [];
 
-        const isStringArray = typeof emojis[0] === "string";
+        const counts = new Map<string, number>();
 
-        const uniqueColors = isStringArray
-            ? Array.from(
-                  new Set(
-                      (emojis as string[]).map(
-                          (name) =>
-                              EMOJIS.find((e) => e.name === name)?.colors[0] || stringToColor(name),
-                      ),
-                  ),
-              )
-            : Array.from(
-                  new Set((emojis as EmojiData[]).map((e) => e.colors[0] || stringToColor(e.name))),
-              );
+        for (const e of emojis as (EmojiData | string)[]) {
+            const name = typeof e === "string" ? e : e.name;
+            const color =
+                (typeof e === "string"
+                    ? EMOJIS.find((x) => x.name === e)?.colors[0]
+                    : e.colors[0]) || stringToColor(name);
+            counts.set(color, (counts.get(color) ?? 0) + 1);
+        }
 
-        return uniqueColors.sort();
+        return [...counts.entries()]
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, MAX_COLORS)
+            .map(([color]) => color)
+            .sort();
     }, [emojis]);
 
     const targetColorsRef = useRef<THREE.Color[]>(
@@ -136,7 +136,7 @@ const LiquidScene = ({
             uProgress: { value: 0 },
             uActivity: { value: 0 },
             uColors: {
-                value: Array.from({ length: MAX_COLORS }, () => new THREE.Color("#a3d9ff")),
+                value: Array.from({ length: MAX_COLORS }, () => new THREE.Color("#ffafa3")),
             },
             uColorPresence: {
                 value: Array.from({ length: MAX_COLORS }, (_, i) => (i === 0 ? 1 : 0)),
