@@ -306,6 +306,7 @@ export default function Emojis() {
                 >
                     <img
                         src={`./emojis/${defaultFile(dragging.emoji.files)}`}
+                        fetchPriority="high"
                         alt={dragging.emoji.name}
                         style={{ width: "28px" }}
                     />

@@ -49,6 +49,8 @@ export function spawnEmoji({
         height: `${CONFIG.emojiRadius * 2}px`,
         willChange: "transform",
     });
+    el.alt = emoji.name;
+    el.fetchPriority = "high";
     container.appendChild(el);
 
     const emojiIndex = EMOJIS.findIndex((e) => e === emoji);
