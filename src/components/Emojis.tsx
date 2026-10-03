@@ -254,7 +254,7 @@ export default function Emojis() {
                         justifyContent: "flex-start",
                         alignContent: "flex-start",
                         overflowY: "auto",
-                        height: "82%",
+                        height: "calc(90vh - 130px)",
                         fontSize: "24px",
                         paddingRight: "10px",
                     }}
