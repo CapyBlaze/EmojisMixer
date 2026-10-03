@@ -51,4 +51,4 @@ If you want to run it locally on your computer, simply follow these steps
 
 ## Demo Video
 
-[Link to YouTube video demo](https://youtu.be/)
+[Link to YouTube video demo](https://youtu.be/FXpTb7yGIeo)
